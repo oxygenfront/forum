@@ -1,18 +1,20 @@
 .container
-  display: flex
   justify-content: space-between
   width: 100%
   border: 2px solid rgba(255, 255, 255, 0.12)
   border-radius: 25px
   background-color: rgba(32, 36, 45, 1)
   padding: 19px 29px
-
-.left, .right
+  
+.up
   display: flex
-  flex-direction: column
   justify-content: space-between
-.right
-  align-items: end
+  &.flag
+    align-items: center
+
+.down
+  display: flex
+  justify-content: space-between
 .title
   font-size: 24px
   font-weight: 500
@@ -30,7 +32,13 @@
   border-radius: 50%
 .user
   display: flex
+  align-items: center
   gap: 8px
+  width: fit-content
+  font-weight: 500
+  font-style: 12px  
+  color: #8E8B8B
+
 .avatar
   display: flex
   justify-content: center

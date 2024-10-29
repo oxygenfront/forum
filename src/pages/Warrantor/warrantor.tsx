@@ -1,5 +1,6 @@
 import { BlockThemeContainer } from '@/shared/ui/BlockThemeContainer'
 import type { FC } from 'react'
+
 export const WarrantorPage: FC = () => {
 	return (
 		<>
@@ -124,9 +125,10 @@ export const WarrantorPage: FC = () => {
 			<BlockThemeContainer
 				title='Гарант сервис'
 				username='Гарант'
-				date_create='1 час назад'
+				date_create={1730166126}
 				count_views={1003}
 				count_messages={103}
+				flag={true}
 			/>
 		</>
 	)
