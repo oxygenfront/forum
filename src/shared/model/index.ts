@@ -1,4 +1,4 @@
-export { Path, ROUTES, ROLES } from './constants'
+export { PATH, ROUTES, ROLES } from './constants'
 
 export type { IChapter } from './chapter'
 export type { ILatestActivity } from './latest-activity'

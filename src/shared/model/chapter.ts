@@ -1,11 +1,11 @@
-import type { ILatestActivity } from '@/shared/model'
-import type { ITheme } from '@/shared/model'
+import type { ILatestActivity, IUser } from '@/shared/model'
 
 export interface IChapter {
-	chapter_id: string // uuid v4
+	id: string
+	title_chapter: string
 	count_themes: number // count themes in chapter
-	messages: number // count messages in chapter
-	latest_activity: ILatestActivity
+	count_messages: number // count messages in chapter
+	last_message: ILatestActivity
 
-	themes: ITheme[]
+	user: IUser
 }

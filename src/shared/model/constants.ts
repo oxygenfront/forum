@@ -1,10 +1,8 @@
-export enum Path {
+export enum PATH {
 	BASE = '/',
-	AUTH = 'auth',
 	ADMIN = 'admin',
-	WARRANTOR = 'warrantor',
-	CHAPTER = 'chapter',
-	THEME = 'chapter/:id',
+	WARRANTOR = 'garant-service',
+	CHAPTER = 'chapter/:chapterId',
 }
 
 export enum ROLES {

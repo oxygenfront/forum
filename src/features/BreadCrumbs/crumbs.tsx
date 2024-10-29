@@ -1,4 +1,3 @@
-import { ROUTES } from '@/shared/model'
 import classNames from 'classnames'
 import type { FC } from 'react'
 import { IoIosArrowForward } from 'react-icons/io'
@@ -12,7 +11,8 @@ export const BreadCrumbs: FC = () => {
 
 	const routes = pathnames.map((path, index) => {
 		const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`
-		return { path: routeTo, name: ROUTES[path] }
+
+		return { path: routeTo, name: path }
 	})
 
 	return (

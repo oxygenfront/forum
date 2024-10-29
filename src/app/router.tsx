@@ -1,33 +1,32 @@
 import { BaseLayout as App } from '@/app/layout'
 import { ChapterPage } from '@/pages/Chapter/chapter'
-import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
-import { Path } from '@/shared/model'
+import { PATH } from '@/shared/model'
 // import { Profile } from '@/layout/Profile'
 import { ChaptersBlock } from '@/widgets/ChaptersBlock'
 import { createBrowserRouter } from 'react-router-dom'
 
 export const router = createBrowserRouter([
 	{
-		path: Path.BASE,
+		path: PATH.BASE,
 		element: <App />,
 		children: [
 			{
-				path: Path.BASE,
+				path: PATH.BASE,
 				element: <ChaptersBlock />,
 			},
 			{
-				path: Path.WARRANTOR,
+				path: PATH.WARRANTOR,
 				element: <WarrantorPage />,
 			},
 			{
-				path: Path.CHAPTER,
+				path: PATH.CHAPTER,
 				element: <ChapterPage />,
 			},
-			{
-				path: Path.THEME,
-				element: <ThemePage />,
-			},
+			// {
+			// 	path: PATH.THEME,
+			// 	element: <ThemePage />,
+			// },
 		],
 	},
 ])

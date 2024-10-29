@@ -2,7 +2,6 @@ export { rootApi } from './rootApi'
 export { type TBaseQueryFn, baseQueryFunction, baseZodErrorHelper, createRequest } from './utils'
 
 export {
-	SliceName,
 	ApiTag,
 	RequestMethod,
 	API_BASE_URL,

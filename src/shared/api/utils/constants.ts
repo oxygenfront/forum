@@ -1,8 +1,3 @@
-export const SliceName = {
-	rootApi: 'rootApi',
-	storage: 'storage',
-} as const
-
 export enum ApiTag {
 	AUTH = 'auth',
 	QUESTIONS = 'questions',

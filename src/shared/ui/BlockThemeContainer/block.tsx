@@ -1,24 +1,18 @@
 import { ModalSort } from '@/features/ModalSort'
+import { timeSincePublication } from '@/shared/lib/helpers'
 import classNames from 'classnames'
-import relativeTime from 'dayjs/plugin/relativeTime';
 import type { FC } from 'react'
 import { PiWechatLogoBold } from 'react-icons/pi'
-
-import dayjs from 'dayjs'
 // import { PiWechatLogoBold } from 'react-icons/pi'
 import styles from './block.module.sass'
 interface BlockThemeContainer {
 	title: string
 	username: string
-	// biome-ignore lint/style/useNamingConvention: <explanation>
 	date_create: number
-	// biome-ignore lint/style/useNamingConvention: <explanation>
 	count_views: number
-	// biome-ignore lint/style/useNamingConvention: <explanation>
 	count_messages: number
 	flag: boolean
 }
-dayjs.extend(relativeTime)
 
 export const BlockThemeContainer: FC<BlockThemeContainer> = ({
 	title,
@@ -28,13 +22,10 @@ export const BlockThemeContainer: FC<BlockThemeContainer> = ({
 	username,
 	flag,
 }) => {
-	const timeSincePublication = (unix: number) => {
-		return dayjs(unix * 1000).locale('ru-ru').fromNow()
-	}
 	return (
 		<>
 			<div className={styles.container}>
-				<div className={classNames(styles.up, {[styles.flag]: !flag })}>
+				<div className={classNames(styles.up, { [styles.flag]: !flag })}>
 					<p className={styles.title}>{title}</p>
 					<ModalSort arrayTitles={[]} />
 				</div>

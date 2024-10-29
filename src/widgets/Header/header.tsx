@@ -1,5 +1,6 @@
 import { LoginButton } from '@/features/LoginButton'
 import { Search } from '@/features/Search'
+import { PATH } from '@/shared/model'
 import classnames from 'classnames'
 import type { FC } from 'react'
 import { Link } from 'react-router-dom'
@@ -32,7 +33,7 @@ export const Header: FC = () => {
 					</Link>
 					<span className={styles.vertical_line} />
 					<Link
-						to='/warrantor'
+						to={PATH.WARRANTOR}
 						className={styles.navbar__button}
 					>
 						Гарант
