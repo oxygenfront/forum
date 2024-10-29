@@ -9,7 +9,7 @@ export const CommentTheme = () => {
 			<div className={styles.container}>
 				<div className={styles.wrapper}>
 					<div className={styles.user}>
-						<div className={styles.imgprofile} />
+						<div className={styles.imgProfile} />
 						<div className={styles.userDesc}>
 							<div className={styles.desc}>Я съел собаку</div>
 							<div className={styles.role}>Админ</div>
@@ -22,13 +22,13 @@ export const CommentTheme = () => {
 						представлены в исключительно положительном свете.
 					</div>
 				</div>
-				<div className={styles.douwn}>
+				<div className={styles.down}>
 					<div className={styles.marks}>
 						<div className={styles.likes}>
 							<AiOutlineLike className={styles.iconLike} />
 							<span>103</span>
 						</div>
-						<div className={styles.dislake}>
+						<div className={styles.dislike}>
 							<AiOutlineDislike className={styles.iconLike} />
 							<span>103</span>
 						</div>
