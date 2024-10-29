@@ -1,4 +1,4 @@
-import styles from './comenttheme.module.sass'
+import styles from './comment.module.sass'
 
 import { AiOutlineLike } from 'react-icons/ai'
 import { AiOutlineDislike } from 'react-icons/ai'
