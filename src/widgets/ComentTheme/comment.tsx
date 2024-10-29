@@ -3,7 +3,7 @@ import styles from './comenttheme.module.sass'
 import { AiOutlineLike } from 'react-icons/ai'
 import { AiOutlineDislike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
-export const ComentTheme = () => {
+export const CommentTheme = () => {
 	return (
 		<>
 			<div className={styles.container}>

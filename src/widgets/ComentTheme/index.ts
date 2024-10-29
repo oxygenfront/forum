@@ -1,1 +1,1 @@
-export { ComentTheme } from './coment'
+export { CommentTheme } from './comment'
