@@ -1,0 +1,26 @@
+.crumbs
+  display: flex
+  align-items: center
+  gap: 16px
+  color: rgba(192, 192, 192, 0.7)
+  grid-area: 2 / 1 / 3 / 6
+
+.route
+  display: flex
+  align-items: center
+  gap: 10px
+  &:hover &__arrow
+    color: rgb(192, 192, 192)
+  &__arrow
+    font-size: 20px
+    transition: all .2s linear
+    &.main
+      font-size: 12px
+      transform: rotate(90deg)
+
+  &__text
+    border-bottom: 2px solid transparent
+    transition: all .2s linear
+    &:hover
+      color: rgb(192, 192, 192)
+      border-bottom: 2px solid rgb(192, 192, 192)

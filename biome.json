@@ -1,0 +1,29 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"extends": ["./biome.formatter.json", "./biome.linter.json"],
+	"files": {
+		"ignore": ["./src/**/*.svg", "./src/**/*.d.ts"],
+		"ignoreUnknown": true,
+		"include": ["./src/**/*.ts", "./src/**/*.tsx", "./types/**/*.ts", "./src/**/*.json"]
+	},
+	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		}
+	},
+	"json": {
+		"parser": {
+			"allowComments": true,
+			"allowTrailingCommas": true
+		}
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"useIgnoreFile": true,
+		"defaultBranch": "development"
+	}
+}

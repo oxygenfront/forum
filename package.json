@@ -1,0 +1,39 @@
+{
+  "name": "darkforum_v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "author": "Mark Yurkulskiy",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "biome lint --apply-unsafe src",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "react-redux": "^9.1.2",
+    "react-router-dom": "^6.27.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.8.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "classnames": "^2.5.1",
+    "json-server": "^1.0.0-beta.3",
+    "sass": "^1.80.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vite-tsconfig-paths": "^5.0.1"
+  },
+  "volta": {
+    "node": "23.1.0",
+    "yarn": "4.5.1"
+  }
+}
