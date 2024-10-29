@@ -3,10 +3,10 @@ import { ChapterPage } from '@/pages/Chapter/chapter'
 import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
 import { Path } from '@/shared/model'
+import {ComentTheme} from "@/widgets/ComentTheme"
 // import { Profile } from '@/layout/Profile'
 import { ChaptersBlock } from '@/widgets/ChaptersBlock'
 import { createBrowserRouter } from 'react-router-dom'
-
 export const router = createBrowserRouter([
 	{
 		path: Path.BASE,
@@ -27,6 +27,10 @@ export const router = createBrowserRouter([
 			{
 				path: Path.THEME,
 				element: <ThemePage />,
+			},
+			{
+				path: Path.TEST,
+				element: <ComentTheme />,
 			},
 		],
 	},
