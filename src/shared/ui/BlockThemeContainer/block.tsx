@@ -2,6 +2,7 @@ import { ModalSort } from '@/features/ModalSort'
 import { timeSincePublication } from '@/shared/lib/helpers'
 import classNames from 'classnames'
 import type { FC } from 'react'
+import { LuLock } from 'react-icons/lu'
 import { PiWechatLogoBold } from 'react-icons/pi'
 // import { PiWechatLogoBold } from 'react-icons/pi'
 import styles from './block.module.sass'
@@ -26,7 +27,13 @@ export const BlockThemeContainer: FC<BlockThemeContainer> = ({
 		<>
 			<div className={styles.container}>
 				<div className={classNames(styles.up, { [styles.flag]: !flag })}>
-					<p className={styles.title}>{title}</p>
+					<div className={styles.lockWithTitle}>
+						<p className={styles.title}>{title}</p>
+						{flag && (<div className={styles.locked}>
+							<LuLock className={styles.imgLocked} />
+							<span className={styles.naming}>Закрыто</span>
+						</div>)}
+					</div>
 					<ModalSort arrayTitles={[]} />
 				</div>
 				{flag && (

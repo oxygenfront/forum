@@ -3,6 +3,8 @@ export enum PATH {
 	ADMIN = 'admin',
 	WARRANTOR = 'garant-service',
 	CHAPTER = 'chapter/:chapterId',
+	THEME = 'chapter/:id',
+	TEST = 'test',
 }
 
 export enum ROLES {
