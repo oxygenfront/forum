@@ -1,11 +1,11 @@
 import { ModalSort } from '@/features/ModalSort'
 import classNames from 'classnames'
-import relativeTime from 'dayjs/plugin/relativeTime';
+import relativeTime from 'dayjs/plugin/relativeTime'
 import type { FC } from 'react'
+import { LuLock } from 'react-icons/lu'
 import { PiWechatLogoBold } from 'react-icons/pi'
 
 import dayjs from 'dayjs'
-// import { PiWechatLogoBold } from 'react-icons/pi'
 import styles from './block.module.sass'
 interface BlockThemeContainer {
 	title: string
@@ -29,13 +29,21 @@ export const BlockThemeContainer: FC<BlockThemeContainer> = ({
 	flag,
 }) => {
 	const timeSincePublication = (unix: number) => {
-		return dayjs(unix * 1000).locale('ru-ru').fromNow()
+		return dayjs(unix * 1000)
+			.locale('ru-ru')
+			.fromNow()
 	}
 	return (
 		<>
 			<div className={styles.container}>
-				<div className={classNames(styles.up, {[styles.flag]: !flag })}>
-					<p className={styles.title}>{title}</p>
+				<div className={classNames(styles.up, { [styles.flag]: !flag })}>
+					<div className={styles.lockWithTitle}>
+						<p className={styles.title}>{title}</p>
+						{flag && (<div className={styles.locked}>
+							<LuLock className={styles.imgLocked} />
+							<span className={styles.naming}>Закрыто</span>
+						</div>)}
+					</div>
 					<ModalSort arrayTitles={[]} />
 				</div>
 				{flag && (

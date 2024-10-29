@@ -5,6 +5,7 @@ export enum Path {
 	WARRANTOR = 'warrantor',
 	CHAPTER = 'chapter',
 	THEME = 'chapter/:id',
+	TEST = "test"
 }
 
 export enum ROLES {
