@@ -5,14 +5,17 @@ import { Header } from '@/widgets/Header'
 import { HelloBlock } from '@/widgets/HelloBlock'
 import { Main } from '@/widgets/Main'
 import type { FC } from 'react'
+import { PATH } from '@/shared/model'
+import { useLocation } from 'react-router-dom'
 import styles from './layout.module.sass'
 
 export const Layout: FC = () => {
+	const { pathname } = useLocation()
 	return (
 		<>
 			<Container>
 				<Header />
-				<HelloBlock />
+				{pathname !== PATH.PROFILE &&<HelloBlock />}
 				<main className={styles.main}>
 					<Main />
 					<Aside />

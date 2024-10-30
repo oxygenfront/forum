@@ -2,6 +2,7 @@ import { selectModal } from '@/entities/Modal'
 import { Auth } from '@/features/Auth'
 import { BreadCrumbs } from '@/features/BreadCrumbs'
 import { useAppSelector } from '@/shared/lib/hooks'
+import { PATH } from '@/shared/model'
 import { ButtonLogin } from '@/widgets/ButtonLogin'
 import { NavBlock } from '@/widgets/NavBlock'
 import type { FC } from 'react'
@@ -13,8 +14,8 @@ export const Main: FC = () => {
 	return (
 		<>
 			<div className={styles.main}>
-				<NavBlock />
-				<BreadCrumbs />
+				{pathname !== PATH.PROFILE && <NavBlock />}
+				{pathname !== PATH.PROFILE && <BreadCrumbs />}
 				<Outlet />
 				{pathname.split('/')[1] === 'warrantor' ? <ButtonLogin /> : null}
 			</div>
