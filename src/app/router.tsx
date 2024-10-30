@@ -1,11 +1,11 @@
 import { BaseLayout as App } from '@/app/layout'
 import { ChapterPage } from '@/pages/Chapter/chapter'
+import { Profile } from '@/pages/Profile'
 import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
 import { PATH } from '@/shared/model'
 import { ChaptersBlock } from '@/widgets/ChaptersBlock'
-import { CommentTheme } from '@/widgets/ComentTheme'
-import {Profile} from "@/pages/Profile"
+import { Message } from '@/widgets/MessageBlock'
 import { createBrowserRouter } from 'react-router-dom'
 
 export const router = createBrowserRouter([
@@ -35,7 +35,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: PATH.PROFILE,
-				element: <Profile/>
+				element: <Profile />,
 			},
 		],
 	},
