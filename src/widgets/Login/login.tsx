@@ -1,5 +1,4 @@
-import { Input } from '@/shared/ui/Input'
-import { InputPassword } from '@/shared/ui/InputPassword'
+import { Input, InputPassword } from '@/shared/ui'
 import type { FC } from 'react'
 import styles from './login.module.sass'
 export const Login: FC = () => {

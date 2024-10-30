@@ -1,2 +1,2 @@
 // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
-export const selectModal = ({ modal }: RootState) => modal.status
+export const selectStatusModal = ({ toggleModals }: RootState) => toggleModals

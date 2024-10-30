@@ -8,3 +8,5 @@ export type { IProfile } from './profile'
 export type { IStats } from './stats'
 export type { ITheme } from './theme'
 export type { IUser } from './user'
+
+export type { IForgot, ILogin, IRegister, InputProps, InputValue, IInitialState, TPayload } from './forms'

@@ -1,17 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	status: false,
+	authModal: false,
+	userModal: false,
 }
 
 export const modalSlice = createSlice({
-	name: 'modal',
+	name: 'toggleModals',
 	initialState,
 	reducers: {
-		toggleModal: (state) => {
-			state.status = !state.status
+		toggleAuthModal: (state) => {
+			state.authModal = !state.authModal
+		},
+		toggleUserModal: (state) => {
+			state.userModal = !state.userModal
 		},
 	},
 })
 
-export const { toggleModal } = modalSlice.actions
+export const { toggleAuthModal, toggleUserModal } = modalSlice.actions

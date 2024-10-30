@@ -1,4 +1,6 @@
-import { Container } from '@/shared/ui/Container'
+import { setIsLogin, setUserData, useGetAuthQuery } from '@/features/Auth'
+import { useAppDispatch } from '@/shared/lib/hooks'
+import { Container } from '@/shared/ui'
 import { Aside } from '@/widgets/Aside'
 import { Footer } from '@/widgets/Footer'
 import { Header } from '@/widgets/Header'
@@ -11,6 +13,15 @@ import styles from './layout.module.sass'
 
 export const Layout: FC = () => {
 	const { pathname } = useLocation()
+	const { data, isSuccess } = useGetAuthQuery({})
+	const dispatch = useAppDispatch()
+	useEffect(() => {
+		if (isSuccess) {
+			dispatch(setUserData(data))
+			dispatch(setIsLogin(true))
+
+		}
+	}, [data, dispatch, isSuccess])
 	return (
 		<>
 			<Container>

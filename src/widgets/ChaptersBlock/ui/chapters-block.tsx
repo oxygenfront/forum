@@ -1,6 +1,5 @@
-import { useGetChaptersQuery } from '@/shared/api/rootApi'
-import { ChapterItem } from '@/shared/ui/ChapterItem'
-import { Title } from '@/shared/ui/TitleBlock'
+import { ChapterItem, Title } from '@/shared/ui'
+import { useGetChaptersQuery } from '@/widgets/ChaptersBlock'
 import type { FC } from 'react'
 import styles from './chapters-block.module.sass'
 export const ChaptersBlock: FC = () => {

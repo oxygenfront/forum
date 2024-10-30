@@ -1,3 +1,5 @@
+export type TypeForms = 'login' | 'register' | 'forgot'
+
 export interface IInitialState {
-	type: 'login' | 'register' | 'forgot'
+	type: TypeForms
 }

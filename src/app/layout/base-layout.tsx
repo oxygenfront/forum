@@ -1,4 +1,4 @@
-import { Layout } from '@/shared/ui/layout'
+import { Layout } from '@/shared/ui'
 import 'dayjs/locale/ru'
 import type { FC } from 'react'
 

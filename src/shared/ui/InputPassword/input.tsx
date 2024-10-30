@@ -1,36 +1,14 @@
-import { changeData, selectData } from '@/entities/Forms/FormsData'
+import { changeData, selectForms } from '@/entities/Forms'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import type { InputProps, InputValue } from '@/shared/model'
 import { type ChangeEvent, type FC, useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa6'
 import styles from './input.module.sass'
 
-type InputValue = ILogin | IRegister | IForgot
-
-interface ILogin {
-	userLogin: string
-	userPassword: string
-}
-interface IRegister {
-	userLogin: string
-	userEmail: string
-	userPassword: string
-	userConfirmPassword: string
-}
-interface IForgot {
-	userEmail: string
-}
-
-interface InputPasswordProps {
-	label: string
-	placeholder: string
-	id: string
-	type: 'login' | 'register' | 'forgot'
-}
-
-export const InputPassword: FC<InputPasswordProps> = ({ label, placeholder, id, type }) => {
+export const InputPassword: FC<InputProps> = ({ label, placeholder, id, type }) => {
 	const [isVisiblePass, setIsVisiblePass] = useState(false)
 	const dispatch = useAppDispatch()
-	const value = useAppSelector(selectData)[type]
+	const value = useAppSelector(selectForms)[type]
 
 	const changeValueInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const { id, value: inputValue } = event.target

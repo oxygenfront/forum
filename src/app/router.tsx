@@ -7,6 +7,7 @@ import { ChaptersBlock } from '@/widgets/ChaptersBlock'
 import { CommentTheme } from '@/widgets/ComentTheme'
 import {Profile} from "@/pages/Profile"
 import { createBrowserRouter } from 'react-router-dom'
+
 export const router = createBrowserRouter([
 	{
 		path: PATH.BASE,
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: PATH.TEST,
-				element: <CommentTheme />,
+				element: <Message />,
 			},
 			{
 				path: PATH.PROFILE,

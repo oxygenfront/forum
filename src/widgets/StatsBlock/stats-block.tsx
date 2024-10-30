@@ -1,4 +1,4 @@
-import { BlockContainer } from '@/shared/ui/BlockContainer'
+import { BlockContainer } from '@/shared/ui'
 import type { FC } from 'react'
 import { FaRegUser } from 'react-icons/fa6'
 import { MdOutlineEdit } from 'react-icons/md'
