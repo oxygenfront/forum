@@ -1,10 +1,11 @@
 export enum PATH {
-	BASE = '/',
-	ADMIN = 'admin',
-	WARRANTOR = 'garant-service',
-	CHAPTER = 'chapter/:chapterId',
-	THEME = 'chapter/:id',
-	TEST = 'test',
+	BASE = '',
+	ADMIN = '/admin',
+	WARRANTOR = '/garant-service',
+	CHAPTER = '/chapter/:chapterId',
+	THEME = '/chapter/:id',
+	TEST = '/test',
+	PROFILE = "/profile",
 }
 
 export enum ROLES {
