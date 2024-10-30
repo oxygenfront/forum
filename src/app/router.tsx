@@ -5,7 +5,7 @@ import { WarrantorPage } from '@/pages/Warrantor'
 import { PATH } from '@/shared/model'
 // import { Profile } from '@/layout/Profile'
 import { ChaptersBlock } from '@/widgets/ChaptersBlock'
-import { CommentTheme } from '@/widgets/ComentTheme'
+import { Message } from '@/widgets/MessageBlock'
 import { createBrowserRouter } from 'react-router-dom'
 export const router = createBrowserRouter([
 	{
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: PATH.TEST,
-				element: <CommentTheme />,
+				element: <Message />,
 			},
 		],
 	},

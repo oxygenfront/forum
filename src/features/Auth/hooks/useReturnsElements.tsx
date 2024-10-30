@@ -1,28 +1,49 @@
 import { toggleViewForm } from '@/entities/Forms'
-import { selectData } from '@/entities/Forms/FormsData'
-import { toggleModal } from '@/entities/Modal'
-import { useLoginMutation } from '@/features/Auth/api'
+import { type TypeForms, selectForms } from '@/entities/Forms'
+import { toggleAuthModal } from '@/entities/Modal'
+
+import { setIsLogin, setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
+
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { ROLES } from '@/shared/model'
+
 import { Forgot } from '@/widgets/ForgotPassword'
 import { Login } from '@/widgets/Login'
 import { Register } from '@/widgets/Register'
+
 import { useEffect } from 'react'
 import { LiaKeySolid } from 'react-icons/lia'
 import { LuUser2 } from 'react-icons/lu'
 import { RxCross2 } from 'react-icons/rx'
-type TypeForms = 'login' | 'register' | 'forgot'
 
 // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 export const useReturnsElements = (styles: CSSModuleClasses) => {
-	const [login, { isSuccess, isError, isLoading }] = useLoginMutation()
-
+	const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin, data: fetchLoginData }] = useLoginMutation()
+	const [register] = useRegisterMutation()
 	const dispatch = useAppDispatch()
-	const loginData = useAppSelector(selectData).login
+	const { forgot, login: loginData, register: registerData } = useAppSelector(selectForms)
+
 	const handleLogin = () => {
-		login(loginData)
+		login({ email: loginData.userLogin, password: loginData.userPassword })
 	}
 
-	useEffect(() => {}, [isSuccess, isError, isLoading])
+	const handleRegister = () => {
+		register({
+			email: registerData.userEmail,
+			userLogin: registerData.userLogin,
+			password: registerData.userPassword,
+			role: ROLES.USER,
+		})
+	}
+
+	useEffect(() => {
+		if (!isLoadingLogin && isSuccessLogin) {
+			localStorage.setItem('token', fetchLoginData.token)
+			dispatch(toggleAuthModal())
+			dispatch(setUserData(fetchLoginData.data))
+			dispatch(setIsLogin(true))
+		}
+	}, [isSuccessLogin, isLoadingLogin])
 
 	const returnTop = (typeForm: TypeForms) => {
 		switch (typeForm) {
@@ -31,7 +52,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 					<div className={styles.top}>
 						<button
 							type='button'
-							onClick={() => dispatch(toggleModal())}
+							onClick={() => dispatch(toggleAuthModal())}
 							className={styles.close}
 						>
 							<RxCross2 />
@@ -51,7 +72,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 					<div className={styles.top}>
 						<button
 							type='button'
-							onClick={() => dispatch(toggleModal())}
+							onClick={() => dispatch(toggleAuthModal())}
 							className={styles.close}
 						>
 							<RxCross2 />
@@ -72,7 +93,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 					<div className={styles.top}>
 						<button
 							type='button'
-							onClick={() => dispatch(toggleModal())}
+							onClick={() => dispatch(toggleAuthModal())}
 							className={styles.close}
 						>
 							<RxCross2 />
@@ -164,6 +185,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 					<button
 						type='button'
 						className={styles.login}
+						onClick={handleRegister}
 					>
 						Зарегистрироваться
 					</button>

@@ -1,5 +1,4 @@
-import { BlockContainer } from '@/shared/ui/BlockContainer'
-import { ReviewItem } from '@/shared/ui/ReviewItem'
+import { BlockContainer, ReviewItem } from '@/shared/ui'
 import type { FC } from 'react'
 import styles from './purchased-block.module.sass'
 export const PurchasedBlock: FC = () => {

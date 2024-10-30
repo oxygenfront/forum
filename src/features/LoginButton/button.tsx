@@ -1,4 +1,4 @@
-import { toggleModal } from '@/entities/Modal'
+import { toggleAuthModal } from '@/entities/Modal'
 import { useAppDispatch } from '@/shared/lib/hooks'
 import type { FC } from 'react'
 import { MdLogin } from 'react-icons/md'
@@ -8,7 +8,7 @@ export const LoginButton: FC = () => {
 	const dispatch = useAppDispatch()
 
 	function handleButtonClick() {
-		dispatch(toggleModal())
+		dispatch(toggleAuthModal())
 	}
 
 	return (

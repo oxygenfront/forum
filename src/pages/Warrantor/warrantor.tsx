@@ -1,4 +1,4 @@
-import { BlockThemeContainer } from '@/shared/ui/BlockThemeContainer'
+import { BlockThemeContainer } from '@/shared/ui'
 import type { FC } from 'react'
 
 export const WarrantorPage: FC = () => {

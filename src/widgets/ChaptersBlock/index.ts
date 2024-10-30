@@ -1,1 +1,2 @@
-export { ChaptersBlock } from './chapters-block'
+export { ChaptersBlock } from './ui'
+export { useGetChaptersQuery } from './api'

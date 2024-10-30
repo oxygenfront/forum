@@ -1,4 +1,4 @@
-import { Container } from '@/shared/ui/Container'
+import { Container } from '@/shared/ui'
 import classNames from 'classnames'
 import type { FC } from 'react'
 import { Link } from 'react-router-dom'

@@ -1,19 +1,3 @@
-export interface IInitialState {
-	login: {
-		userLogin: string
-		userPassword: string
-	}
-	register: {
-		userLogin: string
-		userEmail: string
-		userPassword: string
-		userConfirmPassword: string
-	}
-	forgot: {
-		userEmail: string
-	}
-}
-
 export interface ILogin {
 	userLogin: string
 	userPassword: string
@@ -27,7 +11,21 @@ export interface IRegister {
 export interface IForgot {
 	userEmail: string
 }
-type InputValue = ILogin | IRegister | IForgot
+
+export interface InputProps {
+	label: string
+	placeholder: string
+	id: string
+	type: 'login' | 'register' | 'forgot'
+}
+
+export type InputValue = ILogin | IRegister | IForgot
+
+export interface IInitialState {
+	login: ILogin
+	register: IRegister
+	forgot: IForgot
+}
 
 export interface TPayload {
 	type: 'login' | 'register' | 'forgot'

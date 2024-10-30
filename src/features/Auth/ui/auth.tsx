@@ -1,9 +1,10 @@
 import { selectType } from '@/entities/Forms'
-import { toggleModal } from '@/entities/Modal'
+import { toggleAuthModal } from '@/entities/Modal'
+import { useReturnsElements } from '@/features/Auth/hooks'
+import { useOutsideClick } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import classNames from 'classnames'
-import { type FC, useEffect, useRef } from 'react'
-import { useReturnsElements } from '../hooks/hooks'
+import { type FC, useRef } from 'react'
 import styles from './auth.module.sass'
 
 export const Auth: FC = () => {
@@ -12,28 +13,10 @@ export const Auth: FC = () => {
 	const type = useAppSelector(selectType)
 	const ref = useRef<HTMLDivElement>(null)
 
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			dispatch(toggleModal())
-		}
+	function handleClose() {
+		dispatch(toggleAuthModal())
 	}
-
-	function handleClickOutside(event: MouseEvent) {
-		if (ref.current && !ref.current.contains(event.target as Node)) {
-			dispatch(toggleModal())
-		}
-	}
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		document.addEventListener('keydown', handleKeyDown)
-		document.addEventListener('mousedown', handleClickOutside)
-
-		return () => {
-			document.removeEventListener('keydown', handleKeyDown)
-			document.removeEventListener('mousedown', handleClickOutside)
-		}
-	}, [])
+	useOutsideClick(ref, handleClose)
 
 	return (
 		<div className={styles.wrapper}>

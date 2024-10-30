@@ -1,5 +1,5 @@
 import { ModalSort } from '@/features/ModalSort'
-import { Title } from '@/shared/ui/TitleBlock'
+import { Title } from '@/shared/ui'
 import classNames from 'classnames'
 import type { FC, ReactNode } from 'react'
 import styles from './block.module.sass'

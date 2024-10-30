@@ -1,2 +1,2 @@
-export { toggleModal, modalSlice } from './slice'
-export { selectModal } from './selectors'
+export { toggleAuthModal, toggleUserModal, modalSlice } from './slice'
+export { selectStatusModal } from './selectors'

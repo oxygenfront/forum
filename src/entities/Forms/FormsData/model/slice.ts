@@ -1,5 +1,5 @@
+import type { IInitialState, TPayload } from '@/shared/model'
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
-import type { IInitialState, TPayload } from './types'
 
 const initialState: IInitialState = {
 	login: {

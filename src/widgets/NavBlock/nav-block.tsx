@@ -1,4 +1,4 @@
-import { BlockContainer } from '@/shared/ui/BlockContainer'
+import { BlockContainer } from '@/shared/ui'
 import type { FC } from 'react'
 import { Link } from 'react-router-dom'
 import banner1 from '/gif/1 banner.gif'

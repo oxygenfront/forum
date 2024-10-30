@@ -1,1 +1,1 @@
-export { selectModal, modalSlice, toggleModal } from './model'
+export { modalSlice, selectStatusModal, toggleAuthModal, toggleUserModal } from './model'

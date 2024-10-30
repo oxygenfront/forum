@@ -1,1 +1,0 @@
-export { CommentTheme } from './comment'

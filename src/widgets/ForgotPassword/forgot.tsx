@@ -1,4 +1,4 @@
-import { Input } from '@/shared/ui/Input'
+import { Input } from '@/shared/ui'
 import type { FC } from 'react'
 export const Forgot: FC = () => {
 	return (

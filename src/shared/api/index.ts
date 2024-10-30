@@ -1,22 +1,12 @@
 export { rootApi } from './rootApi'
-export { type TBaseQueryFn, baseQueryFunction, baseZodErrorHelper, createRequest } from './utils'
+export { type TBaseQueryFn, baseQueryFunction } from './utils'
 
 export {
 	ApiTag,
 	RequestMethod,
 	API_BASE_URL,
 	AUTH_LOGIN_API,
-	AUTH_API,
-	USER_SIGNUP_API,
+	USER_REGISTER_API,
 	GET_USERS_API,
-	CREATE_QUESTION_API,
-	UPDATE_QUESTION_API,
-	DELETE_QUESTION_API,
-	GET_QUESTIONS_API,
-	CREATE_TEST_API,
-	UPDATE_TEST_API,
-	DELETE_TEST_API,
-	GET_TESTS_API,
-	CREATE_RESULT_API,
-	GET_RESULTS_API,
+	AUTH_ME_API
 } from './utils/constants'
