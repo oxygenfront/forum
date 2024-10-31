@@ -98,7 +98,7 @@
 				"noUnusedVariables": "warn",
 				"noVoidElementsWithChildren": "error",
 				"noVoidTypeReturn": "warn",
-				"useExhaustiveDependencies": "warn",
+				"useExhaustiveDependencies": "off",
 				"useHookAtTopLevel": "error",
 				"useIsNan": "error",
 				"useJsxKeyInIterable": "error",

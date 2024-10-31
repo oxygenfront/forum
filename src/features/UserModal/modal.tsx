@@ -22,6 +22,7 @@ export const UserModal: FC = () => {
 		localStorage.removeItem('token')
 		sessionStorage.removeItem('token')
 		dispatch(setIsLogin(false))
+		dispatch(toggleUserModal())
 	}
 
 	useOutsideClick(ref, handleClose)

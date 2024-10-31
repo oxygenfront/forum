@@ -40,7 +40,7 @@ export const Login: FC<ILoginProps> = ({ isErrorLogin }) => {
 	}, [hint.login.userLogin.status, hint.login.userPassword.status, value.login.userEmail, value.login.userPassword])
 
 	function handleRememberMe() {
-		dispatch(setRememberMe())
+		dispatch(setRememberMe(!rememberMe))
 	}
 
 	return (

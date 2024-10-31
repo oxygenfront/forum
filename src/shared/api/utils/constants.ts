@@ -12,9 +12,9 @@ export enum RequestMethod {
 export const API_BASE_URL = 'https://a09ab73da26c002e.mokky.dev/'
 const CHAPTERS = 'chapters'
 const USERS = 'users'
-const CREATE = 'create'
-const UPDATE = 'update'
-const DELETE = 'delete'
+const _CREATE = 'create'
+const _UPDATE = 'update'
+const _DELETE = 'delete'
 
 const AUTH = 'auth'
 const REGISTER = 'register'

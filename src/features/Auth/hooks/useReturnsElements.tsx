@@ -5,11 +5,12 @@ import { setIsLogin, setUserData, useLoginMutation, useRegisterMutation } from '
 
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { ROLES } from '@/shared/model'
+import type { ILoginResponse } from '@/shared/model/loginResponse'
 
 import { setHint } from '@/shared/ui/InputsForm'
 import { Forgot } from '@/widgets/ForgotPassword'
 import { Login } from '@/widgets/Login'
-import { selectRememberMe } from '@/widgets/Login/model'
+import { selectRememberMe, setRememberMe } from '@/widgets/Login/model'
 import { Register } from '@/widgets/Register'
 import { useEffect } from 'react'
 import { LiaKeySolid } from 'react-icons/lia'
@@ -20,8 +21,10 @@ import { RxCross2 } from 'react-icons/rx'
 export const useReturnsElements = (styles: CSSModuleClasses) => {
 	const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin, data: fetchLoginData, isError: isErrorLogin }] =
 		useLoginMutation()
-	const [register, { isLoading: isLoadingRegister, isSuccess: isSuccessRegister, isError: isErrorRegister }] =
-		useRegisterMutation()
+	const [
+		register,
+		{ isLoading: isLoadingRegister, isSuccess: isSuccessRegister, isError: isErrorRegister, data: fetchRegisterData },
+	] = useRegisterMutation()
 	const rememberMe = useAppSelector(selectRememberMe)
 	const dispatch = useAppDispatch()
 
@@ -38,8 +41,9 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 				dispatch(setHint({ type: 'login', key: 'userPassword', status: true, hintKey: 'isEmptyPassword' }))
 			}
 		} else {
-			login({ email: storeLoginData.userEmail, password: storeLoginData.userPassword })
+			dispatch(setRememberMe(true))
 			dispatch(clearData())
+			login({ email: storeLoginData.userEmail, password: storeLoginData.userPassword })
 		}
 	}
 
@@ -71,32 +75,37 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 				dispatch(setHint({ type: 'register', key: 'userConfirmPassword', status: false, hintKey: null }))
 			}
 		} else {
+			dispatch(setRememberMe(true))
 			register({
 				email: storeRegisterData.userEmail,
 				userLogin: storeRegisterData.userLogin,
 				password: storeRegisterData.userPassword,
 				role: ROLES.USER,
 			})
+			dispatch(clearData())
 		}
 	}
 
 	useEffect(() => {
-		if (isSuccessRegister) {
-			dispatch(setTypeForm('login'))
-		}
-	}, [isSuccessRegister])
-
-	useEffect(() => {
-		if (!isLoadingLogin && isSuccessLogin) {
+		const handleAuthSuccess = (fetchData: ILoginResponse) => {
 			if (rememberMe) {
-				localStorage.setItem('token', fetchLoginData.token)
+				localStorage.setItem('token', fetchData.token)
 			}
-			sessionStorage.setItem('token', fetchLoginData.token)
+			sessionStorage.setItem('token', fetchData.token)
+			dispatch(setUserData(fetchData.data))
+		}
+
+		if ((!isLoadingLogin && isSuccessLogin) || (!isLoadingRegister && isSuccessRegister)) {
+			if (isSuccessLogin) {
+				handleAuthSuccess(fetchLoginData)
+			}
+			if (isSuccessRegister) {
+				handleAuthSuccess(fetchRegisterData)
+			}
 			dispatch(toggleAuthModal())
-			dispatch(setUserData(fetchLoginData.data))
 			dispatch(setIsLogin(true))
 		}
-	}, [isSuccessLogin, isLoadingLogin])
+	}, [isSuccessLogin, isLoadingLogin, isLoadingRegister, isSuccessRegister])
 
 	const returnTop = (typeForm: TypeForms) => {
 		switch (typeForm) {

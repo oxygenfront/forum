@@ -1,3 +1,4 @@
+import { setTypeForm } from '@/entities/Forms'
 import { toggleAuthModal } from '@/entities/Modal'
 import { useAppDispatch } from '@/shared/lib/hooks'
 import type { FC } from 'react'
@@ -9,6 +10,7 @@ export const LoginButton: FC = () => {
 
 	function handleButtonClick() {
 		dispatch(toggleAuthModal())
+		dispatch(setTypeForm('login'))
 	}
 
 	return (

@@ -8,8 +8,8 @@ export const rememberMeSlice = createSlice({
 	name: 'rememberMe',
 	initialState,
 	reducers: {
-		setRememberMe: (state) => {
-			state.rememberMe = !state.rememberMe
+		setRememberMe: (state, { payload }) => {
+			state.rememberMe = payload
 		},
 	},
 })
