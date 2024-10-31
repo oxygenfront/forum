@@ -3,6 +3,7 @@ import { modalSlice } from '@/entities/Modal'
 import { userSlice } from '@/features/Auth'
 import { breadCrumbsSlice } from '@/features/BreadCrumbs'
 import { rootApi } from '@/shared/api'
+import { hintSlice } from '@/shared/ui/InputsForm'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 const rootReducer = combineReducers({
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
 	[formsDataSlice.name]: formsDataSlice.reducer,
 	[breadCrumbsSlice.name]: breadCrumbsSlice.reducer,
 	[userSlice.name]: userSlice.reducer,
+	[hintSlice.name]: hintSlice.reducer,
 })
 
 export const store = configureStore({

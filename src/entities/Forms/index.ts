@@ -1,2 +1,2 @@
-export { formTypeSlice, toggleViewForm, selectType, type TypeForms } from './FormTypes'
-export { selectForms, changeData, formsDataSlice } from './FormsData'
+export { formTypeSlice, setTypeForm, selectType, type TypeForms } from './FormTypes'
+export { selectForms, changeData, formsDataSlice, clearData } from './FormsData'

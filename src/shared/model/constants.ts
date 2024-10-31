@@ -5,7 +5,7 @@ export enum PATH {
 	CHAPTER = '/chapter/:chapterId',
 	THEME = '/chapter/:id',
 	TEST = '/test',
-	PROFILE = "/profile",
+	PROFILE = '/profile',
 }
 
 export enum ROLES {
@@ -23,4 +23,14 @@ export enum THEME_STATUS {
 export const ROUTES: { [key: string]: string } = {
 	warrantor: 'Гарант',
 	'': 'Форум',
+}
+
+export enum FORM_HINTS_ERRORS {
+	isEmptyLogin = 'Поле логина не может быть пустым',
+	isEmptyEmail = 'Поле почты не может быть пустым',
+	isEmptyPassword = 'Поле пароля не может быть пустым',
+	isEmptyConfirmPassword = 'Поле подтверждения пароля не может быть пустым',
+	incorrectLogin = 'Неверный логин или пароль',
+	passwordsDoNotMatch = 'Пароли не совпадают',
+	userAlreadyRegistered = 'Пользователь с такой почтой уже зарегистрирован',
 }

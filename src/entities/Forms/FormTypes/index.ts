@@ -1,1 +1,1 @@
-export { formTypeSlice, selectType, toggleViewForm, type TypeForms } from './model'
+export { formTypeSlice, selectType, setTypeForm, type TypeForms } from './model'

@@ -9,10 +9,10 @@ export const formTypeSlice = createSlice({
 	name: 'formType',
 	initialState,
 	reducers: {
-		toggleViewForm: (state, action) => {
+		setTypeForm: (state, action) => {
 			state.type = action.payload
 		},
 	},
 })
 
-export const { toggleViewForm } = formTypeSlice.actions
+export const { setTypeForm } = formTypeSlice.actions

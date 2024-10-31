@@ -5,10 +5,15 @@ import { RouterProvider } from 'react-router-dom'
 import './global.sass'
 import { store } from '@/app/store'
 import { Provider } from 'react-redux'
+
+import { SnackbarProvider } from 'notistack'
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<Provider store={store}>
-			<RouterProvider router={router} />
-		</Provider>
+		<SnackbarProvider maxSnack={3}>
+			<Provider store={store}>
+				<RouterProvider router={router} />
+			</Provider>
+		</SnackbarProvider>
 	</React.StrictMode>,
 )

@@ -15,7 +15,7 @@ export interface IForgot {
 export interface InputProps {
 	label: string
 	placeholder: string
-	id: string
+	id: keyof ILogin | keyof IRegister | keyof IForgot
 	type: 'login' | 'register' | 'forgot'
 }
 
