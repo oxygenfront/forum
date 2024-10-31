@@ -3,7 +3,7 @@ import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState: IInitialState = {
 	login: {
-		userLogin: '',
+		userEmail: '',
 		userPassword: '',
 	},
 	register: {

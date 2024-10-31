@@ -1,5 +1,5 @@
 export interface ILogin {
-	userLogin: string
+	userEmail: string
 	userPassword: string
 }
 export interface IRegister {

@@ -20,6 +20,7 @@ export const UserModal: FC = () => {
 
 	function handleLogout() {
 		localStorage.removeItem('token')
+		sessionStorage.removeItem('token')
 		dispatch(setIsLogin(false))
 	}
 

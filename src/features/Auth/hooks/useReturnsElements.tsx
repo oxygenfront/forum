@@ -9,6 +9,7 @@ import { ROLES } from '@/shared/model'
 import { setHint } from '@/shared/ui/InputsForm'
 import { Forgot } from '@/widgets/ForgotPassword'
 import { Login } from '@/widgets/Login'
+import { selectRememberMe } from '@/widgets/Login/model'
 import { Register } from '@/widgets/Register'
 import { useEffect } from 'react'
 import { LiaKeySolid } from 'react-icons/lia'
@@ -21,21 +22,23 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 		useLoginMutation()
 	const [register, { isLoading: isLoadingRegister, isSuccess: isSuccessRegister, isError: isErrorRegister }] =
 		useRegisterMutation()
+	const rememberMe = useAppSelector(selectRememberMe)
 	const dispatch = useAppDispatch()
+
 	const { login: storeLoginData, register: storeRegisterData } = useAppSelector(selectForms)
 	const checkIsEmptyObject = (obj: object) => Object.entries(obj).some(([_, val]) => val === '')
 
 	const handleLogin = () => {
 		if (checkIsEmptyObject(storeLoginData)) {
-			if (storeLoginData.userLogin === '') {
-				dispatch(setHint({ type: 'login', key: 'userLogin', status: true, hintKey: 'isEmptyLogin' }))
+			if (storeLoginData.userEmail === '') {
+				dispatch(setHint({ type: 'login', key: 'userEmail', status: true, hintKey: 'isEmptyEmail' }))
 			}
 
 			if (storeLoginData.userPassword === '') {
 				dispatch(setHint({ type: 'login', key: 'userPassword', status: true, hintKey: 'isEmptyPassword' }))
 			}
 		} else {
-			login({ email: storeLoginData.userLogin, password: storeLoginData.userPassword })
+			login({ email: storeLoginData.userEmail, password: storeLoginData.userPassword })
 			dispatch(clearData())
 		}
 	}
@@ -85,7 +88,10 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 
 	useEffect(() => {
 		if (!isLoadingLogin && isSuccessLogin) {
-			localStorage.setItem('token', fetchLoginData.token)
+			if (rememberMe) {
+				localStorage.setItem('token', fetchLoginData.token)
+			}
+			sessionStorage.setItem('token', fetchLoginData.token)
 			dispatch(toggleAuthModal())
 			dispatch(setUserData(fetchLoginData.data))
 			dispatch(setIsLogin(true))
