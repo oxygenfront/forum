@@ -53,7 +53,7 @@ export const Header: FC = () => {
 				<Search />
 				<span className={styles.vertical_line} />
 				{isLogin ? <UserButton /> : <LoginButton />}
-				{(userModal || isLogin) && <UserModal />}
+				{userModal && isLogin && <UserModal />}
 			</div>
 		</header>
 	)

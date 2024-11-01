@@ -6,7 +6,7 @@ type TUserData = {
 	email: null | string
 	role: null | ROLES
 	userLogin: null | string
-	userImage: null | string
+	userImage?: null | string
 }
 
 type IResponseUser = {
@@ -16,7 +16,7 @@ type IResponseUser = {
 
 const initialState: IResponseUser = {
 	isLogin: false,
-	userData: { id: null, email: null, role: null, userLogin: null, userImage: null },
+	userData: { id: null, email: null, role: null, userLogin: null },
 }
 
 export const userSlice = createSlice({

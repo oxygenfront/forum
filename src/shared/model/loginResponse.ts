@@ -1,8 +1,11 @@
+import type { ROLES } from '@/shared/model/constants'
+
 export interface ILoginResponse {
 	token: string
-	userData: {
+	data: {
 		id: number
 		email: string
-		nickname: string
+		userLogin: string
+		role: ROLES
 	}
 }

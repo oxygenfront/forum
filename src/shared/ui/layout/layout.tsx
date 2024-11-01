@@ -1,5 +1,5 @@
-import { setIsLogin, setUserData, useGetAuthQuery } from '@/features/Auth'
-import { useAppDispatch } from '@/shared/lib/hooks'
+import { selectIsLogin, setIsLogin, setUserData, useGetAuthQuery } from '@/features/Auth'
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { PATH } from '@/shared/model'
 import { Container } from '@/shared/ui'
 import { Aside } from '@/widgets/Aside'
@@ -14,18 +14,19 @@ import styles from './layout.module.sass'
 export const Layout: FC = () => {
 	const { pathname } = useLocation()
 	const { data, isSuccess } = useGetAuthQuery({})
+	const isLogin = useAppSelector(selectIsLogin)
 	const dispatch = useAppDispatch()
 	useEffect(() => {
-		if (isSuccess) {
+		if (isSuccess || data) {
 			dispatch(setUserData(data))
 			dispatch(setIsLogin(true))
 		}
-	}, [data, dispatch, isSuccess])
+	}, [data, isSuccess])
 	return (
 		<>
 			<Container>
 				<Header />
-				{pathname !== PATH.PROFILE && <HelloBlock />}
+				{pathname !== PATH.PROFILE && !isLogin && <HelloBlock />}
 				<main className={styles.main}>
 					<Main />
 					<Aside />

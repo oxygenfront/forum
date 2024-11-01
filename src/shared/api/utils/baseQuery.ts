@@ -8,7 +8,7 @@ export const baseQueryFunction = async (args: string | FetchArgs, api: BaseQuery
 		baseUrl: API_BASE_URL,
 		credentials: 'include',
 		prepareHeaders: (headers) => {
-			const token = localStorage.getItem('token')
+			const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
 			if (token) {
 				headers.set('authorization', `Bearer ${token}`)

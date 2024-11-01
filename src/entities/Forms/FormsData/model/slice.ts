@@ -3,7 +3,7 @@ import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState: IInitialState = {
 	login: {
-		userLogin: '',
+		userEmail: '',
 		userPassword: '',
 	},
 	register: {
@@ -38,7 +38,12 @@ export const formsDataSlice = createSlice({
 					break
 			}
 		},
+		clearData: (state) => {
+			state.login = initialState.login
+			state.forgot = initialState.forgot
+			state.register = initialState.register
+		},
 	},
 })
 
-export const { changeData } = formsDataSlice.actions
+export const { changeData, clearData } = formsDataSlice.actions

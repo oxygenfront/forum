@@ -1,4 +1,4 @@
-export { PATH, ROUTES, ROLES } from './constants'
+export { PATH, ROUTES, ROLES, THEME_STATUS } from './constants'
 
 export type { IChapter } from './chapter'
 export type { ILatestActivity } from './latest-activity'
@@ -9,4 +9,4 @@ export type { IStats } from './stats'
 export type { ITheme } from './theme'
 export type { IUser } from './user'
 
-export type { IForgot, ILogin, IRegister, InputProps, InputValue, IInitialState, TPayload } from './forms'
+export type { IForgot, ILogin, IRegister, InputProps, InputValue, IInitialState, TPayload } from './formsInterfaces'

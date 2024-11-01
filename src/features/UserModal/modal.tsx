@@ -8,6 +8,7 @@ import { RiLogoutCircleRLine } from 'react-icons/ri'
 import { VscAccount } from 'react-icons/vsc'
 import { Link } from 'react-router-dom'
 import styles from './modal.module.sass'
+
 export const UserModal: FC = () => {
 	const { userImage, userLogin } = useAppSelector(selectUserData)
 	const dispatch = useAppDispatch()
@@ -19,7 +20,9 @@ export const UserModal: FC = () => {
 
 	function handleLogout() {
 		localStorage.removeItem('token')
+		sessionStorage.removeItem('token')
 		dispatch(setIsLogin(false))
+		dispatch(toggleUserModal())
 	}
 
 	useOutsideClick(ref, handleClose)

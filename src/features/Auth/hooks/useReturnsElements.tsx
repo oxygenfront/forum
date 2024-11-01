@@ -1,16 +1,17 @@
-import { toggleViewForm } from '@/entities/Forms'
-import { type TypeForms, selectForms } from '@/entities/Forms'
+import { type TypeForms, clearData, selectForms, setTypeForm } from '@/entities/Forms'
 import { toggleAuthModal } from '@/entities/Modal'
 
 import { setIsLogin, setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
 
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { ROLES } from '@/shared/model'
+import type { ILoginResponse } from '@/shared/model/loginResponse'
 
+import { setHint } from '@/shared/ui/InputsForm'
 import { Forgot } from '@/widgets/ForgotPassword'
 import { Login } from '@/widgets/Login'
+import { selectRememberMe, setRememberMe } from '@/widgets/Login/model'
 import { Register } from '@/widgets/Register'
-
 import { useEffect } from 'react'
 import { LiaKeySolid } from 'react-icons/lia'
 import { LuUser2 } from 'react-icons/lu'
@@ -18,32 +19,93 @@ import { RxCross2 } from 'react-icons/rx'
 
 // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 export const useReturnsElements = (styles: CSSModuleClasses) => {
-	const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin, data: fetchLoginData }] = useLoginMutation()
-	const [register] = useRegisterMutation()
+	const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin, data: fetchLoginData, isError: isErrorLogin }] =
+		useLoginMutation()
+	const [
+		register,
+		{ isLoading: isLoadingRegister, isSuccess: isSuccessRegister, isError: isErrorRegister, data: fetchRegisterData },
+	] = useRegisterMutation()
+	const rememberMe = useAppSelector(selectRememberMe)
 	const dispatch = useAppDispatch()
-	const { forgot, login: loginData, register: registerData } = useAppSelector(selectForms)
+
+	const { login: storeLoginData, register: storeRegisterData } = useAppSelector(selectForms)
+	const checkIsEmptyObject = (obj: object) => Object.entries(obj).some(([_, val]) => val === '')
 
 	const handleLogin = () => {
-		login({ email: loginData.userLogin, password: loginData.userPassword })
+		if (checkIsEmptyObject(storeLoginData)) {
+			if (storeLoginData.userEmail === '') {
+				dispatch(setHint({ type: 'login', key: 'userEmail', status: true, hintKey: 'isEmptyEmail' }))
+			}
+
+			if (storeLoginData.userPassword === '') {
+				dispatch(setHint({ type: 'login', key: 'userPassword', status: true, hintKey: 'isEmptyPassword' }))
+			}
+		} else {
+			dispatch(setRememberMe(true))
+			dispatch(clearData())
+			login({ email: storeLoginData.userEmail, password: storeLoginData.userPassword })
+		}
 	}
 
 	const handleRegister = () => {
-		register({
-			email: registerData.userEmail,
-			userLogin: registerData.userLogin,
-			password: registerData.userPassword,
-			role: ROLES.USER,
-		})
+		if (checkIsEmptyObject(storeRegisterData)) {
+			if (storeRegisterData.userLogin === '') {
+				dispatch(setHint({ type: 'register', key: 'userLogin', status: true, hintKey: 'isEmptyLogin' }))
+			} else {
+				dispatch(setHint({ type: 'register', key: 'userLogin', status: false, hintKey: null }))
+			}
+
+			if (storeRegisterData.userEmail === '') {
+				dispatch(setHint({ type: 'register', key: 'userEmail', status: true, hintKey: 'isEmptyEmail' }))
+			} else {
+				dispatch(setHint({ type: 'register', key: 'userEmail', status: false, hintKey: null }))
+			}
+
+			if (storeRegisterData.userPassword === '') {
+				dispatch(setHint({ type: 'register', key: 'userPassword', status: true, hintKey: 'isEmptyPassword' }))
+			} else {
+				dispatch(setHint({ type: 'register', key: 'userPassword', status: false, hintKey: null }))
+			}
+
+			if (storeRegisterData.userConfirmPassword === '') {
+				dispatch(
+					setHint({ type: 'register', key: 'userConfirmPassword', status: true, hintKey: 'isEmptyConfirmPassword' }),
+				)
+			} else {
+				dispatch(setHint({ type: 'register', key: 'userConfirmPassword', status: false, hintKey: null }))
+			}
+		} else {
+			dispatch(setRememberMe(true))
+			register({
+				email: storeRegisterData.userEmail,
+				userLogin: storeRegisterData.userLogin,
+				password: storeRegisterData.userPassword,
+				role: ROLES.USER,
+			})
+			dispatch(clearData())
+		}
 	}
 
 	useEffect(() => {
-		if (!isLoadingLogin && isSuccessLogin) {
-			localStorage.setItem('token', fetchLoginData.token)
+		const handleAuthSuccess = (fetchData: ILoginResponse) => {
+			if (rememberMe) {
+				localStorage.setItem('token', fetchData.token)
+			}
+			sessionStorage.setItem('token', fetchData.token)
+			dispatch(setUserData(fetchData.data))
+		}
+
+		if ((!isLoadingLogin && isSuccessLogin) || (!isLoadingRegister && isSuccessRegister)) {
+			if (isSuccessLogin) {
+				handleAuthSuccess(fetchLoginData)
+			}
+			if (isSuccessRegister) {
+				handleAuthSuccess(fetchRegisterData)
+			}
 			dispatch(toggleAuthModal())
-			dispatch(setUserData(fetchLoginData.data))
 			dispatch(setIsLogin(true))
 		}
-	}, [isSuccessLogin, isLoadingLogin])
+	}, [isSuccessLogin, isLoadingLogin, isLoadingRegister, isSuccessRegister])
 
 	const returnTop = (typeForm: TypeForms) => {
 		switch (typeForm) {
@@ -114,9 +176,9 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 	const returnForm = (typeForm: TypeForms) => {
 		switch (typeForm) {
 			case 'login':
-				return <Login />
+				return <Login isErrorLogin={isErrorLogin} />
 			case 'register':
-				return <Register />
+				return <Register isErrorRegister={isErrorRegister} />
 			case 'forgot':
 				return <Forgot />
 		}
@@ -130,14 +192,14 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 						<button
 							className={styles.link}
 							type='button'
-							onClick={() => dispatch(toggleViewForm('forgot'))}
+							onClick={() => dispatch(setTypeForm('forgot'))}
 						>
 							Забыл пароль
 						</button>
 						<button
 							type='button'
 							className={styles.link}
-							onClick={() => dispatch(toggleViewForm('register'))}
+							onClick={() => dispatch(setTypeForm('register'))}
 						>
 							Нет аккаунта/ <br />
 							Зарегистрироваться
@@ -149,7 +211,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 					<button
 						type='button'
 						className={styles.link}
-						onClick={() => dispatch(toggleViewForm('login'))}
+						onClick={() => dispatch(setTypeForm('login'))}
 					>
 						Есть аккаунт/ <br />
 						Вход в аккаунт
@@ -160,7 +222,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 					<button
 						type='button'
 						className={styles.link}
-						onClick={() => dispatch(toggleViewForm('login'))}
+						onClick={() => dispatch(setTypeForm('login'))}
 					>
 						Войти
 					</button>
@@ -176,6 +238,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 						type='button'
 						className={styles.login}
 						onClick={handleLogin}
+						disabled={isLoadingLogin}
 					>
 						Войти
 					</button>
@@ -186,6 +249,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 						type='button'
 						className={styles.login}
 						onClick={handleRegister}
+						disabled={isLoadingRegister}
 					>
 						Зарегистрироваться
 					</button>
