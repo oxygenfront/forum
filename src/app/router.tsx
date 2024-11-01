@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
 				element: <ThemePage />,
 			},
 			{
-				path: PATH.TEST,
+				path: PATH.MESSAGE,
 				element: <Message />,
 			},
 			{
