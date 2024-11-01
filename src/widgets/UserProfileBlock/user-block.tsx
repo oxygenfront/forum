@@ -1,47 +1,70 @@
-// import { MdOutlineAddAPhoto } from 'react-icons/md'
-// import styles from './userblock.module.sass'
+import classNames from 'classnames'
+import styles from './userblock.module.sass'
 export const UserBlock = () => {
 	return (
 		<>
-			{/* <div className={styles.container}>
-				<div className={styles.container_main}>
-					<div className={styles.wrapper}>
-						<div className={styles.add}>
-							<img
-								src='https://img.freepik.com/free-vector/girl-with-red-eyes_603843-3008.jpg'
-								alt='user-photo'
-								className={styles.add_image}
-							/>
-							<MdOutlineAddAPhoto className={styles.add_icon} />
+			<div className={styles.wrapper}>
+				<div className={styles.user}>
+					<img
+						src='https://img.freepik.com/free-vector/girl-with-red-eyes_603843-3008.jpg'
+						alt='user avatar'
+						className={styles.user_img}
+					/>
+					<p className={classNames(styles.status_online, styles.isOnline)}>Онлайн</p>
+				</div>
+				<div className={styles.about}>
+					<div className={styles.up}>
+						<div className={styles.up_left}>
+							<div className={styles.username}>Username</div>
+							<div className={styles.status_site}>Не проверен</div>
 						</div>
-					</div>
-					<div className={styles.role}>
-						<div className={styles.role_content}>Роль пользователя</div>
-						<div className={styles.role_content_user}>Пользователь</div>
-					</div>
-					<div className={styles.main}>
-						<div className={styles.left}>
-							<div className={styles.left_name}>てめ</div>
-
+						<div className={styles.up_right}>
 							<button
 								type='button'
-								className={styles.left_button}
+								className={styles.button}
 							>
-								<div className={styles.left_button_content}>Не проверен</div>
+								Посмотреть профиль
 							</button>
 						</div>
-
-						<div className={styles.right}>
+					</div>
+					<div className={styles.middle}>
+						<p className={styles.about_block}>Роль пользователя</p>
+						<p className={styles.role}>Пользователь</p>
+					</div>
+					<div className={styles.bottom}>
+						<div className={styles.bottom_left}>
+							<div className={styles.bottom_left_item}>
+								<div className={styles.about_block}>Комментарии</div>
+								<div className={styles.bottom_left_item_content}>0</div>
+							</div>
+							<hr className={styles.hr} />
+							<div className={styles.bottom_left_item}>
+								<div className={styles.about_block}>Регистрация</div>
+								<div className={styles.bottom_left_item_content}>10.10.21</div>
+							</div>
+							<hr className={styles.hr} />
+							<div className={styles.bottom_left_item}>
+								<div className={styles.about_block}>Реакции</div>
+								<div className={styles.bottom_left_item_content}>210</div>
+							</div>
+						</div>
+						<div className={styles.bottom_right}>
 							<button
 								type='button'
-								className={styles.right_button}
+								className={styles.button}
 							>
-								<span className={styles.right_button_content}>Посмотреть профиль</span>
+								Отмена
+							</button>
+							<button
+								type='button'
+								className={classNames(styles.button, styles.save)}
+							>
+								Сохранить
 							</button>
 						</div>
 					</div>
 				</div>
-			</div> */}
+			</div>
 		</>
 	)
 }

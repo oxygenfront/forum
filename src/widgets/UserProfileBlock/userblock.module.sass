@@ -1,68 +1,89 @@
-.container
-  padding: 23px 24px 20px 28px
-  width: 100%
-  border: 2px solid #FFFFFF1F
+.wrapper
   background-color: #20232D
+  padding: 30px 24px 21px 28px
+  display: flex
+  gap: 57px
   border-radius: 30px
-  &_main
-    display: flex
-.add
-  position: relative
-  display: inline-block
-  &_image
-    display: block
-    width: 224px
-    height: auto
+  // margin-bottom: 10px
+.user
+  display: flex
+  flex-direction: column
+  gap: 18px
+  overflow: hidden
+  &_img
     border-radius: 25px
-  &_icon
+    width: 224px
+    height: 224px
+    object-fit: cover
+.status
+  &_site
+    padding: 6px 13px
+    background-color: white
     color: black
-    position: absolute
-    top: 85px
-    left: 85px
-    height: 48px
-    width: 48px
-.main
-  display: flex
-  align-items: flex-start
-  justify-content: space-between
-  width: 100%
-.left
-  display: flex
-  &_name
-    color: #fff
-    font-size: 36px
-    font-weight: 600
-    line-height: 30px
-    padding: 0 45px 49px 59px
-  &_button
-    background-color:  #D9D9D9
-    border-radius: 30px
-    height: fit-content
-    &_content
-      color: black
-      font-weight: 400
-      font-size: 16px
-      padding: 5px 13px 6px 12px
-.right
-  &_button
-    border: 1px solid #fff
-    border-radius: 12px
-    height: 30px
-    &_content
-      font-size: 15px
-      font-weight: 400
-      padding: 8px 10px 14px 14px
-.role
-  &_content
-    font-family: Inter
     font-size: 16px
-    font-weight: 400
-    line-height: 19.36px
-    text-align: left
-    color: #D7D7D8
-    &_user
-      font-family: Inter
-      font-size: 24px
-      font-weight: 400
-      line-height: 28px
+    border-radius: 30px
+  &_online
+    display: flex
+    align-items: center
+    gap: 10px
+    &.isOnline::before
+      background-color: #00FFE0
+    &::before
+      content: ''
+      display: block
+      width: 10px
+      height: 10px
+      background-color: red
+      border-radius: 50%
+.username
+  font-size: 36px
 
+.about
+  display: flex
+  flex-direction: column
+  flex: 1
+  gap: 50px
+.up
+  display: flex
+  justify-content: space-between
+  align-items: center
+  &_left
+    display: flex
+    align-items: center
+    gap: 33px
+
+.middle
+  display: flex
+  flex-direction: column
+  gap: 12px
+.bottom
+  width: 100%
+  display: flex
+  justify-content: space-between
+  align-items: center
+  &_left
+    display: flex
+    align-items: center
+    gap: 31px
+    &_item
+      display: flex
+      flex-direction: column
+      gap: 12px
+  &_right
+    display: flex
+    gap: 12px
+.button
+  padding: 8px 15px
+  border: 2px solid white
+  border-radius: 12px
+  &.save
+    color: #00FFE0
+    border: 2px solid #00FFE0
+.about_block
+  color: #7B7D83
+  font-size: 16px
+
+.hr
+  width: 2px
+  height: 45px
+  background-color: #FFFFFF59
