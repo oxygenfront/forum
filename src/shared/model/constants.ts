@@ -4,7 +4,7 @@ export enum PATH {
 	WARRANTOR = '/garant-service',
 	CHAPTER = '/chapter/:slug',
 	THEME = '/chapter/:id',
-	TEST = '/test',
+	MESSAGE = '/message/',
 	PROFILE = '/profile',
 }
 
