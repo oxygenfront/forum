@@ -1,10 +1,15 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"$schema": "/node_modules/@biomejs/biome/configuration_schema.json",
 	"extends": ["./biome.formatter.json", "./biome.linter.json"],
 	"files": {
-		"ignore": ["./src/**/*.svg", "./src/**/*.d.ts"],
+		"ignore": [
+			"./packages/client/**/*.svg",
+			"./packages/**/*.d.ts",
+			"./packages/server/prisma/**",
+			"./packages/server/src/global/types.ts"
+		],
 		"ignoreUnknown": true,
-		"include": ["./src/**/*.ts", "./src/**/*.tsx", "./types/**/*.ts", "./src/**/*.json"]
+		"include": ["./packages/**/*.ts", "./packages/**/*.tsx"]
 	},
 	"javascript": {
 		"parser": {

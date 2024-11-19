@@ -1,40 +1,51 @@
 {
-  "name": "darkforum_v2",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "author": "Mark Yurkulskiy",
+  "name": "darkforum",
+  "keywords": [
+    "yarn workspaces",
+    "react",
+    "typescript",
+    "vite",
+    "nestjs",
+    "prisma"
+  ],
+  "packageManager": "yarn@4.5.1",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "biome lint --apply-unsafe src",
-    "preview": "vite preview"
+    "server:build": "yarn workspace server build",
+    "client:build": "yarn workspace client build",
+    "build": "yarn workspaces foreach -Apt run build",
+    "server:start:dev": "yarn workspace server start:dev",
+    "client:start:dev": "yarn workspace client start:dev",
+    "start:dev": "yarn workspaces foreach -Apti run start:dev",
+    "server:start:prod": "yarn workspace server start:prod",
+    "client:start:prod": "yarn workspace client start:prod",
+    "start:prod": "yarn workspaces foreach -Apti run start:prod",
+    "studio": "yarn workspace server run prisma:studio",
+    "db:migrate:dev": "yarn workspace server run migrate:dev",
+    "db:migrate:deploy": "yarn workspace server run migrate:deploy",
+    "server:format": "biome format --write packages/server",
+    "client:format": "biome format --write packages/client",
+    "server:lint": "biome lint --apply packages/server",
+    "client:lint": "biome lint --apply-unsafe packages/client",
+    "check": "biome check --apply-unsafe --error-on-warnings packages"
   },
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.3.0",
-    "notistack": "^3.0.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^5.3.0",
-    "react-redux": "^9.1.2",
-    "react-router-dom": "^6.27.0",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@types/node": "^22.8.2",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "classnames": "^2.5.1",
-    "json-server": "^1.0.0-beta.3",
-    "sass": "^1.80.4",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.10",
-    "vite-tsconfig-paths": "^5.0.1"
+  "people": {
+    "contributors": [
+      {
+        "name": "Mark Yurkulskiy",
+        "email": "markyurkulskiy@gmail.com"
+      }
+    ]
   },
   "volta": {
-    "node": "23.1.0",
+    "node": "22.11.0",
     "yarn": "4.5.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.7.0",
+    "@evilmartians/lefthook": "^1.6.10"
   }
 }

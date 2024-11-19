@@ -1,1 +1,0 @@
-export { ModalSort } from './modal'

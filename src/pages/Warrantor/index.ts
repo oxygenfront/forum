@@ -1,1 +1,0 @@
-export { WarrantorPage } from './warrantor'

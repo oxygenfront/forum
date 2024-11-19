@@ -1,1 +1,0 @@
-export { Forgot } from './forgot'

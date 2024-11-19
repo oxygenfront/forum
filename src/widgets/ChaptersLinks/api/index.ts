@@ -1,1 +1,0 @@
-export { useGetChaptersQuery } from './getChapters'
