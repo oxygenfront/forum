@@ -4,7 +4,7 @@ import { Profile } from '@/pages/Profile'
 import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
 import { PATH } from '@/shared/model'
-import { ChaptersBlock } from '@/widgets/ChaptersBlock'
+import { ChaptersLinksBlock } from '@/widgets/ChaptersLinks'
 import { Message } from '@/widgets/MessageBlock'
 import { createBrowserRouter } from 'react-router-dom'
 
@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
 		children: [
 			{
 				path: PATH.BASE,
-				element: <ChaptersBlock />,
+				element: <ChaptersLinksBlock />,
 			},
 			{
 				path: PATH.WARRANTOR,

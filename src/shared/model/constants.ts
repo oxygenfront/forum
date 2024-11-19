@@ -2,7 +2,7 @@ export enum PATH {
 	BASE = '',
 	ADMIN = '/admin',
 	WARRANTOR = '/garant-service',
-	CHAPTER = '/chapter/:chapterId',
+	CHAPTER = '/chapter/:slug',
 	THEME = '/chapter/:id',
 	TEST = '/test',
 	PROFILE = '/profile',

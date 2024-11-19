@@ -1,8 +1,8 @@
-import { ChapterItem, Title } from '@/shared/ui'
-import { useGetChaptersQuery } from '@/widgets/ChaptersBlock'
+import { ChapterLink, Title } from '@/shared/ui'
+import { useGetChaptersQuery } from '@/widgets/ChaptersLinks'
 import type { FC } from 'react'
-import styles from './chapters-block.module.sass'
-export const ChaptersBlock: FC = () => {
+import styles from './links-block.module.sass'
+export const ChaptersLinksBlock: FC = () => {
 	const { data, isLoading } = useGetChaptersQuery('users,last_messages')
 
 	if (isLoading || !data) {
@@ -16,7 +16,7 @@ export const ChaptersBlock: FC = () => {
 				<hr className={styles.hr} />
 				<div className={styles.bottom}>
 					{data.map((el) => (
-						<ChapterItem
+						<ChapterLink
 							key={el.id}
 							{...el}
 						/>

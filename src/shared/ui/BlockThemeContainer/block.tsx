@@ -7,12 +7,12 @@ import { PiWechatLogoBold } from 'react-icons/pi'
 // import { PiWechatLogoBold } from 'react-icons/pi'
 import styles from './block.module.sass'
 interface BlockThemeContainer {
-	title: string
-	username: string
-	date_create: number
-	count_views: number
-	count_messages: number
-	flag: boolean
+	title?: string
+	username?: string
+	date_create?: number
+	count_views?: number
+	count_messages?: number
+	flag?: boolean
 }
 
 export const BlockThemeContainer: FC<BlockThemeContainer> = ({
@@ -29,14 +29,16 @@ export const BlockThemeContainer: FC<BlockThemeContainer> = ({
 				<div className={classNames(styles.up, { [styles.flag]: !flag })}>
 					<div className={styles.lockWithTitle}>
 						<p className={styles.title}>{title}</p>
-						{flag && (<div className={styles.locked}>
-							<LuLock className={styles.imgLocked} />
-							<span className={styles.naming}>Закрыто</span>
-						</div>)}
+						{flag && (
+							<div className={styles.locked}>
+								<LuLock className={styles.imgLocked} />
+								<span className={styles.naming}>Закрыто</span>
+							</div>
+						)}
 					</div>
 					<ModalSort arrayTitles={[]} />
 				</div>
-				{flag && (
+				{flag && date_create && (
 					<div className={styles.down}>
 						<div className={styles.user}>
 							<span className={styles.avatar}>Г</span>

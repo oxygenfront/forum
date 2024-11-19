@@ -1,6 +1,6 @@
 export { BlockContainer } from './BlockContainer'
 export { BlockThemeContainer } from './BlockThemeContainer'
-export { ChapterItem } from './ChapterItem'
+export { ChapterLink } from './ChapterLink'
 export { Container } from './Container'
 export { Input, InputPassword } from './InputsForm'
 export { ReviewItem } from './ReviewItem'

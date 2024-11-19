@@ -9,45 +9,48 @@ export const timeSincePublication = (unix: number) => {
 		.fromNow()
 }
 
-export const transliterate = (text: string) => {
-	const russianLetters: { [key: string]: string } = {
-		а: 'a',
-		б: 'b',
-		в: 'v',
-		г: 'g',
-		д: 'd',
-		е: 'e',
-		ё: 'yo',
-		ж: 'zh',
-		з: 'z',
-		и: 'i',
-		й: 'y',
-		к: 'k',
-		л: 'l',
-		м: 'm',
-		н: 'n',
-		о: 'o',
-		п: 'p',
-		р: 'r',
-		с: 's',
-		т: 't',
-		у: 'u',
-		ф: 'f',
-		х: 'kh',
-		ц: 'ts',
-		ч: 'ch',
-		ш: 'sh',
-		щ: 'shch',
-		ы: 'y',
-		э: 'e',
-		ю: 'yu',
-		я: 'ya',
-		' ': '-',
-	}
-
-	return text
+export function createSlug(title: string) {
+	let slug = title
 		.toLowerCase()
-		.split('')
-		.map((char) => russianLetters[char] || char)
-		.join('')
+		.replace(/ /g, '-')
+		.replace(/[^\w\u0400-\u04FF-]+/g, '')
+		.replace(/--+(?=[a-zа-я])/g, '-')
+		.replace(/^[-]+|[-]+$/g, '')
+
+	slug = slug
+		.replace(/а/g, 'a')
+		.replace(/б/g, 'b')
+		.replace(/в/g, 'v')
+		.replace(/г/g, 'g')
+		.replace(/д/g, 'd')
+		.replace(/е/g, 'e')
+		.replace(/ё/g, 'e')
+		.replace(/ж/g, 'zh')
+		.replace(/з/g, 'z')
+		.replace(/и/g, 'i')
+		.replace(/й/g, 'y')
+		.replace(/к/g, 'k')
+		.replace(/л/g, 'l')
+		.replace(/м/g, 'm')
+		.replace(/н/g, 'n')
+		.replace(/о/g, 'o')
+		.replace(/п/g, 'p')
+		.replace(/р/g, 'r')
+		.replace(/с/g, 's')
+		.replace(/т/g, 't')
+		.replace(/у/g, 'u')
+		.replace(/ф/g, 'f')
+		.replace(/х/g, 'h')
+		.replace(/ц/g, 'ts')
+		.replace(/ч/g, 'ch')
+		.replace(/ш/g, 'sh')
+		.replace(/щ/g, 'shch')
+		.replace(/ъ/g, '')
+		.replace(/ы/g, 'y')
+		.replace(/ь/g, '')
+		.replace(/э/g, 'e')
+		.replace(/ю/g, 'yu')
+		.replace(/я/g, 'ya')
+
+	return slug
 }

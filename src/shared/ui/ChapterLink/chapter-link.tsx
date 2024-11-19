@@ -1,14 +1,14 @@
-import { timeSincePublication } from '@/shared/lib/helpers'
+import { createSlug, timeSincePublication } from '@/shared/lib/helpers'
 import type { IChapter } from '@/shared/model'
 import type { FC } from 'react'
 import { BsChatText } from 'react-icons/bs'
 import { MdOutlineEdit } from 'react-icons/md'
 import { PiWechatLogoBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
-import styles from './chapter-item.module.sass'
+import styles from './chapter-link.module.sass'
 
-export const ChapterItem: FC<IChapter> = (props) => {
-	const { id, count_themes, last_message, count_messages, user, title_chapter } = props
+export const ChapterLink: FC<IChapter> = (props) => {
+	const { count_themes, last_message, count_messages, user, title_chapter } = props
 
 	function replaceMessage(count_messages: number) {
 		if (count_messages > 1000) {
@@ -19,7 +19,7 @@ export const ChapterItem: FC<IChapter> = (props) => {
 
 	return (
 		<Link
-			to={`chapter/${id}`}
+			to={`chapter/${createSlug(title_chapter)}`}
 			className={styles.chapter}
 		>
 			<BsChatText />
