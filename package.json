@@ -1,4 +1,9 @@
 {
+  "dependencies": {
+    "@nestjs/mapped-types": "*",
+    "@prisma/client": "5.12.1",
+    "prisma": "5.22.0"
+  },
   "name": "darkforum",
   "keywords": [
     "yarn workspaces",
@@ -14,23 +19,23 @@
     "packages/*"
   ],
   "scripts": {
-    "server:build": "yarn workspace server build",
     "client:build": "yarn workspace client build",
-    "build": "yarn workspaces foreach -Apt run build",
-    "server:start:dev": "yarn workspace server start:dev",
     "client:start:dev": "yarn workspace client start:dev",
-    "start:dev": "yarn workspaces foreach -Apti run start:dev",
-    "server:start:prod": "yarn workspace server start:prod",
     "client:start:prod": "yarn workspace client start:prod",
-    "start:prod": "yarn workspaces foreach -Apti run start:prod",
+    "client:format": "biome format --write packages/client",
+    "client:lint": "biome lint --apply-unsafe packages/client",
+    "server:build": "yarn workspace server build",
+    "server:start:dev": "yarn workspace server start:dev",
+    "server:start:prod": "yarn workspace server start:prod",
     "studio": "yarn workspace server run prisma:studio",
     "db:migrate:dev": "yarn workspace server run migrate:dev",
     "db:migrate:deploy": "yarn workspace server run migrate:deploy",
     "server:format": "biome format --write packages/server",
-    "client:format": "biome format --write packages/client",
     "server:lint": "biome lint --apply packages/server",
-    "client:lint": "biome lint --apply-unsafe packages/client",
-    "check": "biome check --apply-unsafe --error-on-warnings packages"
+    "build": "yarn workspaces foreach -Apt run build",
+    "start:dev": "yarn workspaces foreach -Apti run start:dev",
+    "start:prod": "yarn workspaces foreach -Apti run start:prod",
+    "check": "biome check --write --unsafe --error-on-warnings packages"
   },
   "people": {
     "contributors": [

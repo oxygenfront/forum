@@ -1,5 +1,5 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"$schema": "/node_modules/@biomejs/biome/configuration_schema.json",
 	"linter": {
 		"enabled": true,
 		"rules": {
@@ -161,7 +161,7 @@
 				},
 				"useForOf": "warn",
 				"useFragmentSyntax": "warn",
-				"useImportType": "warn",
+				"useImportType": "off",
 				"useLiteralEnumMembers": "error",
 				"useNamingConvention": {
 					"level": "off",

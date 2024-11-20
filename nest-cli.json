@@ -13,5 +13,5 @@
       }
     ]
   },
-  "sourceRoot": "src"
+  "sourceRoot": "packages/server/src"
 }

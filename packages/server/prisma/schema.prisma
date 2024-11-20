@@ -1,0 +1,84 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+enum ROLE {
+  user
+  admin
+  warrantor
+  seller
+}
+
+enum ReactionType {
+  LIKE
+  DISLIKE
+}
+
+model UserReactions {
+  id             String       @id @default(uuid())
+  userId         String
+  themeMessageId String
+  reactionType   ReactionType
+  user           User         @relation(fields: [userId], references: [id])
+  themeMessages  ThemeMessage @relation(fields: [themeMessageId], references: [id])
+}
+
+model User {
+  id           String         @id @default(uuid())
+  userImage    String?
+  userLogin    String
+  userPassword String
+  userEmail    String         @unique
+  role         ROLE
+  themeChapter ThemeChapter[]
+  createdAt    DateTime       @default(now())
+
+  themeMessageId String?
+  userReaction   UserReactions[]
+  themeMessages  ThemeMessage[]
+
+  is_show_animated_avatar Boolean @default(false)
+  is_close_wall_on_change Boolean @default(false)
+  is_show_status_online   Boolean @default(false)
+  is_private              Boolean @default(false)
+}
+
+model ThemeMessage {
+  id             String          @id @default(uuid())
+  userId         String
+  content        String
+  chapterTheme   ThemeChapter    @relation(fields: [chapterThemeId], references: [id])
+  chapterThemeId String
+  createdAt      DateTime        @default(now())
+  updateAt       DateTime        @updatedAt
+  userReactions  UserReactions[]
+  user           User?           @relation(fields: [userId], references: [id])
+}
+
+model ThemeChapter {
+  id            String         @id @default(uuid())
+  user          User?          @relation(fields: [userId], references: [id])
+  chapters      Chapters?      @relation(fields: [chapterId], references: [id])
+  chapterId     String
+  titleTheme    String
+  themeMessages ThemeMessage[]
+  isPrivate     Boolean        @default(false)
+  userId        String
+  createdAt     DateTime       @default(now())
+  updateAt      DateTime       @updatedAt
+  views         Int?
+}
+
+model Chapters {
+  id String @id @default(uuid())
+
+  chapterTitle  String
+  chaptersTheme ThemeChapter[]
+}

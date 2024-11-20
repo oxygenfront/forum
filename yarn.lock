@@ -794,6 +794,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/mapped-types@npm:*":
+  version: 2.0.6
+  resolution: "@nestjs/mapped-types@npm:2.0.6"
+  peerDependencies:
+    "@nestjs/common": ^8.0.0 || ^9.0.0 || ^10.0.0
+    class-transformer: ^0.4.0 || ^0.5.0
+    class-validator: ^0.13.0 || ^0.14.0
+    reflect-metadata: ^0.1.12 || ^0.2.0
+  peerDependenciesMeta:
+    class-transformer:
+      optional: true
+    class-validator:
+      optional: true
+  checksum: 10c0/c04ba9518d75c76ac6d00faa7a701d111b20bd220706bdef99777a4678f3423fa259ff5cc2968967a54bb58a08a85a7be6a781bfa07ddfb26304f82ee63c628b
+  languageName: node
+  linkType: hard
+
 "@nestjs/mapped-types@npm:2.0.5":
   version: 2.0.5
   resolution: "@nestjs/mapped-types@npm:2.0.5"
@@ -2857,6 +2874,9 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:^1.7.0"
     "@evilmartians/lefthook": "npm:^1.6.10"
+    "@nestjs/mapped-types": "npm:*"
+    "@prisma/client": "npm:5.12.1"
+    prisma: "npm:5.22.0"
   languageName: unknown
   linkType: soft
 
@@ -5277,7 +5297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:^5.12.1":
+"prisma@npm:5.22.0":
   version: 5.22.0
   resolution: "prisma@npm:5.22.0"
   dependencies:
@@ -5845,7 +5865,7 @@ __metadata:
     passport-jwt: "npm:^4.0.1"
     passport-local: "npm:^1.0.0"
     pdfkit: "npm:^0.15.0"
-    prisma: "npm:^5.12.1"
+    prisma: "npm:5.22.0"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.1"
     source-map-support: "npm:^0.5.21"
