@@ -1,2 +1,2 @@
-export { BreadCrumbs } from './crumbs.tsx'
+export { BreadCrumbs } from './crumbs'
 export { breadCrumbsSlice, addCrumb, removeCrumb, selectBreadCrumbs } from './model'

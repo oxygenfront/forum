@@ -1,1 +1,1 @@
-export { ChapterPage } from './chapter.tsx'
+export { ChapterPage } from './chapter'

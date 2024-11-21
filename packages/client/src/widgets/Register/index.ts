@@ -1,1 +1,1 @@
-export { Register } from './register.tsx'
+export { Register } from './register'

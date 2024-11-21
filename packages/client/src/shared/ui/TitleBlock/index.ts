@@ -1,1 +1,1 @@
-export { Title } from './title.tsx'
+export { Title } from './title'

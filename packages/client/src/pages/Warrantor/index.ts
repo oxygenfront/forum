@@ -1,1 +1,1 @@
-export { WarrantorPage } from './warrantor.tsx'
+export { WarrantorPage } from './warrantor'

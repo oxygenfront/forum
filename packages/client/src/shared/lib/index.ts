@@ -1,1 +1,1 @@
-export { useOutsideClick } from './useOutsideClick.tsx'
+export { useOutsideClick } from './useOutsideClick'

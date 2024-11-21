@@ -1,1 +1,1 @@
-export { UserBlock } from './user-block.tsx'
+export {UserBlock} from "./user-block"

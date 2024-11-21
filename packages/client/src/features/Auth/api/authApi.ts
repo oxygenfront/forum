@@ -1,4 +1,4 @@
-import { AUTH_LOGIN_API, AUTH_ME_API, ApiTag, RequestMethod, USER_REGISTER_API, rootApi } from '@/shared/api'
+import { AUTH_LOGIN_API, AUTH_ME_API, AUTH_REGISTER_API, ApiTag, RequestMethod, rootApi } from '@/shared/api'
 
 export const authApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -24,7 +24,7 @@ export const authApi = rootApi.injectEndpoints({
 
 		register: builder.mutation({
 			query: (body) => ({
-				url: USER_REGISTER_API,
+				url: AUTH_REGISTER_API,
 				method: RequestMethod.POST,
 				body: JSON.stringify(body),
 				headers: {

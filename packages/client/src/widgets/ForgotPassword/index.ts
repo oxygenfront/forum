@@ -1,1 +1,1 @@
-export { Forgot } from './forgot.tsx'
+export { Forgot } from './forgot'

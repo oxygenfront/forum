@@ -1,1 +1,1 @@
-export { ChapterLink } from './chapter-link.tsx'
+export { ChapterLink } from './chapter-link'

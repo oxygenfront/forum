@@ -2660,7 +2660,7 @@ __metadata:
     react-redux: "npm:^9.1.2"
     react-router-dom: "npm:^6.27.0"
     rollup-plugin-build-statistics: "npm:^0.0.19"
-    sass: "npm:1.81.0"
+    sass: "npm:^1.81.0"
     typescript: "npm:^5.6.3"
     vite: "npm:^5.4.10"
     vite-plugin-compression: "npm:^0.5.1"
@@ -5775,7 +5775,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.81.0":
+"sass@npm:^1.81.0":
   version: 1.81.0
   resolution: "sass@npm:1.81.0"
   dependencies:

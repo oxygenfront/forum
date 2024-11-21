@@ -1,1 +1,1 @@
-export { AuthForm } from './form.tsx'
+export { AuthForm } from './form'

@@ -1,1 +1,1 @@
-export { hintSlice, setHint } from './slice.ts'
+export { hintSlice, setHint } from './slice'

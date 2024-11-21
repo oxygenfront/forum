@@ -1,1 +1,1 @@
-export { Confidence } from './confidence.tsx'
+export {Confidence} from "./confidence"

@@ -1,1 +1,1 @@
-export { Hint } from './hint.tsx'
+export { Hint } from './hint'

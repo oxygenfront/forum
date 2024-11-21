@@ -1,1 +1,1 @@
-export { HelloBlock } from './hello.tsx'
+export { HelloBlock } from './hello'

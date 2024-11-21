@@ -17,7 +17,7 @@
     "classnames": "^2.5.1",
     "json-server": "^1.0.0-beta.3",
     "rollup-plugin-build-statistics": "^0.0.19",
-    "sass": "1.81.0",
+    "sass": "^1.81.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
     "vite-plugin-compression": "^0.5.1",
@@ -27,7 +27,7 @@
   "name": "client",
   "scripts": {
     "build": "tsc && vite build",
-    "start:dev": "vite",
+    "start:dev": "vite --host",
     "start:prod": "vite preview"
   },
   "type": "module",

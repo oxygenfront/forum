@@ -1,22 +1,24 @@
 export enum Route {
 	BASE = 'api',
-	PING = 'ping',
 	AUTH = 'auth',
 	LOGIN = 'login',
+	LOGOUT = 'logout',
+	REFRESH = 'refresh',
+	REGISTER = 'register',
 	CREATE = 'create',
 	GET_BY_ID = ':id',
-	UPDATE = 'update',
-	DELETE = 'delete',
+	GET_BY_USERNAME = ':username',
+	UPDATE_BY_ID = 'update/:id',
+	GET_BY_EMAIL = ':email',
 	USERS = 'users',
-	SIGNUP = 'signup',
 	DELETE_BY_ID = 'delete/:id',
 	CHAPTERS = 'chapters/',
 }
 
 export enum SwaggerApiTag {
-	PING = 'ping',
-	AUTH = 'auth',
-	USERS = 'users',
-	CHAPTERS = 'chapters',
-	ChapterTheme = 'chapter theme',
+	BASE = 'Base API',
+	AUTH = 'Auth API',
+	USERS = 'Users API',
+	CHAPTERS = 'Chapters API',
+	ChapterTheme = 'Theme API',
 }

@@ -1,5 +1,5 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
-import type { IForgotHint, IInitialStateHint, ILoginHint, IRegisterHint, TPayloadHint } from './types.ts'
+import type { IForgotHint, IInitialStateHint, ILoginHint, IRegisterHint, TPayloadHint } from './types'
 
 const initialState: IInitialStateHint = {
 	register: {

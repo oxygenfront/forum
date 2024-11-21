@@ -1,1 +1,1 @@
-export { GeneralSettings } from './general-settings.tsx'
+export {GeneralSettings} from "./general-settings"

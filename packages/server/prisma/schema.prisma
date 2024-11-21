@@ -31,14 +31,14 @@ model UserReactions {
 }
 
 model User {
-  id           String         @id @default(uuid())
+  id           String   @id @default(uuid())
   userImage    String?
   userLogin    String
   userPassword String
-  userEmail    String         @unique
+  userEmail    String   @unique
   role         ROLE
-  themeChapter ThemeChapter[]
-  createdAt    DateTime       @default(now())
+  themeChapter Theme[]
+  createdAt    DateTime @default(now())
 
   themeMessageId String?
   userReaction   UserReactions[]
@@ -53,21 +53,21 @@ model User {
 }
 
 model ThemeMessage {
-  id             String          @id @default(uuid())
-  userId         String
-  content        String
-  chapterTheme   ThemeChapter    @relation(fields: [chapterThemeId], references: [id])
-  chapterThemeId String
-  createdAt      DateTime        @default(now())
-  updateAt       DateTime        @updatedAt
-  userReactions  UserReactions[]
-  user           User?           @relation(fields: [userId], references: [id])
+  id            String          @id @default(uuid())
+  userId        String
+  content       String
+  theme         Theme           @relation(fields: [themeId], references: [id])
+  themeId       String
+  createdAt     DateTime        @default(now())
+  updateAt      DateTime        @updatedAt
+  userReactions UserReactions[]
+  user          User?           @relation(fields: [userId], references: [id])
 }
 
-model ThemeChapter {
+model Theme {
   id            String         @id @default(uuid())
   user          User?          @relation(fields: [userId], references: [id])
-  chapters      Chapters?      @relation(fields: [chapterId], references: [id])
+  chapters      Chapter?       @relation(fields: [chapterId], references: [id])
   chapterId     String
   titleTheme    String
   themeMessages ThemeMessage[]
@@ -78,9 +78,12 @@ model ThemeChapter {
   views         Int?
 }
 
-model Chapters {
+model Chapter {
   id String @id @default(uuid())
 
   chapterTitle  String
-  chaptersTheme ThemeChapter[]
+  chapterThemes Theme[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
 }

@@ -1,1 +1,1 @@
-export { ReviewItem } from './review-item.tsx'
+export { ReviewItem } from './review-item'

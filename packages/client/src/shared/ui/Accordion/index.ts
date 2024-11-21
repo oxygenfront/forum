@@ -1,1 +1,1 @@
-export { Accordion } from './accordion.tsx'
+export {Accordion} from "./accordion";

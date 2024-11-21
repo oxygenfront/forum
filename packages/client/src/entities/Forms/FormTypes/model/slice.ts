@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { IInitialState } from './types.ts'
+import type { IInitialState } from './types'
 
 const initialState: IInitialState = {
 	type: 'login',

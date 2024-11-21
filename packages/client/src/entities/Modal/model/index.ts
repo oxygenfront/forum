@@ -1,2 +1,2 @@
-export { toggleAuthModal, toggleUserModal, modalSlice } from './slice.ts'
-export { selectStatusModal } from './selectors.ts'
+export { toggleAuthModal, toggleUserModal, modalSlice } from './slice'
+export { selectStatusModal } from './selectors'

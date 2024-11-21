@@ -3,8 +3,10 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 dayjs.extend(relativeTime)
 
-export const timeSincePublication = (unix: number) => {
-	return dayjs(unix * 1000)
+export const timeSincePublication = (date: Date) => {
+	if (!date) return
+	const transformedDate = dayjs(date).unix()
+	return dayjs(transformedDate * 1000)
 		.locale('ru-ru')
 		.fromNow()
 }

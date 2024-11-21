@@ -1,1 +1,1 @@
-export { ModalSort } from './modal.tsx'
+export { ModalSort } from './modal'

@@ -1,1 +1,1 @@
-export { UserModal } from './modal.tsx'
+export { UserModal } from './modal'

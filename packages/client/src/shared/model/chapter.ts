@@ -1,11 +1,21 @@
-import type { ILatestActivity, IUser } from '@/shared/model'
+import { ITheme } from '@/shared/model/theme.ts'
+import { IUser } from '@/shared/model/user.ts'
+
+interface ILatestMessage {
+	id: string
+	userId: string
+	content: string
+	themeId: string
+	createdAt: Date
+	updateAt: Date
+	user: Pick<IUser, 'userLogin' | 'userImage'>
+}
 
 export interface IChapter {
 	id: string
-	title_chapter: string
-	count_themes: number // count themes in chapter
-	count_messages: number // count messages in chapter
-	last_message: ILatestActivity
-
-	user: IUser
+	chapterTitle: string
+	countThemes: number
+	countMessages: number
+	latestMessage: ILatestMessage
+	chapterThemes: ITheme[]
 }

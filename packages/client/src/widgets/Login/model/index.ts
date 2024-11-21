@@ -1,2 +1,2 @@
-export { rememberMeSlice, setRememberMe } from './slice.ts'
-export { selectRememberMe } from './selector.ts'
+export { rememberMeSlice, setRememberMe } from './slice'
+export { selectRememberMe } from './selector'

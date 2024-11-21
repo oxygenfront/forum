@@ -2,10 +2,15 @@ export enum PATH {
 	BASE = '',
 	ADMIN = '/admin',
 	WARRANTOR = '/garant-service',
-	CHAPTER = '/chapter/:slug',
-	THEME = '/chapter/:id',
+	CHAPTER = '/chapter/:slug/:id',
+	THEME = '/chapter/:slug/theme/:id',
 	MESSAGE = '/message/',
 	PROFILE = '/profile',
+}
+
+export enum UI_COMPONENT {
+	CHAPTER_LINK = 'chapter',
+	THEME_LINK = 'theme',
 }
 
 export enum ROLES {

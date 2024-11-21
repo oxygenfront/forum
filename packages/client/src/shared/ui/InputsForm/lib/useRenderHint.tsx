@@ -1,5 +1,5 @@
 import { Hint } from '@/shared/ui/Hint'
-import type { IForgotHint, ILoginHint, IRegisterHint } from '../model/types.ts'
+import type { IForgotHint, ILoginHint, IRegisterHint } from '../model/types'
 
 interface UseRenderHintProps {
 	hintForType: IRegisterHint | ILoginHint | IForgotHint

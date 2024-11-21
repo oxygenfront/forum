@@ -1,1 +1,1 @@
-export { StatsBlock } from './stats-block.tsx'
+export { StatsBlock } from './stats-block'

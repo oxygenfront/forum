@@ -1,1 +1,1 @@
-export { useGetChaptersQuery } from './getChapters.ts'
+export { useGetChaptersQuery } from './getChapters'

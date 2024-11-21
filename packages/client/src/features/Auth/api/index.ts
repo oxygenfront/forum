@@ -1,1 +1,1 @@
-export { useLoginMutation, useGetAuthQuery, useRegisterMutation } from './authApi.ts'
+export { useLoginMutation, useGetAuthQuery, useRegisterMutation } from './authApi'

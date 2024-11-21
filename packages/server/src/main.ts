@@ -1,4 +1,5 @@
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { ConfigService } from '@nestjs/config'
 import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
@@ -6,12 +7,10 @@ import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma'
 import { Route } from '../global/constants'
 import { EnvironmentVariables } from '../global/types'
 import { AppModule } from './app.module'
-
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
 
 	app.setGlobalPrefix(Route.BASE)
-
 	const configService = app.get(ConfigService<EnvironmentVariables>)
 
 	const prismaService: PrismaService = app.get(PrismaService)
@@ -27,6 +26,15 @@ async function bootstrap() {
 			transform: true,
 		}),
 	)
+
+	const corsOptions: CorsOptions = {
+		origin: ['http://localhost:5678'], // Replace with your React app's URL
+		methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+		allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+		credentials: true, // Enable credentials (cookies, authorization) if needed
+	}
+
+	app.enableCors(corsOptions)
 	const config = new DocumentBuilder()
 		.setTitle('Darkforum')
 		.setDescription('Darkforum API description')

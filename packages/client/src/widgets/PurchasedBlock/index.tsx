@@ -1,1 +1,1 @@
-export { PurchasedBlock } from './purchased-block.tsx'
+export { PurchasedBlock } from './purchased-block'

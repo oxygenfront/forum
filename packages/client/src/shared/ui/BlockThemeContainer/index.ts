@@ -1,1 +1,1 @@
-export { BlockThemeContainer } from './block.tsx'
+export { BlockThemeContainer } from './block'

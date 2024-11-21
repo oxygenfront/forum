@@ -1,1 +1,1 @@
-export { BlockContainer } from './block.tsx'
+export { BlockContainer } from './block'

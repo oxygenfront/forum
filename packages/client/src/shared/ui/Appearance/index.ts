@@ -1,1 +1,1 @@
-export { Appearance } from './appearance.tsx'
+export {Appearance} from "./appearance"

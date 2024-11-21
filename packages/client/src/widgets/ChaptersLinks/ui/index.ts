@@ -1,1 +1,1 @@
-export { ChaptersLinksBlock } from './links-block.tsx'
+export { ChaptersLinksBlock } from './links-block'

@@ -1,1 +1,1 @@
-export { Profile } from './profile.tsx'
+export { Profile} from "./profile"

@@ -1,1 +1,1 @@
-export { ThemeTitle } from './theme-title.tsx'
+export { ThemeTitle } from './theme-title'

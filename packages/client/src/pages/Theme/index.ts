@@ -1,1 +1,1 @@
-export { ThemePage } from './theme.tsx'
+export { ThemePage } from './theme'

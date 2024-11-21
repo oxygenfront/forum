@@ -1,1 +1,1 @@
-export { NavBlock } from './nav-block.tsx'
+export { NavBlock } from './nav-block'

@@ -1,1 +1,1 @@
-export { Aside } from './aside.tsx'
+export { Aside } from './aside'
