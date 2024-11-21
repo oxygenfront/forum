@@ -2,6 +2,7 @@
   "dependencies": {
     "@nestjs/mapped-types": "*",
     "@prisma/client": "5.12.1",
+    "argon2": "^0.41.1",
     "prisma": "5.22.0"
   },
   "name": "darkforum",

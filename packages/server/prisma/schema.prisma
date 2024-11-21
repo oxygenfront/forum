@@ -48,6 +48,8 @@ model User {
   is_close_wall_on_change Boolean @default(false)
   is_show_status_online   Boolean @default(false)
   is_private              Boolean @default(false)
+
+  refreshToken String?
 }
 
 model ThemeMessage {
