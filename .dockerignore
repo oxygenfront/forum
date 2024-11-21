@@ -19,7 +19,6 @@ LICENSE
 **/.DS_Store
 .editorconfig
 /packages/client/stats
-lefthook.yml
 biome.json
 biome.formatter.json
 biome.linter.json
