@@ -7,20 +7,24 @@ import { PiWechatLogoBold } from 'react-icons/pi'
 // import { PiWechatLogoBold } from 'react-icons/pi'
 import styles from './block.module.sass'
 interface BlockThemeContainer {
-	title?: string
-	username?: string
-	date_create?: number
-	count_views?: number
-	count_messages?: number
-	flag?: boolean
+	title: string
+	userLogin: string
+	createdAt: Date
+	views: number
+	countThemeMessages: number
+	flag: boolean
+	userImage: string
 }
 
-export const BlockThemeContainer: FC<BlockThemeContainer> = ({
+type BlockThemeContainerProps = Partial<BlockThemeContainer>
+
+export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 	title,
-	count_messages,
-	count_views,
-	date_create,
-	username,
+	countThemeMessages,
+	views,
+	createdAt,
+	userLogin,
+	userImage,
 	flag,
 }) => {
 	return (
@@ -38,21 +42,25 @@ export const BlockThemeContainer: FC<BlockThemeContainer> = ({
 					</div>
 					<ModalSort arrayTitles={[]} />
 				</div>
-				{flag && date_create && (
+				{flag && createdAt && (
 					<div className={styles.down}>
 						<div className={styles.user}>
-							<span className={styles.avatar}>Г</span>
-							<div className={styles.name}>{username}</div>
+							<img
+								src={userImage}
+								className={styles.avatar}
+								alt='Аватар'
+							/>
+							<div className={styles.name}>{userLogin}</div>
 							<div className={styles.dot} />
-							<div className={styles.date_create}>{timeSincePublication(date_create)}</div>
+							<div className={styles.date_create}>{timeSincePublication(createdAt)}</div>
 						</div>
 
 						<div className={styles.about}>
-							<div className={styles.views}>{count_views} просмотров</div>
+							<div className={styles.views}>{views} просмотров</div>
 							<div className={styles.dot} />
 							<div className={styles.messages}>
 								<PiWechatLogoBold />
-								{count_messages}
+								{countThemeMessages}
 							</div>
 						</div>
 					</div>

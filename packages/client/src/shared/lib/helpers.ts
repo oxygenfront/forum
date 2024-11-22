@@ -4,20 +4,27 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 export const timeSincePublication = (date: Date) => {
-	if (!date) return
+	if (!date) {
+		return
+	}
 	const transformedDate = dayjs(date).unix()
 	return dayjs(transformedDate * 1000)
 		.locale('ru-ru')
 		.fromNow()
 }
 
-export function createSlug(title: string) {
+export function createSlug(title: string | unknown) {
+	if (typeof title !== 'string') {
+		return
+	}
+
 	let slug = title
 		.toLowerCase()
-		.replace(/ /g, '-')
-		.replace(/[^\w\u0400-\u04FF-]+/g, '')
-		.replace(/--+(?=[a-zа-я])/g, '-')
-		.replace(/^[-]+|[-]+$/g, '')
+		.trim() // Убираем пробелы в начале и в конце
+		.replace(/ +/g, '-') // Заменяем все пробелы на дефисы
+		.replace(/[^\w\u0400-\u04FF-]+/g, '') // Удаляем все недопустимые символы
+		.replace(/--+/g, '-') // Заменяем последовательные дефисы на один
+		.replace(/^-+|-+$/g, '') // Удаляем дефисы в начале и в конце
 
 	slug = slug
 		.replace(/а/g, 'a')
@@ -55,4 +62,18 @@ export function createSlug(title: string) {
 		.replace(/я/g, 'ya')
 
 	return slug
+}
+
+export function replaceMessage(count_messages: number) {
+	if (count_messages > 1000) {
+		return String(Math.floor(count_messages / 1000)).concat('к')
+	}
+	return count_messages
+}
+
+export function trimmingText(str: string, maxLength = 20): string {
+	if (str.length <= maxLength) {
+		return str
+	}
+	return str.substring(0, maxLength).concat('...')
 }

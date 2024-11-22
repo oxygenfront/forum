@@ -1,29 +1,19 @@
 import { UI_COMPONENT } from '@/shared/model'
 import { BlockThemeContainer, ChapterLink } from '@/shared/ui'
-import { useLazyGetChapterPageQuery } from 'pages/Chapter/api/getChapters.ts'
-import { FC, useEffect } from 'react'
+import { Loader } from '@/shared/ui/Loader'
+import { useGetChapterPageQuery } from 'pages/Chapter/api/getChapters.ts'
+import { FC } from 'react'
 import { useParams } from 'react-router-dom'
 import styles from './chapter.module.sass'
 
 export const ChapterPage: FC = () => {
 	const { id } = useParams()
-	const [getChapterPage, { data, isLoading }] = useLazyGetChapterPageQuery()
+	const { data, isLoading } = useGetChapterPageQuery(id)
 
-	useEffect(() => {
-		if (id) {
-			getChapterPage(id)
-		}
-	}, [id])
-
-	if (isLoading || !data) {
-		return
-	}
-
-	const { chapterThemes } = data
-
+	const conditionalForShow = isLoading || !data
 	return (
 		<>
-			<BlockThemeContainer title={data.chapterTitle} />
+			{conditionalForShow ? null : <BlockThemeContainer title={data.chapterTitle} />}
 			<div className={styles.wrapper}>
 				<div className={styles.titles}>
 					<p className={styles.title}>Заголовок</p>
@@ -33,13 +23,19 @@ export const ChapterPage: FC = () => {
 					</div>
 				</div>
 
-				{chapterThemes.map((el) => (
-					<ChapterLink
-						key={el.id}
-						ui={UI_COMPONENT.THEME_LINK}
-						{...el}
-					/>
-				))}
+				{conditionalForShow ? (
+					<Loader loading={conditionalForShow} />
+				) : (
+					data.chapterThemes.map((el) => {
+						return (
+							<ChapterLink
+								{...el}
+								key={el.id}
+								ui={UI_COMPONENT.THEME_LINK}
+							/>
+						)
+					})
+				)}
 			</div>
 		</>
 	)

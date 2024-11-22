@@ -3,6 +3,7 @@ export enum ApiTag {
 	CHAPTERS = 'chapters',
 	USERS = 'users',
 	THEMES = 'themes',
+	MESSAGE = 'message',
 }
 
 export enum RequestMethod {
@@ -19,6 +20,7 @@ const DELETE = 'delete'
 const CHAPTERS = 'chapters'
 const USERS = 'users'
 const THEMES = 'themes'
+const MESSAGE = 'message'
 
 const LOGIN = 'auth'
 const REGISTER = 'register'
@@ -48,8 +50,14 @@ export const UPDATE_USERS_BY_ID = `${USERS}/${UPDATE}/:id`
 export const DELETE_USERS_BY_ID = `${USERS}/${DELETE}:id`
 
 // Theme Chapter
-export const GET_THEME_CHAPTER = `${THEMES}`
+export const GET_THEMES = `${THEMES}`
 export const GET_THEME_ID = `${THEMES}/:id`
 export const CREATE_THEME_BY_ID = `${THEMES}/${CREATE}`
 export const DELETE_THEME_BY_ID = `${THEMES}/${DELETE}/:id`
 export const UPDATE_THEME_BY_ID = `${THEMES}/${UPDATE}/:id`
+
+// Message
+export const UPDATE_MESSAGE_BY_ID = `${MESSAGE}/${UPDATE}/:id`
+export const CREATE_MESSAGE = `${MESSAGE}/${CREATE}`
+export const DELETE_MESSAGE_BY_ID = `${MESSAGE}/${DELETE}/:id`
+export const GET_MESSAGE_BY_ID = `${MESSAGE}/:id`

@@ -3,7 +3,7 @@ export enum PATH {
 	ADMIN = '/admin',
 	WARRANTOR = '/garant-service',
 	CHAPTER = '/chapter/:slug/:id',
-	THEME = '/chapter/:slug/theme/:id',
+	THEME = '/chapter/:slug/:id/theme/:slug/:id',
 	MESSAGE = '/message/',
 	PROFILE = '/profile',
 }
@@ -14,10 +14,10 @@ export enum UI_COMPONENT {
 }
 
 export enum ROLES {
-	ADMIN = 'admin',
-	USER = 'user',
-	WARRANTOR = 'warrantor',
-	SELLER = 'seller',
+	ADMIN = 'Администратор',
+	USER = 'Пользователь',
+	WARRANTOR = 'Гарант',
+	SELLER = 'Продавец',
 }
 
 export enum THEME_STATUS {

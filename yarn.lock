@@ -2897,6 +2897,7 @@ __metadata:
     "@prisma/client": "npm:5.12.1"
     argon2: "npm:^0.41.1"
     prisma: "npm:5.22.0"
+    react-spinners: "npm:^0.14.1"
   languageName: unknown
   linkType: soft
 
@@ -5498,6 +5499,16 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 10c0/b435510de78fd882bf6ca9800a73cd90cee418bd1d19efd91b8dcaebde36929bbb589e25d9f7eec24ceb84255e8d538bc1fe54e6ddb5c43c32798e2b720fa76d
+  languageName: node
+  linkType: hard
+
+"react-spinners@npm:^0.14.1":
+  version: 0.14.1
+  resolution: "react-spinners@npm:0.14.1"
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/5b3c101f789716331a0b6afad156293fb9aa05620e65494753001afcdb611788057f379b5979b34d570d527fa978003293266b59db505bf2d243ebab899ceeda
   languageName: node
   linkType: hard
 

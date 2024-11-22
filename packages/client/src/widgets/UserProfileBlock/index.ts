@@ -1,1 +1,1 @@
-export {UserBlock} from "./user-block"
+export { UserBlock } from './user-block'

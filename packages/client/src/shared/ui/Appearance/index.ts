@@ -1,1 +1,1 @@
-export {Appearance} from "./appearance"
+export { Appearance } from './appearance'

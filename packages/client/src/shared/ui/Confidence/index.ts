@@ -1,1 +1,1 @@
-export {Confidence} from "./confidence"
+export { Confidence } from './confidence'

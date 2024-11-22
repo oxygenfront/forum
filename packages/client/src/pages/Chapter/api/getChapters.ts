@@ -4,11 +4,11 @@ import type { IChapter } from '@/shared/model'
 
 export const chaptersApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getChapterPage: builder.query<IChapter, string>({
+		getChapterPage: builder.query<IChapter, unknown>({
 			query: (id) => `${GET_CHAPTERS}/${id}`,
 			providesTags: [ApiTag.CHAPTERS],
 		}),
 	}),
 })
 
-export const { useLazyGetChapterPageQuery } = chaptersApi
+export const { useGetChapterPageQuery } = chaptersApi

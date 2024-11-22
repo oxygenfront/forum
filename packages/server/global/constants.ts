@@ -21,4 +21,12 @@ export enum SwaggerApiTag {
 	USERS = 'Users API',
 	CHAPTERS = 'Chapters API',
 	ChapterTheme = 'Theme API',
+	Messages = 'Messages API',
+}
+
+export enum ROLES {
+	ADMIN = 'admin',
+	USER = 'user',
+	WARRANTOR = 'warrantor',
+	SELLER = 'seller',
 }

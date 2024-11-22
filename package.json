@@ -3,8 +3,10 @@
     "@nestjs/mapped-types": "*",
     "@prisma/client": "5.12.1",
     "argon2": "^0.41.1",
-    "prisma": "5.22.0"
+    "prisma": "5.22.0",
+    "react-spinners": "^0.14.1"
   },
+  "private": false,
   "name": "darkforum",
   "keywords": [
     "yarn workspaces",
