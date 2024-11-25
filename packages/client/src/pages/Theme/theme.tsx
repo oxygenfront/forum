@@ -10,37 +10,49 @@ export const ThemePage: FC = () => {
 	const { id } = useParams()
 	const { data, isLoading } = useGetThemePageQuery(id)
 	const [themeId, setThemeId] = useState('')
+
 	const conditionalForShow = isLoading || !data
 
-	useEffect(() => () => setThemeId(''), [])
+	useEffect(() => {
+		if (data) {
+			setThemeId(data.id)
+		}
+		return () => setThemeId('')
+	}, [data])
 
 	if (conditionalForShow) {
 		return <Loader loading={isLoading} />
 	}
 
 	return (
-		<div>
-			<BlockThemeContainer
-				flag
-				title={data.titleTheme}
-				createdAt={data.themeMessages[0].createdAt}
-				userLogin={data.user.userLogin}
-				userImage={data.user.userImage}
-				views={data.views ?? 0}
-				countThemeMessages={data.countThemeMessages}
-			/>
-			{data.themeMessages.map((message) => {
-				if (themeId === '') {
-					setThemeId(message.themeId)
-				}
-				return (
-					<Message
-						key={message.id}
-						{...message}
+		<>
+			{!data || data.themeMessages.length ? (
+				<>
+					<BlockThemeContainer
+						flag
+						title={data.titleTheme}
+						createdAt={data.themeMessages[0].createdAt}
+						userLogin={data.user.userLogin}
+						userImage={data.user.userImage}
+						views={data.views ?? 0}
+						countThemeMessages={data.countThemeMessages}
 					/>
-				)
-			})}
+					{data.themeMessages.map((message) => {
+						if (themeId === '') {
+							setThemeId(message.themeId)
+						}
+						return (
+							<Message
+								key={message.id}
+								{...message}
+							/>
+						)
+					})}
+				</>
+			) : (
+				'Сообщений по этой теме нет'
+			)}
 			<CreateMessage themeId={themeId} />
-		</div>
+		</>
 	)
 }
