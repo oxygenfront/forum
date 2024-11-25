@@ -1,34 +1,73 @@
+import { selectUserData } from '@/features/Auth'
 import { CustomTextarea } from '@/features/CreateMessage/CustomTextArea'
-import { useCreateMessageMutation } from '@/features/CreateMessage/api'
-import { selectMessage } from '@/features/CreateMessage/model'
-import { useAppSelector } from '@/shared/lib/hooks.ts'
+import { useCreateMessageMutation, useUpdateMessageMutation } from '@/features/CreateMessage/api'
+import { selectMessage, setValue } from '@/features/CreateMessage/model'
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
+import { FC, KeyboardEvent } from 'react'
 import styles from './create-message.module.sass'
 
 interface ICreateMessageProps {
 	themeId: string
 }
-export const CreateMessage = (props: ICreateMessageProps) => {
-	const selectData = useAppSelector(selectMessage)
-	const [createMessage] = useCreateMessageMutation()
 
-	function handleCreateMessage() {
-		createMessage(selectData)
+export const CreateMessage: FC<ICreateMessageProps> = ({ themeId }) => {
+	const selectDataMessage = useAppSelector(selectMessage)
+	const { id: userId } = useAppSelector(selectUserData)
+	const dispatch = useAppDispatch()
+
+	const [createMessage, { isSuccess: isSuccessCreate }] = useCreateMessageMutation()
+	const [updateMessage, { isSuccess: isSuccessUpdate }] = useUpdateMessageMutation()
+
+	const dataMessage = {
+		content: selectDataMessage.content,
+		themeId,
+		userId: userId,
+	}
+
+	const handleActionMessage = () => {
+		if (selectDataMessage.isEdit) {
+			updateMessage({ id: selectDataMessage.messageId, content: selectDataMessage.content })
+		} else {
+			createMessage(dataMessage)
+		}
+	}
+
+	const handleCancelEdit = () => {
+		dispatch(setValue({ isEdit: false, content: '' }))
+	}
+
+	const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+		if (event.key === 'Enter' && !event.shiftKey) {
+			event.preventDefault()
+			handleActionMessage()
+		}
 	}
 
 	return (
-		<>
-			<div className={styles.wrapper}>
-				<CustomTextarea themeId={props.themeId} />
-			</div>
+		<div className={styles.wrapper}>
+			<CustomTextarea
+				isSuccessCreate={isSuccessCreate}
+				isSuccessUpdate={isSuccessUpdate}
+				onKeyDown={handleKeyDown}
+			/>
 			<div className={styles.button_wrapper}>
+				{selectDataMessage.isEdit && (
+					<button
+						type='button'
+						className={styles.button}
+						onClick={handleCancelEdit}
+					>
+						Отменить редактирование
+					</button>
+				)}
 				<button
 					type='button'
 					className={styles.button}
-					onClick={handleCreateMessage}
+					onClick={handleActionMessage}
 				>
-					Отправить
+					{selectDataMessage.isEdit ? 'Редактировать' : 'Комментировать'}
 				</button>
 			</div>
-		</>
+		</div>
 	)
 }

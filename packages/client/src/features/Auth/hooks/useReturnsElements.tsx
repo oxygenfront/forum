@@ -4,7 +4,6 @@ import { toggleAuthModal } from '@/entities/Modal'
 import { setIsLogin, setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
 
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
-import { ROLES } from '@/shared/model'
 import type { ILoginResponse } from '@/shared/model/loginResponse'
 
 import { setHint } from '@/shared/ui/InputsForm'
@@ -43,7 +42,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 		} else {
 			dispatch(setRememberMe(true))
 			dispatch(clearData())
-			login({ email: storeLoginData.userEmail, password: storeLoginData.userPassword })
+			login({ userEmail: storeLoginData.userEmail, userPassword: storeLoginData.userPassword })
 		}
 	}
 
@@ -77,10 +76,10 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 		} else {
 			dispatch(setRememberMe(true))
 			register({
-				email: storeRegisterData.userEmail,
+				userEmail: storeRegisterData.userEmail,
 				userLogin: storeRegisterData.userLogin,
-				password: storeRegisterData.userPassword,
-				role: ROLES.USER,
+				userPassword: storeRegisterData.userPassword,
+				role: storeRegisterData.role,
 			})
 			dispatch(clearData())
 		}
@@ -89,10 +88,10 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 	useEffect(() => {
 		const handleAuthSuccess = (fetchData: ILoginResponse) => {
 			if (rememberMe) {
-				localStorage.setItem('token', fetchData.token)
+				localStorage.setItem('token', fetchData.accessToken)
 			}
-			sessionStorage.setItem('token', fetchData.token)
-			dispatch(setUserData(fetchData.data))
+			sessionStorage.setItem('token', fetchData.accessToken)
+			dispatch(setUserData(fetchData))
 		}
 
 		if ((!isLoadingLogin && isSuccessLogin) || (!isLoadingRegister && isSuccessRegister)) {
@@ -125,7 +124,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 						</div>
 						<span className={styles.hello}>Вход в аккаунт</span>
 						<span className={styles.about}>
-							Пожалуйста, введите данные для входа <br /> в аккаунт{' '}
+							Пожалуйста, введите данные для входа <br /> в аккаунт
 						</span>
 					</div>
 				)

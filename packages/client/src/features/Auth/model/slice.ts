@@ -1,12 +1,12 @@
-import type { ROLES } from '@/shared/model'
+import { ROLES } from '@/shared/model'
 import { createSlice } from '@reduxjs/toolkit'
 
 type TUserData = {
-	id: null | number
-	email: null | string
-	role: null | ROLES
-	userLogin: null | string
-	userImage?: null | string
+	id: string
+	userEmail: string
+	role: ROLES
+	userLogin: string
+	userImage?: string
 }
 
 type IResponseUser = {
@@ -16,7 +16,7 @@ type IResponseUser = {
 
 const initialState: IResponseUser = {
 	isLogin: false,
-	userData: { id: null, email: null, role: null, userLogin: null },
+	userData: { id: '', userEmail: '', role: ROLES.USER, userLogin: '' },
 }
 
 export const userSlice = createSlice({
@@ -24,10 +24,10 @@ export const userSlice = createSlice({
 	initialState,
 	reducers: {
 		setUserData: ({ userData }, { payload }: { payload: TUserData }) => {
-			userData.email = payload.email
 			userData.id = payload.id
-			userData.userLogin = payload.userLogin
 			userData.role = payload.role
+			userData.userEmail = payload.userEmail
+			userData.userLogin = payload.userLogin
 			userData.userImage = payload.userImage
 		},
 		setIsLogin: (state, { payload }) => {

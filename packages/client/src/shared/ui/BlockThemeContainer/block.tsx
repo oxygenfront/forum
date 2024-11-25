@@ -1,4 +1,4 @@
-import { ModalSort } from '@/features/ModalSort'
+import { ModalOptions } from '@/features/ModalSort'
 import { timeSincePublication } from '@/shared/lib/helpers'
 import classNames from 'classnames'
 import type { FC } from 'react'
@@ -40,7 +40,7 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 							</div>
 						)}
 					</div>
-					<ModalSort arrayTitles={[]} />
+					<ModalOptions arrayActions={[]} />
 				</div>
 				{flag && createdAt && (
 					<div className={styles.down}>

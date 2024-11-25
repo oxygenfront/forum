@@ -4,10 +4,29 @@
   justify-content: center
   font-size: 33px
   transition: all .2s linear
+
   &:disabled
     pointer-events: none
     background-color: transparent
     color: white
     cursor: not-allowed
+
   &:hover
-      color: #00FFE0
+    color: #00FFE0
+
+.user
+  &_image
+    width: 45px
+    height: 45px
+    display: flex
+    align-items: center
+    justify-content: center
+    object-fit: cover
+    overflow: hidden
+    border-radius: 50%
+
+  &_ico
+    display: flex
+    align-items: center
+    justify-content: center
+    font-size: 30px

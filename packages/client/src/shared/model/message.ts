@@ -1,6 +1,7 @@
 import { IUser } from '@/shared/model'
 
 export interface IMessage {
+	userThemeId: string
 	id: string
 	userId: string
 	content: string

@@ -7,6 +7,7 @@ export interface IRegister {
 	userEmail: string
 	userPassword: string
 	userConfirmPassword: string
+	role: string
 }
 export interface IForgot {
 	userEmail: string

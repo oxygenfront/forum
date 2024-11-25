@@ -1,5 +1,11 @@
 import styles from './message.module.sass'
 
+import { Action } from '@/features/Action/action.tsx'
+import { selectUserData } from '@/features/Auth'
+import { useDeleteMessageMutation } from '@/features/CreateMessage/api'
+import { setValue } from '@/features/CreateMessage/model'
+import { ModalOptions } from '@/features/ModalSort'
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
 import { type IMessage, ROLES } from '@/shared/model'
 import { type FC } from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
@@ -7,9 +13,36 @@ import { AiOutlineDislike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
 
 export const Message: FC<IMessage> = (message) => {
-	const { content, user, userId } = message
+	const { content, user, userId: messageUserId, id: messageId, themeId } = message
+	const { id: userId } = useAppSelector(selectUserData)
+	const dispatch = useAppDispatch()
+	const [deleteMessage] = useDeleteMessageMutation()
+	const handleDeleteMessage = () => {
+		deleteMessage(messageId)
+	}
+
+	const handleUpdateMessage = () => {
+		dispatch(setValue({ content, themeId, userId: message.userId, messageId: messageId, isEdit: true }))
+	}
+
 	return (
 		<div className={styles.container}>
+			{message.user.id === userId && (
+				<ModalOptions
+					arrayActions={[
+						<Action
+							nameAction='Удалить'
+							action={handleDeleteMessage}
+							key={`delete-${messageId}`}
+						/>,
+						<Action
+							nameAction='Редактировать'
+							action={handleUpdateMessage}
+							key={`edit-${messageId}`}
+						/>,
+					]}
+				/>
+			)}
 			<div className={styles.user_wrapper}>
 				<div className={styles.user}>
 					<img
@@ -19,7 +52,9 @@ export const Message: FC<IMessage> = (message) => {
 					/>
 					<div className={styles.user_desc}>
 						<div className={styles.user_name}>{user.userLogin}</div>
-						<div className={styles.user_role}>{user.id === userId ? ROLES.SELLER : 'user'}</div>
+						<div className={styles.user_role}>
+							{message.userThemeId === messageUserId ? ROLES.SELLER : 'Пользователь'}
+						</div>
 					</div>
 				</div>
 				<div className={styles.content}>{content}</div>

@@ -1,4 +1,4 @@
-import { ModalSort } from '@/features/ModalSort'
+import { ModalOptions } from '@/features/ModalSort'
 import { Title } from '@/shared/ui'
 import classNames from 'classnames'
 import type { FC, ReactNode } from 'react'
@@ -18,7 +18,7 @@ export const BlockContainer: FC<IProps> = ({ children, mod, title, modalTitles }
 		<div className={classNames(styles.container, mod ? styles[mod] : '')}>
 			<div className={styles.top}>
 				{title ? <Title>{title}</Title> : null}
-				{modalTitles ? <ModalSort arrayTitles={modalTitles} /> : null}
+				{modalTitles ? <ModalOptions arrayActions={modalTitles} /> : null}
 			</div>
 			<hr className={styles.hr} />
 			{children}

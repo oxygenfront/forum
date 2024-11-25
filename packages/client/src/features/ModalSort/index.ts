@@ -1,1 +1,1 @@
-export { ModalSort } from './modal'
+export { ModalOptions } from './modal'

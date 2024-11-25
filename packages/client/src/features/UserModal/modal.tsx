@@ -1,5 +1,6 @@
 import { toggleUserModal } from '@/entities/Modal'
 import { selectUserData, setIsLogin } from '@/features/Auth'
+import { useLogoutMutation } from '@/features/Auth/api'
 import { useOutsideClick } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { type FC, useRef } from 'react'
@@ -11,6 +12,7 @@ import styles from './modal.module.sass'
 
 export const UserModal: FC = () => {
 	const { userImage, userLogin } = useAppSelector(selectUserData)
+	const [logout] = useLogoutMutation()
 	const dispatch = useAppDispatch()
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -19,6 +21,7 @@ export const UserModal: FC = () => {
 	}
 
 	function handleLogout() {
+		logout({})
 		localStorage.removeItem('token')
 		sessionStorage.removeItem('token')
 		dispatch(setIsLogin(false))
@@ -33,7 +36,15 @@ export const UserModal: FC = () => {
 		>
 			<div className={styles.user}>
 				<div className={styles.user_login}>{userLogin}</div>
-				<div className={styles.user_image}>{userImage || <VscAccount />}</div>
+				{userImage ? (
+					<img
+						src={userImage}
+						alt=''
+						className={styles.user_image}
+					/>
+				) : (
+					<div className={styles.user_ico}>{<VscAccount />}</div>
+				)}
 			</div>
 			<hr className={styles.hr} />
 			<div className={styles.links}>

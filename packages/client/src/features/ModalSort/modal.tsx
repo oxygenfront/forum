@@ -1,9 +1,9 @@
 import classNames from 'classnames'
-import React, { type FC, useEffect, useRef, useState } from 'react'
+import React, { type FC, ReactNode, useEffect, useRef, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import styles from './modal.module.sass'
 
-export const ModalSort: FC<{ arrayTitles: string[] }> = ({ arrayTitles }) => {
+export const ModalOptions: FC<{ arrayActions: ReactNode[] }> = ({ arrayActions }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const modalRef = useRef<HTMLDivElement | null>(null)
 
@@ -39,22 +39,24 @@ export const ModalSort: FC<{ arrayTitles: string[] }> = ({ arrayTitles }) => {
 			className={styles.wrapper}
 			ref={modalRef}
 		>
-			<button
-				type='button'
-				onClick={() => setIsOpen(!isOpen)}
-				className={classNames(styles.button__open, { [styles.active]: isOpen })}
-			>
-				<BsThreeDotsVertical />
-			</button>
-			{isOpen && arrayTitles.length > 0 && (
-				<div className={styles.modal}>
-					{arrayTitles.map((el, index) => (
-						<React.Fragment key={`${el}_${index + 1}`}>
-							<div className={styles.modal__item}>{el}</div>
-						</React.Fragment>
-					))}
-				</div>
-			)}
+			<div className={styles.wrapper__absolute}>
+				<button
+					type='button'
+					onClick={() => setIsOpen(!isOpen)}
+					className={classNames(styles.button__open, { [styles.active]: isOpen })}
+				>
+					<BsThreeDotsVertical />
+				</button>
+				{isOpen && arrayActions.length > 0 && (
+					<div className={styles.modal}>
+						{arrayActions.map((el, i) => (
+							<React.Fragment key={(el as React.ReactElement).key || undefined}>
+								{el} {i !== arrayActions.length - 1 && <hr className={styles.hr} />}
+							</React.Fragment>
+						))}
+					</div>
+				)}
+			</div>
 		</div>
 	)
 }

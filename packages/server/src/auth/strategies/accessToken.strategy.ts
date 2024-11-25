@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-
-type JwtPayload = {
-	sub: string
-	username: string
-}
+import { UsersService } from 'src/users/users.service'
 
 @Injectable()
-export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
-	constructor() {
+export class AccessTokenStrategy extends PassportStrategy(Strategy) {
+	constructor(
+		private usersService: UsersService,
+		private configService: ConfigService,
+	) {
 		super({
-			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			secretOrKey: process.env.JWT_ACCESS_SECRET,
+			secretOrKey: configService.get<string>('JWT_ACCESS_SECRET'),
+			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Извлекаем токен из заголовка
 		})
 	}
 
-	validate(payload: JwtPayload) {
-		return payload
+	async validate(payload: any) {
+		return this.usersService.findById(payload.sub)
 	}
 }

@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
+import { AuthMiddleware } from './auth/middleware/auth.middleware'
 import { ChaptersModule } from './chapters/chapters.module'
 import { MessageModule } from './message/message.module'
 import { ChapterThemeModule } from './theme/theme.module'
@@ -40,4 +41,8 @@ import { UsersModule } from './users/users.module'
 	controllers: [AppController],
 	providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(AuthMiddleware).forRoutes('auth/logout', 'auth/refresh')
+	}
+}

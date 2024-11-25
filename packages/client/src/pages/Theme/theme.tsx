@@ -10,7 +10,6 @@ export const ThemePage: FC = () => {
 	const { id } = useParams()
 	const { data, isLoading } = useGetThemePageQuery(id)
 	const [themeId, setThemeId] = useState('')
-
 	const conditionalForShow = isLoading || !data
 
 	useEffect(() => {
@@ -45,6 +44,7 @@ export const ThemePage: FC = () => {
 							<Message
 								key={message.id}
 								{...message}
+								userThemeId={data.userId}
 							/>
 						)
 					})}
@@ -52,7 +52,7 @@ export const ThemePage: FC = () => {
 			) : (
 				'Сообщений по этой теме нет'
 			)}
-			<CreateMessage themeId={themeId} />
+			<CreateMessage themeId={data.id} />
 		</>
 	)
 }

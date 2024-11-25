@@ -1,5 +1,5 @@
-import { selectIsLogin, setIsLogin, setUserData, useGetAuthQuery } from '@/features/Auth'
-import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { selectIsLogin, setIsLogin, setUserData, useGetAuthQuery, useLoginMutation } from '@/features/Auth'
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
 import { PATH } from '@/shared/model'
 import { Container } from '@/shared/ui'
 import { Aside } from '@/widgets/Aside'
@@ -13,6 +13,7 @@ import styles from './layout.module.sass'
 
 export const Layout: FC = () => {
 	const { pathname } = useLocation()
+	const [_, { isSuccess: isSuccessLogin }] = useLoginMutation()
 	const { data, isSuccess } = useGetAuthQuery({})
 	const isLogin = useAppSelector(selectIsLogin)
 	const dispatch = useAppDispatch()
@@ -21,7 +22,7 @@ export const Layout: FC = () => {
 			dispatch(setUserData(data))
 			dispatch(setIsLogin(true))
 		}
-	}, [data, isSuccess])
+	}, [data, isSuccessLogin])
 	return (
 		<>
 			<Container>

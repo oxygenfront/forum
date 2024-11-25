@@ -7,6 +7,7 @@ export enum Route {
 	REGISTER = 'register',
 	CREATE = 'create',
 	GET_BY_ID = ':id',
+	AUTH_ME = 'auth_me',
 	GET_BY_USERNAME = ':username',
 	UPDATE_BY_ID = 'update/:id',
 	GET_BY_EMAIL = ':email',

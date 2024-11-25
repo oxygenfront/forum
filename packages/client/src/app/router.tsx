@@ -5,7 +5,6 @@ import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
 import { PATH } from '@/shared/model'
 import { ChaptersLinksBlock } from '@/widgets/ChaptersLinks'
-import { Message } from '@/widgets/MessageBlock'
 import { createBrowserRouter } from 'react-router-dom'
 
 export const router = createBrowserRouter([
@@ -28,10 +27,6 @@ export const router = createBrowserRouter([
 			{
 				path: PATH.THEME,
 				element: <ThemePage />,
-			},
-			{
-				path: PATH.MESSAGE,
-				element: <Message />,
 			},
 			{
 				path: PATH.PROFILE,

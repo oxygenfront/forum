@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Route, SwaggerApiTag } from '../../global/constants'
-import { CreateUserDto } from './dto/create-user.dto'
+import { RegisterDto } from '../auth/dto/register.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './users.service'
 
@@ -11,8 +11,8 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Post(Route.CREATE)
-	create(@Body() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto)
+	create(@Body() registerUserDto: RegisterDto) {
+		return this.usersService.create(registerUserDto)
 	}
 
 	@Get()

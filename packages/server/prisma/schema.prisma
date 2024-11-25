@@ -27,7 +27,7 @@ model UserReactions {
   themeMessageId String
   reactionType   ReactionType
   user           User         @relation(fields: [userId], references: [id])
-  themeMessages  ThemeMessage @relation(fields: [themeMessageId], references: [id])
+  themeMessage   ThemeMessage @relation(fields: [themeMessageId], references: [id])
 }
 
 model User {
@@ -40,9 +40,8 @@ model User {
   themeChapter Theme[]
   createdAt    DateTime @default(now())
 
-  themeMessageId String?
-  userReaction   UserReactions[]
-  themeMessages  ThemeMessage[]
+  userReaction  UserReactions[]
+  themeMessages ThemeMessage[]
 
   is_show_animated_avatar Boolean @default(false)
   is_close_wall_on_change Boolean @default(false)

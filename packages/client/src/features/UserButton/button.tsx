@@ -19,7 +19,15 @@ export const UserButton: FC = () => {
 			disabled={userModal}
 			onClick={handleOpen}
 		>
-			{userImage || <VscAccount />}
+			{userImage ? (
+				<img
+					src={userImage}
+					alt=''
+					className={styles.user_image}
+				/>
+			) : (
+				<div className={styles.user_ico}>{<VscAccount />}</div>
+			)}
 		</button>
 	)
 }

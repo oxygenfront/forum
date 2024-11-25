@@ -3,4 +3,4 @@ export {
 	useCreateMessageMutation,
 	useDeleteMessageMutation,
 	useGetMessageByIdQuery,
-} from './createMessageApi'
+} from './message.ts'

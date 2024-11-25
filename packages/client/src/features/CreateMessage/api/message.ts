@@ -4,11 +4,11 @@ import {
 	DELETE_MESSAGE_BY_ID,
 	GET_MESSAGE_BY_ID,
 	RequestMethod,
-	UPDATE_MESSAGE_BY_ID,
+	UPDATE_MESSAGE,
 	rootApi,
 } from '@/shared/api'
 
-const createMessageApi = rootApi.injectEndpoints({
+const messageApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
 		createMessage: builder.mutation({
 			query: (body) => ({
@@ -25,9 +25,9 @@ const createMessageApi = rootApi.injectEndpoints({
 			},
 		}),
 		updateMessage: builder.mutation({
-			query: ({ id, body }) => ({
-				url: `${UPDATE_MESSAGE_BY_ID}/${id}`,
-				body: body,
+			query: ({ id, content }) => ({
+				url: `${UPDATE_MESSAGE}/${id}`,
+				body: { content },
 				method: RequestMethod.PATCH,
 			}),
 			invalidatesTags: (_result, error) => {
@@ -35,7 +35,7 @@ const createMessageApi = rootApi.injectEndpoints({
 					return []
 				}
 
-				return [ApiTag.MESSAGE]
+				return [ApiTag.THEMES, ApiTag.CHAPTERS, ApiTag.MESSAGE]
 			},
 		}),
 		deleteMessage: builder.mutation({
@@ -48,7 +48,7 @@ const createMessageApi = rootApi.injectEndpoints({
 					return []
 				}
 
-				return [ApiTag.MESSAGE]
+				return [ApiTag.THEMES, ApiTag.CHAPTERS]
 			},
 		}),
 		getMessageById: builder.query({
@@ -58,4 +58,4 @@ const createMessageApi = rootApi.injectEndpoints({
 })
 
 export const { useCreateMessageMutation, useDeleteMessageMutation, useGetMessageByIdQuery, useUpdateMessageMutation } =
-	createMessageApi
+	messageApi

@@ -1,15 +1,20 @@
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
+import { ValidationPipe } from '@nestjs/common'
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { ConfigService } from '@nestjs/config'
-import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core'
+import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+
 import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma'
 import { Route } from '../global/constants'
 import { EnvironmentVariables } from '../global/types'
+
+// biome-ignore lint/style/noNamespaceImport: <explanation>
+import * as cookieParser from 'cookie-parser'
+
 import { AppModule } from './app.module'
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
-
+	app.use(cookieParser())
 	app.setGlobalPrefix(Route.BASE)
 	const configService = app.get(ConfigService<EnvironmentVariables>)
 
@@ -28,10 +33,10 @@ async function bootstrap() {
 	)
 
 	const corsOptions: CorsOptions = {
-		origin: ['http://localhost:5678'], // Replace with your React app's URL
-		methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-		allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-		credentials: true, // Enable credentials (cookies, authorization) if needed
+		origin: ['http://localhost:5678'],
+		methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		credentials: true,
 	}
 
 	app.enableCors(corsOptions)
@@ -49,8 +54,6 @@ async function bootstrap() {
 
 	// biome-ignore lint/correctness/useHookAtTopLevel: <explanation>
 	app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
-	// biome-ignore lint/correctness/useHookAtTopLevel: <explanation>
-	app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
 	const port = configService.get('PORT', { infer: true })
 

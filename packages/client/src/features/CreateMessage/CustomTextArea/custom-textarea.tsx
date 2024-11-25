@@ -1,20 +1,38 @@
 import { selectMessage, setValue } from '@/features/CreateMessage/model'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
 import classNames from 'classnames'
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FC, KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { RxFontBold, RxFontItalic, RxUnderline } from 'react-icons/rx'
 import styles from './custom-textarea.module.sass'
 
-export const CustomTextarea = ({ themeId }: { themeId: string }) => {
+interface ICustomTextAreaProps {
+	onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void
+	isSuccessCreate: boolean
+	isSuccessUpdate: boolean
+}
+export const CustomTextarea: FC<ICustomTextAreaProps> = ({ onKeyDown, isSuccessUpdate, isSuccessCreate }) => {
 	const dispatch = useAppDispatch()
-	const { content } = useAppSelector(selectMessage)
+	const selectData = useAppSelector(selectMessage)
 
 	const [isFocused, setIsFocused] = useState(false)
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
 	const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		dispatch(setValue({ themeId, content: e.target.value, userId: 'f5bbb50d-5008-4892-8bc8-949657aeaa55' }))
+		dispatch(setValue({ ...selectData, content: e.target.value }))
 	}
+
+	useEffect(() => {
+		if (selectData.isEdit && textareaRef.current) {
+			textareaRef.current.focus()
+		}
+	}, [selectData.isEdit, selectData.content])
+
+	useEffect(() => {
+		if (isSuccessUpdate || isSuccessCreate) {
+			dispatch(setValue({ content: '', isEdit: false }))
+		}
+	}, [isSuccessUpdate, isSuccessCreate])
+
 	const adjustHeight = () => {
 		if (textareaRef.current) {
 			textareaRef.current.style.height = 'auto'
@@ -23,7 +41,7 @@ export const CustomTextarea = ({ themeId }: { themeId: string }) => {
 	}
 	useEffect(() => {
 		adjustHeight()
-	}, [content])
+	}, [selectData.content])
 
 	return (
 		<div className={styles.wrapper}>
@@ -31,21 +49,18 @@ export const CustomTextarea = ({ themeId }: { themeId: string }) => {
 				<div className={styles.header__icons}>
 					<button
 						type='button'
-						// onClick={handleBold}
 						className={styles.iconButton}
 					>
 						<RxFontBold />
 					</button>
 					<button
 						type='button'
-						// onClick={handleItalic}
 						className={styles.iconButton}
 					>
 						<RxFontItalic />
 					</button>
 					<button
 						type='button'
-						// onClick={handleUnderline}
 						className={styles.iconButton}
 					>
 						<RxUnderline />
@@ -60,7 +75,8 @@ export const CustomTextarea = ({ themeId }: { themeId: string }) => {
 					suppressContentEditableWarning={true}
 					onFocus={() => setIsFocused(true)}
 					onBlur={() => setIsFocused(false)}
-					value={content}
+					onKeyDown={onKeyDown}
+					value={selectData.content}
 					onChange={handleChange}
 					placeholder='Написать комментарий...'
 				/>

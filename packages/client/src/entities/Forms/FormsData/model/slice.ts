@@ -11,6 +11,7 @@ const initialState: IInitialState = {
 		userEmail: '',
 		userPassword: '',
 		userConfirmPassword: '',
+		role: 'user',
 	},
 	forgot: {
 		userEmail: '',
