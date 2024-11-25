@@ -37,7 +37,7 @@ coverage
 
 # Dependency directories
 node_modules/
-
+darkforum_data/
 # TypeScript cache
 *.tsbuildinfo
 
