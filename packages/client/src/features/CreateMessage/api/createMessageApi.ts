@@ -21,11 +21,15 @@ const createMessageApi = rootApi.injectEndpoints({
 					return []
 				}
 
-				return [ApiTag.MESSAGE, ApiTag.THEMES, ApiTag.CHAPTERS]
+				return [ApiTag.THEMES, ApiTag.CHAPTERS]
 			},
 		}),
 		updateMessage: builder.mutation({
-			query: ({ id, body }) => ({ url: `${UPDATE_MESSAGE_BY_ID}/${id}`, body: body, method: RequestMethod.PATCH }),
+			query: ({ id, body }) => ({
+				url: `${UPDATE_MESSAGE_BY_ID}/${id}`,
+				body: body,
+				method: RequestMethod.PATCH,
+			}),
 			invalidatesTags: (_result, error) => {
 				if (error) {
 					return []

@@ -7,6 +7,7 @@ import styles from './search.module.sass'
 export const Search: FC = () => {
 	const [active, setActive] = useState(false)
 	const inputRef = useRef<HTMLInputElement | null>(null)
+
 	const [inputValue, setInputValue] = useState<string>('')
 	useEffect(() => {
 		if (active && inputRef.current) {

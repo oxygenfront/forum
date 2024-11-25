@@ -17,8 +17,8 @@ export const CustomTextarea = ({ themeId }: { themeId: string }) => {
 	}
 	const adjustHeight = () => {
 		if (textareaRef.current) {
-			textareaRef.current.style.height = 'auto' // Сбрасываем высоту
-			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Устанавливаем высоту в зависимости от содержимого
+			textareaRef.current.style.height = 'auto'
+			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
 		}
 	}
 	useEffect(() => {
