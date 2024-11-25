@@ -9,50 +9,73 @@ import { PATH } from '@/shared/model'
 import classnames from 'classnames'
 import type { FC } from 'react'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import styles from './header.module.sass'
+
 export const Header: FC = () => {
 	const isLogin = useAppSelector(selectIsLogin)
 	const { userModal } = useAppSelector(selectStatusModal)
+	const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+	const toggleMenu = () => {
+		setIsMenuOpen((prev) => !prev)
+	}
 
 	return (
 		<header className={styles.header}>
 			<div className={styles.left_block}>
-				<div className='logo'>Лого</div>
-				<nav className={styles.navbar}>
+				<div className={styles.burger}>
+					<div
+						className={classnames(styles.hamburger, {[styles.hamburger_active]: isMenuOpen})}
+						onClick={toggleMenu}
+					>
+						<tspan/>
+						<tspan/>
+						<tspan/>
+					</div>
+					<div className={styles.logo}>Лого</div>
+				</div>
+
+				<nav className={classnames(styles.navbar, {[styles.navbar_open]: isMenuOpen})}>
 					<Link
 						to='/'
 						className={styles.navbar__button}
+						onClick={() => setIsMenuOpen(false)}
 					>
 						Форум
 					</Link>
-					<span className={styles.vertical_line} />
+					<span className={styles.vertical_line}/>
 					<Link
 						to='#...'
 						className={styles.navbar__button}
+						onClick={() => setIsMenuOpen(false)}
 					>
 						Новости
 					</Link>
-					<span className={styles.vertical_line} />
+					<span className={styles.vertical_line}/>
 					<Link
 						to='#...'
 						className={classnames(styles.navbar__button, styles.vip)}
+						onClick={() => setIsMenuOpen(false)}
 					>
 						VIP
 					</Link>
-					<span className={styles.vertical_line} />
+					<span className={styles.vertical_line}/>
 					<Link
 						to={PATH.WARRANTOR}
 						className={styles.navbar__button}
+						onClick={() => setIsMenuOpen(false)}
 					>
 						Гарант
 					</Link>
 				</nav>
+
 			</div>
 
-			<div className={classnames(styles.right_block, { [styles.isLogin]: isLogin })}>
-				<Search />
-				<span className={styles.vertical_line} />
-				{isLogin ? <UserButton /> : <LoginButton />}
+			<div className={classnames(styles.right_block, {[styles.isLogin]: isLogin})}>
+				<Search/>
+				<span className={styles.vertical_line}/>
+				{isLogin ? <UserButton/> : <LoginButton />}
 				{userModal && isLogin && <UserModal />}
 			</div>
 		</header>

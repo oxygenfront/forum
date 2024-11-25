@@ -7,7 +7,10 @@
   height: 43px
   transition: width .2s linear
   width: 300px
-
+  @media(max-width: 768px)
+    width: 250px
+  @media (max-width: 640px)
+    display: none
   &__button
     position: absolute
     right: 0

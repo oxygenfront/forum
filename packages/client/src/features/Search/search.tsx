@@ -4,6 +4,8 @@ import { type FC, useEffect, useRef, useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
 import styles from './search.module.sass'
 
+//Todo Сделать скрытие поиска не авторизованым пользователям, либо при поиске предлагало создать аккаунт
+
 export const Search: FC = () => {
 	const [active, setActive] = useState(false)
 	const inputRef = useRef<HTMLInputElement | null>(null)

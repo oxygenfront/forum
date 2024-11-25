@@ -14,7 +14,15 @@
 .links
   display: flex
   gap: 36px
+
+  @media(max-width: 992px)
+    gap: 25px
+
+  @media(max-width: 756px)
+    gap: 10px
   &__item
+    @media(max-width: 992px)
+      text-align: center
     &.vip
       color: rgba(0, 255, 224, 1)
 .wrapper
