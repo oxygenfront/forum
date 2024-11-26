@@ -29,4 +29,6 @@ export {
 	GET_MESSAGE_BY_ID,
 	AUTH_LOGOUT,
 	AUTH_REFRESH,
+	SEARCH_ALL,
+	SEARCH_uSERS,
 } from './constants'

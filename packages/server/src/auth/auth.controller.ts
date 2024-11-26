@@ -2,14 +2,14 @@ import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@n
 import { ApiTags } from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { Request, Response } from 'express'
-import { Route } from '../../global/constants'
+import { Route, SwaggerApiTag } from '../../global/constants'
 import { AccessTokenGuard } from '../common/guards/accessToken.guard'
 import { AuthService } from './auth.service'
 import { CurrentUser } from './decorators/current-user.decorator'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
 
-@ApiTags(Route.AUTH)
+@ApiTags(SwaggerApiTag.AUTH)
 @Controller(Route.AUTH)
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}

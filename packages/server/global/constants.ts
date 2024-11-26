@@ -14,6 +14,7 @@ export enum Route {
 	USERS = 'users',
 	DELETE_BY_ID = 'delete/:id',
 	CHAPTERS = 'chapters/',
+	SEARCH = 'search',
 }
 
 export enum SwaggerApiTag {
@@ -23,6 +24,7 @@ export enum SwaggerApiTag {
 	CHAPTERS = 'Chapters API',
 	ChapterTheme = 'Theme API',
 	Messages = 'Messages API',
+	SEARCH = 'Search API',
 }
 
 export enum ROLES {

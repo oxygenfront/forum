@@ -4,12 +4,10 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query'
 import { API_BASE_URL, AUTH_REFRESH } from '@/shared/api'
 
 export const baseQueryFunction = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: {}) => {
-	// Базовый запрос
 	const baseQuery = fetchBaseQuery({
 		baseUrl: API_BASE_URL,
 		credentials: 'include',
 		prepareHeaders: (headers) => {
-			// Берём токен из localStorage или sessionStorage
 			const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 			if (token) {
 				headers.set('authorization', `Bearer ${token}`)

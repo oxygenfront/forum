@@ -1,5 +1,4 @@
 import type { ROLES } from '@/shared/model'
-import type { IMessageProfileWall } from '@/shared/model'
 
 export interface IProfile {
 	user_id: string
@@ -12,7 +11,6 @@ export interface IProfile {
 	count_reactions: number
 
 	date_register: string
-	messages_wall: IMessageProfileWall[]
 
 	email: string
 

@@ -1,15 +1,15 @@
 import { selectStatusModal } from '@/entities/Modal'
 import { selectIsLogin } from '@/features/Auth'
 import { LoginButton } from '@/features/LoginButton'
-import { Search } from '@/features/Search'
+import { Search } from '@/features/Search/ui'
 import { UserButton } from '@/features/UserButton'
 import { UserModal } from '@/features/UserModal'
 import { useAppSelector } from '@/shared/lib/hooks'
 import { PATH } from '@/shared/model'
 import classnames from 'classnames'
 import type { FC } from 'react'
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import styles from './header.module.sass'
 
 export const Header: FC = () => {
@@ -25,18 +25,19 @@ export const Header: FC = () => {
 		<header className={styles.header}>
 			<div className={styles.left_block}>
 				<div className={styles.burger}>
-					<div
-						className={classnames(styles.hamburger, {[styles.hamburger_active]: isMenuOpen})}
+					<button
+						type='button'
+						className={classnames(styles.hamburger, { [styles.hamburger_active]: isMenuOpen })}
 						onClick={toggleMenu}
 					>
-						<tspan/>
-						<tspan/>
-						<tspan/>
-					</div>
+						<tspan />
+						<tspan />
+						<tspan />
+					</button>
 					<div className={styles.logo}>Лого</div>
 				</div>
 
-				<nav className={classnames(styles.navbar, {[styles.navbar_open]: isMenuOpen})}>
+				<nav className={classnames(styles.navbar, { [styles.navbar_open]: isMenuOpen })}>
 					<Link
 						to='/'
 						className={styles.navbar__button}
@@ -44,7 +45,7 @@ export const Header: FC = () => {
 					>
 						Форум
 					</Link>
-					<span className={styles.vertical_line}/>
+					<span className={styles.vertical_line} />
 					<Link
 						to='#...'
 						className={styles.navbar__button}
@@ -52,7 +53,7 @@ export const Header: FC = () => {
 					>
 						Новости
 					</Link>
-					<span className={styles.vertical_line}/>
+					<span className={styles.vertical_line} />
 					<Link
 						to='#...'
 						className={classnames(styles.navbar__button, styles.vip)}
@@ -60,7 +61,7 @@ export const Header: FC = () => {
 					>
 						VIP
 					</Link>
-					<span className={styles.vertical_line}/>
+					<span className={styles.vertical_line} />
 					<Link
 						to={PATH.WARRANTOR}
 						className={styles.navbar__button}
@@ -69,13 +70,12 @@ export const Header: FC = () => {
 						Гарант
 					</Link>
 				</nav>
-
 			</div>
 
-			<div className={classnames(styles.right_block, {[styles.isLogin]: isLogin})}>
-				<Search/>
-				<span className={styles.vertical_line}/>
-				{isLogin ? <UserButton/> : <LoginButton />}
+			<div className={classnames(styles.right_block, { [styles.isLogin]: isLogin })}>
+				<Search />
+				<span className={styles.vertical_line} />
+				{isLogin ? <UserButton /> : <LoginButton />}
 				{userModal && isLogin && <UserModal />}
 			</div>
 		</header>

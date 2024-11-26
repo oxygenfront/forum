@@ -8,7 +8,7 @@
   border-radius: 20px
   margin-bottom: 23px
   background-color: rgba(32, 36, 45, 1)
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25)
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25)
   position: sticky
   top: 10px
   z-index: 100
@@ -20,6 +20,7 @@
 .logo
   padding-left: 10px
   padding-top: 3px
+
 .hamburger
   display: none
   flex-direction: column
@@ -33,6 +34,7 @@
     display: block
   @media(max-width: 920px)
     display: block
+
   &.hamburger_active
     tspan
       &:nth-child(1)
@@ -43,18 +45,21 @@
 
       &:nth-child(3)
         transform: rotate(-45deg) translateY(-10px)
+
 tspan
   display: block
   height: 2px
   background-color: #fff
   transition: all 0.3s ease
   margin-top: 5px
+
 .left_block
   height: 100%
   width: 490px
   display: flex
   align-items: center
   justify-content: space-between
+
 .navbar
   display: flex
   align-items: center
@@ -63,15 +68,17 @@ tspan
   @media (max-width: 768px)
     display: none
   @media(max-width: 920px)
-      display: none
+    display: none
   @media (max-width: 576px)
     display: none
+
   &__button
     position: relative
     height: 100%
     display: flex
     align-items: center
     transition: all .2s linear
+
     &:after, &:before
       position: absolute
       content: ''
@@ -80,21 +87,27 @@ tspan
       width: 100%
       background-color: transparent
       transition: all .2s linear
+
     &:after
       top: -2px
+
     &:before
       bottom: -2px
+
     &:hover
       &:after, &:before
         background-color: #566b78
+
     &.vip
       color: #00FFE0
+
 .right_block
-  width: 400px
+  width: 430px
   display: flex
   align-items: center
   gap: 13px
   transition: all .2s linear
+
   &.isLogin
     width: 370px
 

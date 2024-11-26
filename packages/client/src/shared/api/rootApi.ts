@@ -7,6 +7,6 @@ export const rootApi = createApi({
 	refetchOnReconnect: true,
 	keepUnusedDataFor: 60,
 	baseQuery: baseQueryFunction,
-	tagTypes: [ApiTag.CHAPTERS, ApiTag.AUTH, ApiTag.USERS, ApiTag.THEMES, ApiTag.MESSAGE],
+	tagTypes: [ApiTag.CHAPTERS, ApiTag.AUTH, ApiTag.USERS, ApiTag.THEMES, ApiTag.MESSAGE, ApiTag.SEARCH],
 	endpoints: () => ({}),
 })

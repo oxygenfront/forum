@@ -14,8 +14,9 @@ import styles from './layout.module.sass'
 export const Layout: FC = () => {
 	const { pathname } = useLocation()
 	const [_, { isSuccess: isSuccessLogin }] = useLoginMutation()
-	const { data, isSuccess } = useGetAuthQuery({})
 	const isLogin = useAppSelector(selectIsLogin)
+	const { data, isSuccess } = useGetAuthQuery({}, { skip: !!isLogin })
+
 	const dispatch = useAppDispatch()
 	useEffect(() => {
 		if (isSuccess || data) {

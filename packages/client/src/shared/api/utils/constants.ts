@@ -4,13 +4,14 @@ export enum ApiTag {
 	USERS = 'users',
 	THEMES = 'themes',
 	MESSAGE = 'message',
+	SEARCH = 'search',
 }
 
 export enum RequestMethod {
 	POST = 'POST',
-	PUT = 'PUT',
 	DELETE = 'DELETE',
 	PATCH = 'PATCH',
+	GET = 'GET',
 }
 
 const CREATE = 'create'
@@ -28,6 +29,7 @@ const REGISTER = 'register'
 const AUTH_ME = 'auth_me'
 const LOGOUT = 'logout'
 const REFRESH = 'refresh'
+const SEARCH = 'search'
 
 // Base URL
 export const API_BASE_URL = 'http://localhost:3004/api'
@@ -66,3 +68,7 @@ export const UPDATE_MESSAGE = `${MESSAGE}/${UPDATE}`
 export const CREATE_MESSAGE = `${MESSAGE}/${CREATE}`
 export const DELETE_MESSAGE_BY_ID = `${MESSAGE}/${DELETE}`
 export const GET_MESSAGE_BY_ID = `${MESSAGE}`
+
+// Search
+export const SEARCH_ALL = `${SEARCH}/all`
+export const SEARCH_uSERS = `${SEARCH}/${USERS}`
