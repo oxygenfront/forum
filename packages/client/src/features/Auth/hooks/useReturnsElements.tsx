@@ -7,7 +7,7 @@ import type { IRegisterRes } from '@/features/Auth/types'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { Forgot } from '@/widgets/ForgotPassword'
 import { Login } from '@/widgets/Login'
-import { setRememberMe } from '@/widgets/Login/model'
+import { setRememberMe } from '@/widgets/Login'
 import { Register } from '@/widgets/Register'
 
 import { useEffect } from 'react'

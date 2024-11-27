@@ -6,6 +6,7 @@ import { UpdateChapterDto } from './dto/update-chapter.dto'
 @Injectable()
 export class ChapterService {
 	constructor(private readonly prisma: PrismaService) {}
+
 	create(createChapterDto: CreateChapterDto) {
 		const { titleChapter } = createChapterDto
 

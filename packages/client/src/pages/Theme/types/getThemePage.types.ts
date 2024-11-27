@@ -1,4 +1,4 @@
-import { IMessage, IUser } from 'shared/types'
+import type { IMessage, IUser } from '@/shared/model'
 
 export interface IThemePageRes {
 	id: string

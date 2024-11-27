@@ -26,10 +26,9 @@ function renderAvatar(isChapter: boolean, props: IChapterLinkProps) {
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
 export function ChapterLink(props: IChapterLinkProps) {
 	const isChapter = 'titleChapter' in props
-
 	return (
 		<Link
-			to={generateThemeUrl(isChapter, props)}
+			to={generateThemeUrl({ isChapter, props })}
 			className={classNames(styles.chapter, { [styles.theme]: !isChapter })}
 		>
 			{renderAvatar(isChapter, props)}
@@ -61,7 +60,7 @@ export function ChapterLink(props: IChapterLinkProps) {
 						</span>
 					</div>
 					<Link
-						to={generateThemeUrl(isChapter, props)}
+						to={generateThemeUrl({ isChapter, props, isMessage: true })}
 						className={styles.user}
 					>
 						{!(isChapter || props.latestThemeMessage) || (isChapter && !props.latestMessage) ? (

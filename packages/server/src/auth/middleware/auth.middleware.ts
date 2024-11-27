@@ -15,11 +15,9 @@ export class AuthMiddleware implements NestMiddleware {
 		const accessToken = req.cookies['accessToken'] || req.headers['authorization']?.split(' ')[1]
 		if (accessToken) {
 			try {
-				const payload = await this.jwtService.verifyAsync(accessToken, {
+				req.user = await this.jwtService.verifyAsync(accessToken, {
 					secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
 				})
-				req.user = payload
-				// Если accessToken валиден, пропускаем запрос
 				next()
 			} catch (error) {
 				console.error('Access token verification failed', error)
@@ -33,10 +31,9 @@ export class AuthMiddleware implements NestMiddleware {
 			}
 
 			try {
-				const payload = await this.jwtService.verifyAsync(refreshToken, {
+				req.user = await this.jwtService.verifyAsync(refreshToken, {
 					secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
 				})
-				req.user = payload
 				next()
 			} catch (error) {
 				console.error('Refresh token verification failed', error)

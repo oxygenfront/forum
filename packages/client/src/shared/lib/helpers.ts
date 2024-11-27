@@ -80,10 +80,21 @@ export function trimmingText(str: string, maxLength = 20): string {
 }
 type IChapterLinkProps = (IChapter & { ui: UI_COMPONENT }) | (ITheme & { ui: UI_COMPONENT })
 
-export function generateThemeUrl(isChapter: boolean, props: IChapterLinkProps): string {
+export function generateThemeUrl({
+	isChapter,
+	props,
+	isMessage,
+}: {
+	isChapter: boolean
+	props: IChapterLinkProps
+	isMessage?: boolean
+}): string {
 	if (isChapter) {
 		const { titleChapter, id, latestMessage } = props as IChapter & { ui: UI_COMPONENT }
-		return `chapter/${createSlug(titleChapter)}/${id}/theme/${createSlug(latestMessage.theme.themeTitle)}/${latestMessage?.themeId}`
+		if (isMessage) {
+			return `chapter/${createSlug(titleChapter)}/${id}/theme/${createSlug(latestMessage.theme.themeTitle)}/${latestMessage.themeId}`
+		}
+		return `chapter/${createSlug(titleChapter)}/${id}`
 	}
 	const { id, themeTitle } = props as ITheme & { ui: UI_COMPONENT }
 	return `theme/${createSlug(themeTitle)}/${id}`

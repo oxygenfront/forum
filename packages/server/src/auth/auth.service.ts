@@ -76,7 +76,7 @@ export class AuthService {
 			if (!isPasswordValid) {
 				throw new BadRequestException({
 					type: 'all',
-					message: 'Неверный' + ' логин или пароль',
+					message: 'Неверный логин или пароль',
 				})
 			}
 
