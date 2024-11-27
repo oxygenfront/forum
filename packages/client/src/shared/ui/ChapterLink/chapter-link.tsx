@@ -59,46 +59,43 @@ export function ChapterLink(props: IChapterLinkProps) {
 							</span>
 						</span>
 					</div>
-					<Link
-						to={generateThemeUrl({ isChapter, props, isMessage: true })}
-						className={styles.user}
-					>
-						{!(isChapter || props.latestThemeMessage) || (isChapter && !props.latestMessage) ? (
-							<span
-								style={{
-									width: '220px',
-									fontSize: '20px',
-								}}
-							>
-								Нет сообщений
-							</span>
-						) : (
-							<>
-								<img
-									src={isChapter ? props.latestMessage?.user.userImage : props.latestThemeMessage?.user.userImage}
-									alt='Аватар пользователя'
-									className={styles.user_avatar}
-								/>
-								<div className={styles.user__wrapper}>
-									<p className={styles.user_message}>
+					{!(isChapter || props.latestThemeMessage) || (isChapter && !props.latestMessage) ? (
+						<span
+							style={{
+								width: '220px',
+								fontSize: '20px',
+								display: 'flex',
+								justifyContent: 'center',
+							}}
+						>
+							Нет сообщений
+						</span>
+					) : (
+						<Link to={generateThemeUrl({ isChapter, props, isMessage: true })}>
+							<img
+								src={isChapter ? props.latestMessage?.user.userImage : props.latestThemeMessage?.user.userImage}
+								alt='Аватар пользователя'
+								className={styles.user_avatar}
+							/>
+							<div className={styles.user__wrapper}>
+								<p className={styles.user_message}>
+									{isChapter
+										? trimmingText(props.latestMessage?.content)
+										: trimmingText(props.latestThemeMessage?.content)}
+								</p>
+								<div className={styles.user__info}>
+									<div className={styles.user__info_name}>
+										{isChapter ? props.latestMessage?.user.userLogin : props.latestThemeMessage?.user.userLogin}
+									</div>
+									<div className={styles.user__info_time}>
 										{isChapter
-											? trimmingText(props.latestMessage?.content)
-											: trimmingText(props.latestThemeMessage?.content)}
-									</p>
-									<div className={styles.user__info}>
-										<div className={styles.user__info_name}>
-											{isChapter ? props.latestMessage?.user.userLogin : props.latestThemeMessage?.user.userLogin}
-										</div>
-										<div className={styles.user__info_time}>
-											{isChapter
-												? timeSincePublication(props.latestMessage?.createdAt)
-												: timeSincePublication(props.latestThemeMessage?.createdAt)}
-										</div>
+											? timeSincePublication(props.latestMessage?.createdAt)
+											: timeSincePublication(props.latestThemeMessage?.createdAt)}
 									</div>
 								</div>
-							</>
-						)}
-					</Link>
+							</div>
+						</Link>
+					)}
 				</div>
 			</div>
 		</Link>
