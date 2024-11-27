@@ -1,4 +1,4 @@
-import { FORM_HINTS_ERRORS } from '@/shared/model/constants'
+import { FORM_HINTS_ERRORS } from '@/shared/model'
 import type { FC } from 'react'
 import styles from './styles.module.sass'
 

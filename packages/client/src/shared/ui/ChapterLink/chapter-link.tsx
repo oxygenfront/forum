@@ -1,7 +1,6 @@
-import { createSlug, replaceMessage, timeSincePublication, trimmingText } from '@/shared/lib/helpers.ts'
+import { generateThemeUrl, replaceMessage, timeSincePublication, trimmingText } from '@/shared/lib'
 import { IChapter, ITheme, UI_COMPONENT } from '@/shared/model'
 import classNames from 'classnames'
-import { FC } from 'react'
 import { BsChatText } from 'react-icons/bs'
 import { MdOutlineEdit } from 'react-icons/md'
 import { PiWechatLogoBold } from 'react-icons/pi'
@@ -10,30 +9,33 @@ import styles from './chapter-link.module.sass'
 
 type IChapterLinkProps = (IChapter & { ui: UI_COMPONENT }) | (ITheme & { ui: UI_COMPONENT })
 
-export const ChapterLink: FC<IChapterLinkProps> = (props) => {
-	const isChapter = 'chapterTitle' in props
+function renderAvatar(isChapter: boolean, props: IChapterLinkProps) {
+	if (isChapter) {
+		return <BsChatText />
+	}
+	const { latestThemeMessage } = props as ITheme & { ui: UI_COMPONENT }
+	return (
+		<img
+			src={latestThemeMessage?.user.userImage}
+			alt='Аватар пользователя'
+			className={styles.user_avatar}
+		/>
+	)
+}
 
-	const themeUrlFromChapters = `chapter/${createSlug((isChapter && props.chapterTitle) as string)}/${isChapter && props.id}/theme/${createSlug((isChapter && props.latestMessage?.theme.titleTheme) as string)}/${isChapter && props.latestMessage?.themeId}`
-
-	const themeUrlFromThemes = `theme/${createSlug((!isChapter && props.titleTheme) as string)}/${!isChapter && props.id}`
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
+export function ChapterLink(props: IChapterLinkProps) {
+	const isChapter = 'titleChapter' in props
 
 	return (
 		<Link
-			to={`${isChapter ? 'chapter' : 'theme'}/${createSlug(isChapter ? props.chapterTitle : props.titleTheme)}/${props.id}`}
+			to={generateThemeUrl(isChapter, props)}
 			className={classNames(styles.chapter, { [styles.theme]: !isChapter })}
 		>
-			{isChapter ? (
-				<BsChatText />
-			) : (
-				<img
-					className={classNames(styles.user_avatar, styles.big)}
-					src={props.latestThemeMessage?.user.userImage}
-					alt='Автар'
-				/>
-			)}
+			{renderAvatar(isChapter, props)}
 			<div className={styles.wrapper}>
 				<div className={styles.chapter__left}>
-					<div className={styles.chapter__left_title}>{isChapter ? props.chapterTitle : props.titleTheme}</div>
+					<div className={styles.chapter__left_title}>{isChapter ? props.titleChapter : props.themeTitle}</div>
 					{isChapter ? null : (
 						<div className={styles.chapter__left_theme_info}>
 							<span className={styles.chapter__left_theme_info_item}>{props.user.userLogin}</span>
@@ -59,7 +61,7 @@ export const ChapterLink: FC<IChapterLinkProps> = (props) => {
 						</span>
 					</div>
 					<Link
-						to={isChapter ? themeUrlFromChapters : themeUrlFromThemes}
+						to={generateThemeUrl(isChapter, props)}
 						className={styles.user}
 					>
 						{!(isChapter || props.latestThemeMessage) || (isChapter && !props.latestMessage) ? (

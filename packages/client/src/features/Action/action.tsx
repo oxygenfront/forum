@@ -2,7 +2,7 @@ import { FC } from 'react'
 import styles from './action.module.sass'
 interface IActionProps {
 	nameAction: string
-	action: (...args: any) => void
+	action: () => void
 }
 export const Action: FC<IActionProps> = ({ nameAction, action }) => {
 	return (

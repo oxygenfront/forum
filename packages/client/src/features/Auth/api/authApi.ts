@@ -1,3 +1,4 @@
+import type { ILoginReq, ILoginRes, IRegisterReq, IRegisterRes } from '@/features/Auth'
 import {
 	AUTH_LOGIN_API,
 	AUTH_LOGOUT,
@@ -10,35 +11,34 @@ import {
 
 export const authApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getAuth: builder.query({
+		getAuth: builder.query<void, void>({
 			query: () => AUTH_ME_API,
-			providesTags: [ApiTag.AUTH],
 		}),
-		login: builder.mutation({
+		login: builder.mutation<ILoginRes, ILoginReq>({
 			query: (body) => ({
 				url: AUTH_LOGIN_API,
 				method: RequestMethod.POST,
 				body,
 			}),
 
-			invalidatesTags: (result, error) => {
-				if (!result || error) {
-					return []
-				}
-
-				return [ApiTag.AUTH]
-			},
-			async onQueryStarted(_, { queryFulfilled }) {
+			async onQueryStarted(_, { queryFulfilled, getState }) {
 				try {
 					const { data } = await queryFulfilled
-					localStorage.setItem('token', data.accessToken)
+
+					// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
+					const state = getState() as RootState
+
+					const { rememberMe } = state.rememberMe
+					rememberMe
+						? localStorage.setItem('token', data.accessToken)
+						: sessionStorage.setItem('token', data.accessToken)
 				} catch (error) {
 					console.error('Login failed:', error)
 				}
 			},
 		}),
 
-		register: builder.mutation({
+		register: builder.mutation<IRegisterRes, IRegisterReq>({
 			query: (body) => ({
 				url: AUTH_REGISTER_API,
 				method: RequestMethod.POST,
@@ -57,7 +57,7 @@ export const authApi = rootApi.injectEndpoints({
 				}
 			},
 		}),
-		logout: builder.mutation({
+		logout: builder.mutation<void, void>({
 			query: () => ({
 				url: AUTH_LOGOUT,
 				method: RequestMethod.POST,

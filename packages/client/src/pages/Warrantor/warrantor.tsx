@@ -125,9 +125,9 @@ export const WarrantorPage: FC = () => {
 			<BlockThemeContainer
 				title='Гарант сервис'
 				userLogin='Гарант'
-				date_create={1730166126}
+				createdAt={new Date('2024-11-26T21:02:40.561Z')}
 				views={1003}
-				messagesThemeCount={103}
+				countThemeMessages={103}
 				flag={true}
 			/>
 		</>

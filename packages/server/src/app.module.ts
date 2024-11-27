@@ -7,7 +7,9 @@ import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/middleware/auth.middleware'
 import { ChaptersModule } from './chapters/chapters.module'
 import { MessageModule } from './message/message.module'
+import { PurchasedModule } from './purchased/purchased.module'
 import { SearchModule } from './search/search.module'
+import { StatisticModule } from './statistic/statistic.module'
 import { ChapterThemeModule } from './theme/theme.module'
 import { UsersModule } from './users/users.module'
 
@@ -38,6 +40,8 @@ import { UsersModule } from './users/users.module'
 		AuthModule,
 		UsersModule,
 		MessageModule,
+		StatisticModule,
+		PurchasedModule,
 		SearchModule,
 	],
 	controllers: [AppController],

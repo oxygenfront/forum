@@ -16,7 +16,8 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy) {
 		})
 	}
 
-	async validate(payload: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	validate(payload: any) {
 		return this.usersService.findById(payload.sub)
 	}
 }

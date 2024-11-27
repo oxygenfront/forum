@@ -6,8 +6,8 @@ import { UpdateMessageDto } from './dto/update-message.dto'
 @Injectable()
 export class MessageService {
 	constructor(private readonly prisma: PrismaService) {}
-	create(createMessageDto: CreateMessageDto) {
-		return this.prisma.themeMessage.create({
+	async create(createMessageDto: CreateMessageDto) {
+		await this.prisma.themeMessage.create({
 			data: createMessageDto,
 		})
 	}

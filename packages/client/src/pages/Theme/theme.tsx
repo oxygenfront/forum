@@ -1,14 +1,14 @@
 import { CreateMessage } from '@/features/CreateMessage'
+import { useGetThemePageQuery } from '@/pages/Theme'
 import { BlockThemeContainer } from '@/shared/ui'
 import { Loader } from '@/shared/ui/Loader'
 import { Message } from '@/widgets/MessageBlock'
-import { useGetThemePageQuery } from 'pages/Theme/api/getThemePage.ts'
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const ThemePage: FC = () => {
 	const { id } = useParams()
-	const { data, isLoading } = useGetThemePageQuery(id)
+	const { data, isLoading } = useGetThemePageQuery(id, { skip: !id })
 	const [themeId, setThemeId] = useState('')
 	const conditionalForShow = isLoading || !data
 
@@ -29,7 +29,7 @@ export const ThemePage: FC = () => {
 				<>
 					<BlockThemeContainer
 						flag
-						title={data.titleTheme}
+						title={data.themeTitle}
 						createdAt={data.themeMessages[0].createdAt}
 						userLogin={data.user.userLogin}
 						userImage={data.user.userImage}

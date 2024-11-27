@@ -1,3 +1,4 @@
+import { IChapter, ITheme, UI_COMPONENT } from '@/shared/model'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
@@ -76,4 +77,14 @@ export function trimmingText(str: string, maxLength = 20): string {
 		return str
 	}
 	return str.substring(0, maxLength).concat('...')
+}
+type IChapterLinkProps = (IChapter & { ui: UI_COMPONENT }) | (ITheme & { ui: UI_COMPONENT })
+
+export function generateThemeUrl(isChapter: boolean, props: IChapterLinkProps): string {
+	if (isChapter) {
+		const { titleChapter, id, latestMessage } = props as IChapter & { ui: UI_COMPONENT }
+		return `chapter/${createSlug(titleChapter)}/${id}/theme/${createSlug(latestMessage.theme.themeTitle)}/${latestMessage?.themeId}`
+	}
+	const { id, themeTitle } = props as ITheme & { ui: UI_COMPONENT }
+	return `theme/${createSlug(themeTitle)}/${id}`
 }

@@ -1,4 +1,4 @@
-export { PATH, ROUTES, ROLES, THEME_STATUS, UI_COMPONENT } from './constants'
+export { PATH, ROUTES, ROLES, THEME_STATUS, UI_COMPONENT, FORM_HINTS_ERRORS } from './constants'
 
 export type { IChapter } from './chapter'
 export type { IProfile } from './profile'

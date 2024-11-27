@@ -7,11 +7,11 @@ import { UpdateChapterDto } from './dto/update-chapter.dto'
 export class ChapterService {
 	constructor(private readonly prisma: PrismaService) {}
 	create(createChapterDto: CreateChapterDto) {
-		const { chapterTitle } = createChapterDto
+		const { titleChapter } = createChapterDto
 
 		return this.prisma.chapter.create({
 			data: {
-				chapterTitle,
+				titleChapter,
 			},
 		})
 	}
@@ -20,14 +20,13 @@ export class ChapterService {
 		const chapters = await this.prisma.chapter.findMany({
 			select: {
 				id: true,
-				chapterTitle: true,
+				titleChapter: true,
 				chapterThemes: {
 					select: {
 						id: true,
-						titleTheme: true,
+						themeTitle: true,
 						themeMessages: {
 							orderBy: { createdAt: 'asc' },
-
 							include: {
 								user: {
 									select: {
@@ -38,7 +37,7 @@ export class ChapterService {
 								},
 								theme: {
 									select: {
-										titleTheme: true,
+										themeTitle: true,
 									},
 								},
 							},
@@ -48,15 +47,28 @@ export class ChapterService {
 			},
 		})
 
+		const calculateCounts = (themes) => ({
+			countThemes: themes.length,
+			countMessages: themes.reduce((acc, theme) => acc + theme.themeMessages.length, 0),
+		})
+
+		const findLatestMessage = (themes) => {
+			for (const theme of themes) {
+				if (theme.themeMessages.length > 0) {
+					return theme.themeMessages[0] // Поскольку сообщения отсортированы по createdAt ASC
+				}
+			}
+			return null
+		}
+
+		// Формирование ответа
 		return chapters.map((chapter) => {
-			const countThemes = chapter.chapterThemes.length
-			const countMessages = chapter.chapterThemes.reduce((acc, theme) => acc + theme.themeMessages.length, 0)
-			const latestMessage = chapter.chapterThemes
-				.flatMap((el) => el.themeMessages.flatMap((el, i) => i === 0 && el))
-				.filter((el) => el)[0]
+			const { countThemes, countMessages } = calculateCounts(chapter.chapterThemes)
+			const latestMessage = findLatestMessage(chapter.chapterThemes)
+
 			return {
 				id: chapter.id,
-				chapterTitle: chapter.chapterTitle,
+				titleChapter: chapter.titleChapter,
 				countThemes,
 				countMessages,
 				latestMessage,
@@ -67,12 +79,18 @@ export class ChapterService {
 	async findOne(id: string) {
 		const chapter = await this.prisma.chapter.findFirst({
 			where: { id },
-			include: {
+			select: {
+				id: true,
+				titleChapter: true,
 				chapterThemes: {
-					include: {
+					select: {
+						id: true,
+						themeTitle: true,
 						themeMessages: {
-							orderBy: { createdAt: 'asc' },
-							include: {
+							select: {
+								id: true,
+								content: true,
+								createdAt: true,
 								user: {
 									select: {
 										id: true,
@@ -80,6 +98,13 @@ export class ChapterService {
 										userImage: true,
 									},
 								},
+							},
+							take: 1,
+							orderBy: { createdAt: 'desc' },
+						},
+						_count: {
+							select: {
+								themeMessages: true,
 							},
 						},
 						user: {
@@ -97,16 +122,19 @@ export class ChapterService {
 		if (!chapter) {
 			return null
 		}
-
-		const updatedChapterThemes = chapter.chapterThemes.map((theme) => ({
-			...theme,
-			countThemeMessages: theme.themeMessages.length,
-			latestThemeMessage: theme.themeMessages[0],
-		}))
+		const transformThemes = (themes) =>
+			themes.map((theme) => ({
+				id: theme.id,
+				themeTitle: theme.themeTitle,
+				countThemeMessages: theme._count.themeMessages,
+				latestThemeMessage: theme.themeMessages[0] || null,
+				user: theme.user,
+			}))
 
 		return {
-			...chapter,
-			chapterThemes: updatedChapterThemes,
+			id: chapter.id,
+			titleChapter: chapter.titleChapter,
+			chapterThemes: transformThemes(chapter.chapterThemes),
 		}
 	}
 

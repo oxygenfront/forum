@@ -1,43 +1,12 @@
-import { selectForms } from '@/entities/Forms'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { Input, InputPassword } from '@/shared/ui'
-import { setHint } from '@/shared/ui/InputsForm'
-import { selectHint } from '@/shared/ui/InputsForm/model/selector'
-import { selectRememberMe, setRememberMe } from '@/widgets/Login/model'
-import { type FC, useEffect } from 'react'
+import { type FC } from 'react'
 import styles from './login.module.sass'
-interface ILoginProps {
-	isErrorLogin: boolean
-}
-export const Login: FC<ILoginProps> = ({ isErrorLogin }) => {
+import { selectRememberMe, setRememberMe } from './model'
+
+export const Login: FC = () => {
 	const dispatch = useAppDispatch()
-	const { login: storeLoginData } = useAppSelector(selectForms)
-	const value = useAppSelector(selectForms)
-	const hint = useAppSelector(selectHint)
 	const rememberMe = useAppSelector(selectRememberMe)
-
-	useEffect(() => {
-		if (isErrorLogin) {
-			dispatch(setHint({ type: 'login', key: 'userPassword', status: true, hintKey: 'incorrectLogin' }))
-			dispatch(setHint({ type: 'login', key: 'userEmail', status: true, hintKey: 'incorrectLogin' }))
-		}
-	}, [isErrorLogin])
-
-	useEffect(() => {
-		if ((hint.login.userLogin.status || hint.login.userPassword.status) && !isErrorLogin) {
-			if (storeLoginData.userEmail === '') {
-				dispatch(setHint({ type: 'login', key: 'userEmail', status: true, hintKey: 'isEmptyEmail' }))
-			} else {
-				dispatch(setHint({ type: 'login', key: 'userEmail', status: false, hintKey: null }))
-			}
-
-			if (storeLoginData.userPassword === '') {
-				dispatch(setHint({ type: 'login', key: 'userPassword', status: true, hintKey: 'isEmptyPassword' }))
-			} else {
-				dispatch(setHint({ type: 'login', key: 'userPassword', status: false, hintKey: null }))
-			}
-		}
-	}, [hint.login.userLogin.status, hint.login.userPassword.status, value.login.userEmail, value.login.userPassword])
 
 	function handleRememberMe() {
 		dispatch(setRememberMe(!rememberMe))

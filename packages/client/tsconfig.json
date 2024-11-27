@@ -17,10 +17,14 @@
 	"typeRoots": ["node_modules/@types", "types/"],
     "paths": {
       "@/*": ["./src/*", "./dist/*", ""],
-      "pages/*": ["src/pages/*"],
-      "components/*": ["src/components/*"],
-      "types/*": ["src/@types/*"],
-      "public/*": ["public/*"]
+      "@/app/*": ["src/app/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/widgets/*": ["src/widgets/*"],
+      "@/features/*": ["src/features/*"],
+      "@/entities/*": ["src/entities/*"],
+      "@/shared/*": ["src/shared/*"],
+      "@/global/*": ["src/global/*"],
+      "@/public/*": ["public/*"]
     },
 
     /* Linting */
@@ -30,6 +34,6 @@
     "noFallthroughCasesInSwitch": true
   },
 
-  "include": ["src", "types"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -3,7 +3,7 @@ import { IMessage, IUser } from '@/shared/model'
 export interface ITheme {
 	id: string
 	chapterId: string
-	titleTheme: string
+	themeTitle: string
 	isPrivate: boolean
 	userId: string
 	createdAt: Date

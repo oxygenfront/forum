@@ -7,7 +7,7 @@ export class CreateThemeDto {
 	@ApiProperty()
 	@IsString()
 	@IsNotEmpty()
-	titleTheme: string
+	themeTitle: string
 
 	@ApiProperty()
 	@IsString()

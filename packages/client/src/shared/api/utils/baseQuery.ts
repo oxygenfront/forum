@@ -1,8 +1,10 @@
 import type { BaseQueryApi, FetchArgs } from '@reduxjs/toolkit/query'
 import { fetchBaseQuery } from '@reduxjs/toolkit/query'
 
+import { RootState } from '@/app/store.ts'
 import { API_BASE_URL, AUTH_REFRESH } from '@/shared/api'
 
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
 export const baseQueryFunction = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: {}) => {
 	const baseQuery = fetchBaseQuery({
 		baseUrl: API_BASE_URL,
@@ -23,9 +25,12 @@ export const baseQueryFunction = async (args: string | FetchArgs, api: BaseQuery
 
 		if (refreshResponse.data && typeof refreshResponse.data === 'object' && 'accessToken' in refreshResponse.data) {
 			const { accessToken } = refreshResponse.data as { accessToken: string }
+			const state = api.getState() as RootState
+			const { rememberMe } = state.rememberMe
 
-			// Сохраняем новый токен
-			localStorage.setItem('token', accessToken)
+			rememberMe || !localStorage.getItem('token')
+				? localStorage.setItem('token', accessToken)
+				: sessionStorage.setItem('token', accessToken)
 
 			response = await baseQuery(args, api, extraOptions)
 		} else {

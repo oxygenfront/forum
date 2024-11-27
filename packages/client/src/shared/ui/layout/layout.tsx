@@ -15,8 +15,7 @@ export const Layout: FC = () => {
 	const { pathname } = useLocation()
 	const [_, { isSuccess: isSuccessLogin }] = useLoginMutation()
 	const isLogin = useAppSelector(selectIsLogin)
-	const { data, isSuccess } = useGetAuthQuery({}, { skip: !!isLogin })
-
+	const { data, isSuccess } = useGetAuthQuery(undefined, { skip: !!isLogin })
 	const dispatch = useAppDispatch()
 	useEffect(() => {
 		if (isSuccess || data) {
@@ -24,6 +23,7 @@ export const Layout: FC = () => {
 			dispatch(setIsLogin(true))
 		}
 	}, [data, isSuccessLogin])
+
 	return (
 		<>
 			<Container>

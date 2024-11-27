@@ -1,10 +1,10 @@
 import { selectUserData } from '@/features/Auth'
-import { CustomTextarea } from '@/features/CreateMessage/CustomTextArea'
-import { useCreateMessageMutation, useUpdateMessageMutation } from '@/features/CreateMessage/api'
-import { selectMessage, setValue } from '@/features/CreateMessage/model'
+import { CustomTextarea } from '@/features/CustomTextArea'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
 import { FC, KeyboardEvent } from 'react'
+import { useCreateMessageMutation, useUpdateMessageMutation } from './api'
 import styles from './create-message.module.sass'
+import { selectMessage, setValue } from './model'
 
 interface ICreateMessageProps {
 	themeId: string
@@ -26,7 +26,10 @@ export const CreateMessage: FC<ICreateMessageProps> = ({ themeId }) => {
 
 	const handleActionMessage = () => {
 		if (selectDataMessage.isEdit) {
-			updateMessage({ id: selectDataMessage.messageId, content: selectDataMessage.content })
+			updateMessage({
+				id: selectDataMessage.messageId,
+				content: selectDataMessage.content,
+			})
 		} else {
 			createMessage(dataMessage)
 		}

@@ -1,5 +1,5 @@
 import { selectType } from '@/entities/Forms'
-import { useReturnsElements } from '@/features/Auth/hooks'
+import { useReturnsElements } from '@/features/Auth'
 import { useAppSelector } from '@/shared/lib/hooks'
 import classNames from 'classnames'
 import type { FC } from 'react'

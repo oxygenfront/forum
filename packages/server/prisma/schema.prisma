@@ -37,7 +37,7 @@ model User {
   userPassword String
   userEmail    String   @unique
   role         ROLE
-  themeChapter Theme[]
+  userThemes   Theme[]
   createdAt    DateTime @default(now())
 
   userReaction  UserReactions[]
@@ -49,6 +49,8 @@ model User {
   is_private              Boolean @default(false)
 
   refreshToken String?
+  Chat         Chat[]
+  ChatUser     ChatUser[]
 }
 
 model ThemeMessage {
@@ -66,12 +68,12 @@ model ThemeMessage {
 model Theme {
   id            String         @id @default(uuid())
   user          User?          @relation(fields: [userId], references: [id])
-  chapters      Chapter?       @relation(fields: [chapterId], references: [id])
+  userId        String
+  chapter       Chapter?       @relation(fields: [chapterId], references: [id])
   chapterId     String
-  titleTheme    String
+  themeTitle    String
   themeMessages ThemeMessage[]
   isPrivate     Boolean        @default(false)
-  userId        String
   createdAt     DateTime       @default(now())
   updateAt      DateTime       @updatedAt
   views         Int?
@@ -80,9 +82,28 @@ model Theme {
 model Chapter {
   id String @id @default(uuid())
 
-  chapterTitle  String
+  titleChapter  String
   chapterThemes Theme[]
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
+}
+
+model Chat {
+  id        String     @id @default(uuid())
+  name      String?
+  createdAt DateTime   @default(now())
+  creatorId String
+  creator   User       @relation(fields: [creatorId], references: [id])
+  users     ChatUser[]
+}
+
+model ChatUser {
+  id     String @id @default(uuid())
+  chatId String
+  userId String
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([chatId, userId])
 }

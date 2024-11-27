@@ -14,40 +14,32 @@ import { RegisterDto } from './dto/register.dto'
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
-	@Post(Route.REGISTER)
-	async register(@Body() registerUserDto: RegisterDto, @Res() res: Response) {
-		const user = await this.authService.register(registerUserDto)
-		res.cookie('refreshToken', user.refreshToken, {
+	private setCookie(res: Response, refreshToken: string) {
+		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'strict',
-			maxAge: 7 * 24 * 60 * 60 * 1000,
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
 		})
+	}
 
-		const {
-			id,
-			userImage,
-			userLogin,
-			userEmail,
-			role,
-			createdAt,
-			is_show_animated_avatar,
-			is_close_wall_on_change,
-			is_show_status_online,
-			is_private,
-		} = user
+	@Post(Route.REGISTER)
+	async register(@Body() registerUserDto: RegisterDto, @Res() res: Response) {
+		const user = await this.authService.register(registerUserDto)
+		this.setCookie(res, user.refreshToken)
+
 		return res.status(HttpStatus.CREATED).json({
 			accessToken: user.accessToken,
-			id,
-			userImage,
-			userLogin,
-			userEmail,
-			role,
-			createdAt,
-			is_show_animated_avatar,
-			is_close_wall_on_change,
-			is_show_status_online,
-			is_private,
+			id: user.id,
+			userImage: user.userImage,
+			userLogin: user.userLogin,
+			userEmail: user.userEmail,
+			role: user.role,
+			createdAt: user.createdAt,
+			is_show_animated_avatar: user.is_show_animated_avatar,
+			is_close_wall_on_change: user.is_close_wall_on_change,
+			is_show_status_online: user.is_show_status_online,
+			is_private: user.is_private,
 		})
 	}
 
@@ -56,37 +48,20 @@ export class AuthController {
 	async login(@Body() data: LoginDto, @Res() res: Response) {
 		const user = await this.authService.login(data, res)
 
-		res.cookie('refreshToken', user.refreshToken, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			sameSite: 'strict',
-			maxAge: 7 * 24 * 60 * 60 * 1000,
-		})
-		const {
-			id,
-			userImage,
-			userLogin,
-			userEmail,
-			role,
-			createdAt,
-			is_show_animated_avatar,
-			is_close_wall_on_change,
-			is_show_status_online,
-			is_private,
-		} = user.user
+		this.setCookie(res, user.refreshToken)
 
 		return res.json({
 			accessToken: user.accessToken,
-			id,
-			userImage,
-			userLogin,
-			userEmail,
-			role,
-			createdAt,
-			is_show_animated_avatar,
-			is_close_wall_on_change,
-			is_show_status_online,
-			is_private,
+			id: user.id,
+			userImage: user.userImage,
+			userLogin: user.userLogin,
+			userEmail: user.userEmail,
+			role: user.role,
+			createdAt: user.createdAt,
+			is_show_animated_avatar: user.is_show_animated_avatar,
+			is_close_wall_on_change: user.is_close_wall_on_change,
+			is_show_status_online: user.is_show_status_online,
+			is_private: user.is_private,
 		})
 	}
 
@@ -100,7 +75,7 @@ export class AuthController {
 		await this.authService.logout(userId, res)
 		res.clearCookie('refreshToken')
 
-		return res.status(HttpStatus.OK).json({ message: 'Logged out successfully' })
+		return res.status(HttpStatus.OK).send()
 	}
 
 	@Get(Route.REFRESH)
@@ -112,13 +87,7 @@ export class AuthController {
 
 		const tokens = await this.authService.refreshTokens(userId, refreshToken, res)
 
-		// Обновляем refreshToken в куки
-		res.cookie('refreshToken', tokens.refreshToken, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			sameSite: 'strict',
-			maxAge: 7 * 24 * 60 * 60 * 1000,
-		})
+		this.setCookie(res, tokens.refreshToken)
 
 		return res.json({
 			accessToken: tokens.accessToken,

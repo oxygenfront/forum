@@ -1,11 +1,12 @@
 import { selectStatusModal } from '@/entities/Modal'
-import { selectIsLogin } from '@/features/Auth'
+import { selectIsLogin, useLoginMutation } from '@/features/Auth'
 import { LoginButton } from '@/features/LoginButton'
-import { Search } from '@/features/Search/ui'
+import { Search } from '@/features/Search'
 import { UserButton } from '@/features/UserButton'
 import { UserModal } from '@/features/UserModal'
 import { useAppSelector } from '@/shared/lib/hooks'
 import { PATH } from '@/shared/model'
+import { Loader } from '@/shared/ui'
 import classnames from 'classnames'
 import type { FC } from 'react'
 import { useState } from 'react'
@@ -13,8 +14,9 @@ import { Link } from 'react-router-dom'
 import styles from './header.module.sass'
 
 export const Header: FC = () => {
-	const isLogin = useAppSelector(selectIsLogin)
+	const isLogin = useAppSelector(selectIsLogin) || !!localStorage.getItem('token')
 	const { userModal } = useAppSelector(selectStatusModal)
+	const [_, { isLoading }] = useLoginMutation()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	const toggleMenu = () => {
@@ -75,7 +77,7 @@ export const Header: FC = () => {
 			<div className={classnames(styles.right_block, { [styles.isLogin]: isLogin })}>
 				<Search />
 				<span className={styles.vertical_line} />
-				{isLogin ? <UserButton /> : <LoginButton />}
+				{isLogin ? <UserButton /> : isLoading ? <Loader loading={isLoading} /> : <LoginButton />}
 				{userModal && isLogin && <UserModal />}
 			</div>
 		</header>

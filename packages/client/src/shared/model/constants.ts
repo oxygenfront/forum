@@ -37,5 +37,6 @@ export enum FORM_HINTS_ERRORS {
 	isEmptyConfirmPassword = 'Поле подтверждения пароля не может быть пустым',
 	incorrectLogin = 'Неверная почта или пароль',
 	passwordsDoNotMatch = 'Пароли не совпадают',
-	userAlreadyRegistered = 'Пользователь с такой почтой уже зарегистрирован',
+	userAlreadyRegisteredEmail = 'Пользователь с такой почтой уже зарегистрирован',
+	userAlreadyRegisterLogin = 'Пользователь с таким логином уже зарегистрирован',
 }

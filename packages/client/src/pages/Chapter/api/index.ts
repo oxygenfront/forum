@@ -1,0 +1,1 @@
+export { useGetChapterPageQuery } from './getChapterPageApi'

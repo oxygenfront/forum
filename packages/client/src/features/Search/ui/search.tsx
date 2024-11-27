@@ -69,7 +69,7 @@ export const Search: FC = () => {
 					<CiSearch />
 				</button>
 			</div>
-			{isLoading ? <ModalResults loading /> : data && active ? <ModalResults results={data} /> : null}
+			{isLoading ? <ModalResults loading /> : data && active && inputValue ? <ModalResults results={data} /> : null}
 		</div>
 	)
 }

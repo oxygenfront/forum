@@ -22,7 +22,7 @@ export class ThemeService {
 	}
 
 	async findOne(id: string) {
-		const responseTheme = await this.prisma.theme.findFirst({
+		const theme = await this.prisma.theme.findFirst({
 			where: { id },
 			include: {
 				themeMessages: {
@@ -37,6 +37,11 @@ export class ThemeService {
 						},
 					},
 				},
+				_count: {
+					select: {
+						themeMessages: true, // Получаем количество сообщений
+					},
+				},
 				user: {
 					select: {
 						id: true,
@@ -46,15 +51,31 @@ export class ThemeService {
 				},
 			},
 		})
-		const countThemeMessages = responseTheme.themeMessages.length
-		return { ...responseTheme, countThemeMessages }
+
+		if (!theme) {
+			return null
+		}
+
+		return {
+			id: theme.id,
+			userId: theme.userId,
+			chapterId: theme.chapterId,
+			themeTitle: theme.themeTitle,
+			isPrivate: theme.isPrivate,
+			createdAt: theme.createdAt,
+			updateAt: theme.updateAt,
+			views: theme.views,
+			themeMessages: theme.themeMessages,
+			user: theme.user,
+			countThemeMessages: theme._count.themeMessages,
+		}
 	}
 
 	update(currentThemeId: string, updateThemeDto: UpdateThemeDto) {
 		return this.prisma.theme.update({
 			where: { id: currentThemeId },
 			data: {
-				titleTheme: updateThemeDto.titleTheme,
+				themeTitle: updateThemeDto.themeTitle,
 				isPrivate: updateThemeDto.isPrivate,
 			},
 		})

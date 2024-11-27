@@ -22,10 +22,10 @@ export class SearchService {
 			const [findChapters, findThemes] = await Promise.all([
 				this.prisma.chapter.findMany({
 					where: {
-						OR: [{ chapterTitle: { contains: query, mode: 'insensitive' } }],
+						OR: [{ titleChapter: { contains: query, mode: 'insensitive' } }],
 					},
 					select: {
-						chapterTitle: true,
+						titleChapter: true,
 						id: true,
 						chapterThemes: {
 							select: {
@@ -50,14 +50,14 @@ export class SearchService {
 				}),
 				this.prisma.theme.findMany({
 					where: {
-						OR: [{ titleTheme: { contains: query, mode: 'insensitive' } }],
+						OR: [{ themeTitle: { contains: query, mode: 'insensitive' } }],
 					},
 					select: {
-						titleTheme: true,
+						themeTitle: true,
 						chapterId: true,
-						chapters: {
+						chapter: {
 							select: {
-								chapterTitle: true,
+								titleChapter: true,
 							},
 						},
 						id: true,
@@ -80,13 +80,12 @@ export class SearchService {
 				}),
 			])
 
-			// Форматирование результатов
 			const chaptersWithType = findChapters.map((chapter) => {
 				const latestMessage = chapter.chapterThemes?.[0]?.themeMessages?.[0] || null
 
 				return {
-					id: chapter.id,
-					title: chapter.chapterTitle,
+					chapterId: chapter.id,
+					titleChapter: chapter.titleChapter,
 					latestMessage,
 					type: 'chapter',
 				}
@@ -96,9 +95,10 @@ export class SearchService {
 				const latestMessage = theme.themeMessages?.[0] || null
 
 				return {
-					id: theme.id,
-					title: theme.titleTheme,
-					chapterTitle: theme.chapters.chapterTitle,
+					themeId: theme.id,
+					titleTheme: theme.themeTitle,
+					chapterId: theme.chapterId,
+					titleChapter: theme.chapter.titleChapter,
 					latestMessage,
 					type: 'theme',
 				}

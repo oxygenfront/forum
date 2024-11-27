@@ -1,7 +1,7 @@
+import { useGetChapterPageQuery } from '@/pages/Chapter'
 import { UI_COMPONENT } from '@/shared/model'
 import { BlockThemeContainer, ChapterLink } from '@/shared/ui'
 import { Loader } from '@/shared/ui/Loader'
-import { useGetChapterPageQuery } from 'pages/Chapter/api/getChapters.ts'
 import { FC } from 'react'
 import { useParams } from 'react-router-dom'
 import styles from './chapter.module.sass'
@@ -13,7 +13,7 @@ export const ChapterPage: FC = () => {
 	const conditionalForShow = isLoading || !data
 	return (
 		<>
-			{conditionalForShow ? null : <BlockThemeContainer title={data.chapterTitle} />}
+			{conditionalForShow ? null : <BlockThemeContainer title={data.titleChapter} />}
 			<div className={styles.wrapper}>
 				<div className={styles.titles}>
 					<p className={styles.title}>Заголовок</p>

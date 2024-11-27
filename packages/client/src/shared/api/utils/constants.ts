@@ -5,6 +5,8 @@ export enum ApiTag {
 	THEMES = 'themes',
 	MESSAGE = 'message',
 	SEARCH = 'search',
+	STATS = 'stats',
+	PURCHASED = 'purchased',
 }
 
 export enum RequestMethod {
@@ -71,4 +73,10 @@ export const GET_MESSAGE_BY_ID = `${MESSAGE}`
 
 // Search
 export const SEARCH_ALL = `${SEARCH}/all`
-export const SEARCH_uSERS = `${SEARCH}/${USERS}`
+export const SEARCH_USERS = `${SEARCH}/${USERS}`
+
+// Stats
+export const GET_STATS = 'stats'
+
+// Latest purchased
+export const GET_PURCHASED = 'purchased'

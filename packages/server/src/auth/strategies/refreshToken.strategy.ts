@@ -13,11 +13,12 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'refresh') 
 		super({
 			secretOrKey: configService.get<string>('JWT_ACCESS_SECRET'),
 			jwtFromRequest: ExtractJwt.fromExtractors([
-				(req) => req.cookies['refreshToken'], // Извлекаем refreshToken из cookies
+				(req) => req.cookies.refreshToken, // Извлекаем refreshToken из cookies
 			]),
 		})
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	validate(payload: any) {
 		return this.usersService.findById(payload.sub)
 	}

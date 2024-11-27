@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common'
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 // biome-ignore lint/style/noNamespaceImport: <explanation>
@@ -18,50 +18,91 @@ export class AuthService {
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	async register(registerUserDto: RegisterDto): Promise<any> {
-		const userExists = await this.usersService.findByEmail(registerUserDto.userEmail)
-		if (userExists) {
-			throw new BadRequestException('Пользователь с таким email уже существует')
+		try {
+			const validationErrors: string[] = []
+
+			this.validateRegistrationData(registerUserDto, validationErrors)
+
+			const userExists = await this.usersService.findByEmail(registerUserDto.userEmail)
+			if (userExists) {
+				validationErrors.push('Пользователь с таким email уже существует')
+			}
+
+			if (validationErrors.length > 0) {
+				throw new BadRequestException(validationErrors)
+			}
+
+			// Хеширование пароля
+			const hashedPassword = await this.hashData(registerUserDto.userPassword)
+
+			const newUser = await this.usersService.create({
+				...registerUserDto,
+				userPassword: hashedPassword,
+			})
+
+			const tokens = await this.getTokens(newUser.id, newUser.userEmail)
+
+			// Обновление refresh-токена в базе данных
+			await this.updateRefreshToken(newUser.id, tokens.refreshToken)
+
+			return {
+				...newUser,
+				accessToken: tokens.accessToken,
+				refreshToken: tokens.refreshToken,
+			}
+		} catch (error) {
+			console.error('Ошибка регистрации пользователя:', error)
+
+			if (error instanceof BadRequestException) {
+				throw error
+			}
+
+			throw new InternalServerErrorException('Произошла ошибка. Повторите попытку позже.')
 		}
-
-		const hashedPassword = await this.hashData(registerUserDto.userPassword)
-		const newUser = await this.usersService.create({
-			...registerUserDto,
-			userPassword: hashedPassword,
-		})
-
-		const tokens = await this.getTokens(newUser.id, newUser.userEmail)
-		await this.updateRefreshToken(newUser.id, tokens.refreshToken)
-
-		return { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, ...newUser }
 	}
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	async login(data: LoginDto, res: ExpressResponse): Promise<any> {
-		const user = await this.usersService.findByEmail(data.userEmail)
-		if (!user) {
-			throw new BadRequestException('Пользователь с таким email не найден')
-		}
+		try {
+			const user = await this.usersService.findByEmail(data.userEmail)
+			if (!user) {
+				throw new BadRequestException({
+					type: 'login',
+					message: 'Пользователь не зарегистрирован',
+				})
+			}
 
-		const passwordMatches = await argon2.verify(user.userPassword, data.userPassword)
-		if (!passwordMatches) {
-			throw new BadRequestException('Неверный пароль')
-		}
+			const isPasswordValid = await argon2.verify(user.userPassword, data.userPassword)
+			if (!isPasswordValid) {
+				throw new BadRequestException({
+					type: 'all',
+					message: 'Неверный' + ' логин или пароль',
+				})
+			}
 
-		const tokens = await this.getTokens(user.id, user.userEmail)
+			const tokens = await this.getTokens(user.id, user.userEmail)
 
-		this.setRefreshTokenCookie(res, tokens.refreshToken)
-		await this.updateRefreshToken(user.id, tokens.refreshToken)
-		return {
-			user,
-			accessToken: tokens.accessToken,
-			refreshToken: tokens.refreshToken,
+			this.setRefreshTokenCookie(res, tokens.refreshToken)
+
+			await this.updateRefreshToken(user.id, tokens.refreshToken)
+
+			return {
+				...user,
+				accessToken: tokens.accessToken,
+				refreshToken: tokens.refreshToken,
+			}
+		} catch (error) {
+			if (error instanceof BadRequestException) {
+				throw error
+			}
+			console.error('Ошибка при входе пользователя:', error)
+			throw new InternalServerErrorException('Произошла ошибка. Повторите попытку позже.')
 		}
 	}
 
-	async logout(userId: string, res: ExpressResponse): Promise<{ message: string }> {
+	async logout(userId: string, res: ExpressResponse) {
 		await this.usersService.update(userId, { refreshToken: null })
 		res.clearCookie('refreshToken')
-		return { message: 'Выход выполнен успешно' }
 	}
 
 	async refreshTokens(
@@ -90,6 +131,38 @@ export class AuthService {
 		}
 	}
 
+	private validateRegistrationData(data: RegisterDto, validationErrors: string[]): void {
+		const { userEmail, userPassword, userLogin } = data
+
+		if (!userEmail) {
+			validationErrors.push('Email обязательное поле')
+		} else if (!this.isValidEmail(userEmail)) {
+			validationErrors.push('Некорректный email')
+		}
+
+		if (!userPassword) {
+			validationErrors.push('Пароль обязательное поле')
+		} else if (!this.isValidPassword(userPassword)) {
+			validationErrors.push(
+				'Пароль должен содержать минимум 8 символов, включая цифры, буквы верхнего и нижнего регистра и специальные символы',
+			)
+		}
+
+		if (!userLogin) {
+			validationErrors.push('Имя обязательное поле')
+		}
+	}
+
+	private isValidEmail(email: string): boolean {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+		return emailRegex.test(email)
+	}
+
+	private isValidPassword(password: string): boolean {
+		const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+		return passwordRegex.test(password)
+	}
+
 	private hashData(data: string): Promise<string> {
 		return argon2.hash(data)
 	}
@@ -99,7 +172,13 @@ export class AuthService {
 		await this.usersService.update(userId, { refreshToken: hashedRefreshToken })
 	}
 
-	private async getTokens(userId: string, username: string): Promise<{ accessToken: string; refreshToken: string }> {
+	private async getTokens(
+		userId: string,
+		username: string,
+	): Promise<{
+		accessToken: string
+		refreshToken: string
+	}> {
 		const [accessToken, refreshToken] = await Promise.all([
 			this.jwtService.signAsync(
 				{ sub: userId, username },

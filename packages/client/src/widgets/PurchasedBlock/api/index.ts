@@ -1,0 +1,1 @@
+export { useGetLatestPurchasedQuery } from './purchasedApi'

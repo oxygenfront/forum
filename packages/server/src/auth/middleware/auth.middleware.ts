@@ -10,7 +10,7 @@ export class AuthMiddleware implements NestMiddleware {
 		private configService: ConfigService,
 	) {}
 
-	async use(req: Request, res: Response, next: NextFunction) {
+	async use(req: Request, _res: Response, next: NextFunction) {
 		// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 		const accessToken = req.cookies['accessToken'] || req.headers['authorization']?.split(' ')[1]
 		if (accessToken) {

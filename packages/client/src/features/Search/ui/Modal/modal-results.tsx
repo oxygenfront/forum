@@ -1,12 +1,11 @@
-import { IChapterResult, IThemeResult } from '@/features/Search/model'
-import { ResultElement } from '@/features/Search/ui/ResultElement'
+import { type ISearchRes, ResultElement } from '@/features/Search'
 import { Loader } from '@/shared/ui/Loader'
 import { FC } from 'react'
 import styles from './modal-results.module.sass'
 
 // Типизация входных данных
 interface IModalResultsProps {
-	results?: (({ type: 'theme' } & IThemeResult) | ({ type: 'chapter' } & IChapterResult))[]
+	results?: ISearchRes[]
 	loading?: boolean
 }
 
@@ -19,7 +18,7 @@ export const ModalResults: FC<IModalResultsProps> = ({ results, loading }) => {
 				results?.map((result) => {
 					return (
 						<ResultElement
-							key={result.id}
+							key={result.chapterId}
 							result={result}
 						/>
 					)

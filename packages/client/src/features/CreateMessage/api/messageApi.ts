@@ -1,3 +1,4 @@
+import type { ICreateMessageReq, IMessageRes } from '@/features/CreateMessage'
 import {
 	ApiTag,
 	CREATE_MESSAGE,
@@ -10,7 +11,7 @@ import {
 
 const messageApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
-		createMessage: builder.mutation({
+		createMessage: builder.mutation<void, ICreateMessageReq>({
 			query: (body) => ({
 				url: CREATE_MESSAGE,
 				body: body,
@@ -21,10 +22,10 @@ const messageApi = rootApi.injectEndpoints({
 					return []
 				}
 
-				return [ApiTag.THEMES, ApiTag.CHAPTERS]
+				return [ApiTag.THEMES, ApiTag.CHAPTERS, ApiTag.STATS, ApiTag.PURCHASED]
 			},
 		}),
-		updateMessage: builder.mutation({
+		updateMessage: builder.mutation<void, { id: string; content: string }>({
 			query: ({ id, content }) => ({
 				url: `${UPDATE_MESSAGE}/${id}`,
 				body: { content },
@@ -35,10 +36,10 @@ const messageApi = rootApi.injectEndpoints({
 					return []
 				}
 
-				return [ApiTag.THEMES, ApiTag.CHAPTERS, ApiTag.MESSAGE]
+				return [ApiTag.THEMES, ApiTag.CHAPTERS, ApiTag.MESSAGE, ApiTag.PURCHASED]
 			},
 		}),
-		deleteMessage: builder.mutation({
+		deleteMessage: builder.mutation<void, string>({
 			query: (id) => ({
 				url: `${DELETE_MESSAGE_BY_ID}/${id}`,
 				method: RequestMethod.DELETE,
@@ -48,10 +49,10 @@ const messageApi = rootApi.injectEndpoints({
 					return []
 				}
 
-				return [ApiTag.THEMES, ApiTag.CHAPTERS]
+				return [ApiTag.THEMES, ApiTag.CHAPTERS, ApiTag.STATS, ApiTag.PURCHASED]
 			},
 		}),
-		getMessageById: builder.query({
+		getMessageById: builder.query<IMessageRes, string>({
 			query: (id) => `${GET_MESSAGE_BY_ID}/${id}`,
 		}),
 	}),

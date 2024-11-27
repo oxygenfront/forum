@@ -1,4 +1,4 @@
-import { selectMessage, setValue } from '@/features/CreateMessage/model'
+import { selectMessage, setValue } from '@/features/CreateMessage'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
 import classNames from 'classnames'
 import { ChangeEvent, FC, KeyboardEvent, useEffect, useRef, useState } from 'react'

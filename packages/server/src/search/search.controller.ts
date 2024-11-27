@@ -1,10 +1,10 @@
 import { Controller, Get, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { SwaggerApiTag } from '../../global/constants'
+import { Route, SwaggerApiTag } from '../../global/constants'
 import { SearchService } from './search.service'
 
 @ApiTags(SwaggerApiTag.SEARCH)
-@Controller('search')
+@Controller(Route.SEARCH)
 export class SearchController {
 	constructor(private searchService: SearchService) {}
 

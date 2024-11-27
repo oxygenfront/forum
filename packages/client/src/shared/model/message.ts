@@ -10,6 +10,6 @@ export interface IMessage {
 	updateAt: Date
 	user: IUser
 	theme: {
-		titleTheme?: string
+		themeTitle?: string
 	}
 }

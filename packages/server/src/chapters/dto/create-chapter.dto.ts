@@ -4,5 +4,5 @@ import { IsNotEmpty } from 'class-validator'
 export class CreateChapterDto {
 	@ApiProperty()
 	@IsNotEmpty()
-	chapterTitle: string
+	titleChapter: string
 }

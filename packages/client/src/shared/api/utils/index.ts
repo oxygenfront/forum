@@ -30,5 +30,7 @@ export {
 	AUTH_LOGOUT,
 	AUTH_REFRESH,
 	SEARCH_ALL,
-	SEARCH_uSERS,
+	SEARCH_USERS,
+	GET_STATS,
+	GET_PURCHASED,
 } from './constants'
