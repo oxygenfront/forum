@@ -71,7 +71,10 @@ export function ChapterLink(props: IChapterLinkProps) {
 							Нет сообщений
 						</span>
 					) : (
-						<Link to={generateThemeUrl({ isChapter, props, isMessage: true })}>
+						<Link
+							to={generateThemeUrl({ isChapter, props, isMessage: true })}
+							className={styles.user}
+						>
 							<img
 								src={isChapter ? props.latestMessage?.user.userImage : props.latestThemeMessage?.user.userImage}
 								alt='Аватар пользователя'

@@ -1,4 +1,3 @@
-import type { ICreateMessageReq, IMessageRes } from '@/features/CreateMessage'
 import {
 	ApiTag,
 	CREATE_MESSAGE,
@@ -8,6 +7,7 @@ import {
 	UPDATE_MESSAGE,
 	rootApi,
 } from '@/shared/api'
+import type { ICreateMessageReq, IMessageRes } from '@/shared/types'
 
 const messageApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({

@@ -11,7 +11,7 @@ import { AiOutlineLike } from 'react-icons/ai'
 import { AiOutlineDislike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
 
-export const Message: FC<IMessage> = (message) => {
+export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (message) => {
 	const { content, user, userId: messageUserId, id: messageId, themeId } = message
 	const { id: userId } = useAppSelector(selectUserData)
 	const dispatch = useAppDispatch()
@@ -30,14 +30,14 @@ export const Message: FC<IMessage> = (message) => {
 				<ModalOptions
 					arrayActions={[
 						<Action
-							nameAction='Удалить'
-							action={handleDeleteMessage}
-							key={`delete-${messageId}`}
-						/>,
-						<Action
 							nameAction='Редактировать'
 							action={handleUpdateMessage}
 							key={`edit-${messageId}`}
+						/>,
+						<Action
+							nameAction='Удалить'
+							action={handleDeleteMessage}
+							key={`delete-${messageId}`}
 						/>,
 					]}
 				/>

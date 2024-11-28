@@ -22,7 +22,6 @@ export const ThemePage: FC = () => {
 	if (conditionalForShow) {
 		return <Loader loading={isLoading} />
 	}
-
 	return (
 		<>
 			{!data || data.themeMessages.length ? (

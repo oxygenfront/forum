@@ -1,9 +1,29 @@
-import { IChapter, ITheme, UI_COMPONENT } from '@/shared/model'
+import type { UI_COMPONENT } from '@/shared/constants'
+import type { IChapterPageRes, IThemePageRes } from '@/shared/types'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import updateLocale from 'dayjs/plugin/updateLocale'
 
 dayjs.extend(relativeTime)
-
+dayjs.extend(updateLocale)
+dayjs.updateLocale('ru', {
+	relativeTime: {
+		future: 'через %s',
+		past: '%s назад',
+		s: 'неск. сек.', // замените, если хотите более точный формат
+		ss: '%d сек.', // добавляет поддержку секунд, например, "2 сек."
+		m: '1 мин.',
+		mm: '%d мин.',
+		h: '1 ч.',
+		hh: '%d ч.',
+		d: '1 д.',
+		dd: '%d д.',
+		M: '1 мес.',
+		MM: '%d мес.',
+		y: '1 г.',
+		yy: '%d г.',
+	},
+})
 export const timeSincePublication = (date: Date) => {
 	if (!date) {
 		return
@@ -78,7 +98,7 @@ export function trimmingText(str: string, maxLength = 20): string {
 	}
 	return str.substring(0, maxLength).concat('...')
 }
-type IChapterLinkProps = (IChapter & { ui: UI_COMPONENT }) | (ITheme & { ui: UI_COMPONENT })
+type IChapterLinkProps = (IChapterPageRes & { ui: UI_COMPONENT }) | (IThemePageRes & { ui: UI_COMPONENT })
 
 export function generateThemeUrl({
 	isChapter,
@@ -90,12 +110,12 @@ export function generateThemeUrl({
 	isMessage?: boolean
 }): string {
 	if (isChapter) {
-		const { titleChapter, id, latestMessage } = props as IChapter & { ui: UI_COMPONENT }
+		const { titleChapter, id, latestMessage } = props as IChapterPageRes & { ui: UI_COMPONENT }
 		if (isMessage) {
-			return `chapter/${createSlug(titleChapter)}/${id}/theme/${createSlug(latestMessage.theme.themeTitle)}/${latestMessage.themeId}`
+			return `chapter/${createSlug(titleChapter)}/${id}/theme/${createSlug(latestMessage?.theme.themeTitle)}/${latestMessage?.themeId}`
 		}
 		return `chapter/${createSlug(titleChapter)}/${id}`
 	}
-	const { id, themeTitle } = props as ITheme & { ui: UI_COMPONENT }
+	const { id, themeTitle } = props as IThemePageRes & { ui: UI_COMPONENT }
 	return `theme/${createSlug(themeTitle)}/${id}`
 }

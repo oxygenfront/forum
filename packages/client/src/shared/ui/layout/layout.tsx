@@ -22,7 +22,7 @@ export const Layout: FC = () => {
 			dispatch(setUserData(data))
 			dispatch(setIsLogin(true))
 		}
-	}, [data, isSuccessLogin])
+	}, [data, isSuccessLogin, isSuccess])
 
 	return (
 		<>

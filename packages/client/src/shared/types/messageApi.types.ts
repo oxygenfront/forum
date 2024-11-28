@@ -3,6 +3,7 @@ export interface ICreateMessageReq {
 	themeId: string
 	userId: string
 }
+
 export interface IMessageRes {
 	id: string
 	userId: string

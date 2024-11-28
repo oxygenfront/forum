@@ -8,7 +8,6 @@ interface IResultElement {
 	result: ISearchRes
 }
 export const ResultElement: FC<IResultElement> = ({ result }) => {
-	console.log(result)
 	const link =
 		result.type === 'theme'
 			? `chapter/${createSlug(result.titleChapter)}/${result.chapterId}/theme/${createSlug(result.titleTheme)}/${result.themeId}`

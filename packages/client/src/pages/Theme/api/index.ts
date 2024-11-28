@@ -1,1 +1,1 @@
-export { useGetThemePageQuery } from './getThemePageApi'
+export { useGetThemePageQuery } from './themePageApi'

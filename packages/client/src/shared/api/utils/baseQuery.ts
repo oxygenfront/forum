@@ -12,7 +12,7 @@ export const baseQueryFunction = async (args: string | FetchArgs, api: BaseQuery
 		prepareHeaders: (headers) => {
 			const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 			if (token) {
-				headers.set('authorization', `Bearer ${token}`)
+				headers.set('Authorization', `Bearer ${token}`)
 			}
 			return headers
 		},

@@ -23,3 +23,12 @@ export interface ILoginReq {
 }
 
 export type ILoginRes = IRegisterRes
+
+export interface ILoginError {
+	data: {
+		statusCode: number
+		message: { type: string; hintKey: string }[] | string
+		error: string
+	}
+	statusCode: number
+}

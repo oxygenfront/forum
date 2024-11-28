@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { PrismaModule, loggingMiddleware } from 'nestjs-prisma'
+import { PrismaModule } from 'nestjs-prisma'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
@@ -24,15 +24,6 @@ import { UsersModule } from './users/users.module'
 			isGlobal: true,
 			prismaServiceOptions: {
 				explicitConnect: true,
-				middlewares: [loggingMiddleware()],
-				prismaOptions: {
-					log: [
-						{
-							emit: 'event',
-							level: 'query',
-						},
-					],
-				},
 			},
 		}),
 		ChaptersModule,

@@ -3,10 +3,14 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 // biome-ignore lint/style/noNamespaceImport: <explanation>
 import * as argon2 from 'argon2'
+import { FORM_HINTS_ERRORS } from 'client/src/shared/constants'
 import { Response as ExpressResponse } from 'express'
 import { UsersService } from 'src/users/users.service'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
+
+type TTypeError = keyof Omit<RegisterDto, 'role' | 'id' | 'userImage'>
+type TValidationErrors = { inputType: TTypeError; hintKey: keyof typeof FORM_HINTS_ERRORS }[]
 
 @Injectable()
 export class AuthService {
@@ -19,20 +23,27 @@ export class AuthService {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	async register(registerUserDto: RegisterDto): Promise<any> {
 		try {
-			const validationErrors: string[] = []
+			const validationErrors: TValidationErrors = []
 
 			this.validateRegistrationData(registerUserDto, validationErrors)
 
-			const userExists = await this.usersService.findByEmail(registerUserDto.userEmail)
-			if (userExists) {
-				validationErrors.push('Пользователь с таким email уже существует')
+			const userEmailExists = await this.usersService.findByEmail(registerUserDto.userEmail)
+			const userLoginExists = await this.usersService.findByLogin(registerUserDto.userLogin)
+			if (userEmailExists) {
+				validationErrors.push({
+					inputType: 'userEmail',
+					hintKey: 'EMAIL_ALREADY_REGISTERED',
+				})
+			}
+
+			if (userLoginExists) {
+				validationErrors.push({ inputType: 'userLogin', hintKey: 'LOGIN_ALREADY_REGISTERED' })
 			}
 
 			if (validationErrors.length > 0) {
 				throw new BadRequestException(validationErrors)
 			}
 
-			// Хеширование пароля
 			const hashedPassword = await this.hashData(registerUserDto.userPassword)
 
 			const newUser = await this.usersService.create({
@@ -42,7 +53,6 @@ export class AuthService {
 
 			const tokens = await this.getTokens(newUser.id, newUser.userEmail)
 
-			// Обновление refresh-токена в базе данных
 			await this.updateRefreshToken(newUser.id, tokens.refreshToken)
 
 			return {
@@ -64,20 +74,27 @@ export class AuthService {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	async login(data: LoginDto, res: ExpressResponse): Promise<any> {
 		try {
+			const validationErrors: TValidationErrors = []
+			this.validateLoginData(data, validationErrors)
+
+			if (validationErrors.length > 0) {
+				throw new BadRequestException(validationErrors)
+			}
+
 			const user = await this.usersService.findByEmail(data.userEmail)
 			if (!user) {
-				throw new BadRequestException({
-					type: 'login',
-					message: 'Пользователь не зарегистрирован',
-				})
+				throw new BadRequestException([
+					{ hintType: 'INVALID_CREDENTIALS', type: 'userPassword' },
+					{ hintType: 'INVALID_CREDENTIALS', type: 'userEmail' },
+				])
 			}
 
 			const isPasswordValid = await argon2.verify(user.userPassword, data.userPassword)
 			if (!isPasswordValid) {
-				throw new BadRequestException({
-					type: 'all',
-					message: 'Неверный логин или пароль',
-				})
+				throw new BadRequestException([
+					{ hintType: 'INVALID_CREDENTIALS', type: 'userPassword' },
+					{ hintType: 'INVALID_CREDENTIALS', type: 'userEmail' },
+				])
 			}
 
 			const tokens = await this.getTokens(user.id, user.userEmail)
@@ -131,25 +148,39 @@ export class AuthService {
 		}
 	}
 
-	private validateRegistrationData(data: RegisterDto, validationErrors: string[]): void {
-		const { userEmail, userPassword, userLogin } = data
+	private validateLoginData(data: LoginDto, validationErrors: TValidationErrors): void {
+		const { userEmail, userPassword } = data
 
 		if (!userEmail) {
-			validationErrors.push('Email обязательное поле')
+			validationErrors.push({ hintKey: 'EMPTY_EMAIL', inputType: 'userEmail' })
 		} else if (!this.isValidEmail(userEmail)) {
-			validationErrors.push('Некорректный email')
+			validationErrors.push({ hintKey: 'INVALID_EMAIL', inputType: 'userEmail' })
 		}
 
 		if (!userPassword) {
-			validationErrors.push('Пароль обязательное поле')
+			validationErrors.push({ hintKey: 'EMPTY_PASSWORD', inputType: 'userPassword' })
+		}
+	}
+
+	private validateRegistrationData(data: RegisterDto, validationErrors: TValidationErrors): void {
+		const { userEmail, userPassword, userLogin } = data
+		if (!userEmail) {
+			validationErrors.push({ hintKey: 'EMPTY_EMAIL', inputType: 'userEmail' })
+		} else if (!this.isValidEmail(userEmail)) {
+			validationErrors.push({ hintKey: 'INVALID_EMAIL', inputType: 'userEmail' })
+		}
+
+		if (!userPassword) {
+			validationErrors.push({ hintKey: 'EMPTY_PASSWORD', inputType: 'userPassword' })
 		} else if (!this.isValidPassword(userPassword)) {
-			validationErrors.push(
-				'Пароль должен содержать минимум 8 символов, включая цифры, буквы верхнего и нижнего регистра и специальные символы',
-			)
+			validationErrors.push({
+				hintKey: 'INVALID_PASSWORD',
+				inputType: 'userPassword',
+			})
 		}
 
 		if (!userLogin) {
-			validationErrors.push('Имя обязательное поле')
+			validationErrors.push({ hintKey: 'EMPTY_LOGIN', inputType: 'userLogin' })
 		}
 	}
 
@@ -184,7 +215,7 @@ export class AuthService {
 				{ sub: userId, username },
 				{
 					secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-					expiresIn: '15m',
+					expiresIn: '1m',
 				},
 			),
 			this.jwtService.signAsync(
