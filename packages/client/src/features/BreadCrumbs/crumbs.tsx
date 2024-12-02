@@ -7,10 +7,10 @@ import styles from './crumbs.module.sass'
 
 export const BreadCrumbs: FC = () => {
 	const location = useLocation()
-	const pathnames = location.pathname.split('/').filter((x) => x)
+	const pathNames = location.pathname.split('/').filter((x) => x)
 
-	const routes = pathnames.map((path, index) => {
-		const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`
+	const routes = pathNames.map((path, index) => {
+		const routeTo = `/${pathNames.slice(0, index + 1).join('/')}`
 
 		return { path: routeTo, name: path }
 	})

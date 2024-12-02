@@ -3,7 +3,7 @@ import { selectUserData, setIsLogin } from '@/features/Auth'
 import { useLogoutMutation } from '@/features/Auth/api'
 import { useOutsideClick } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
-import { type FC, useRef } from 'react'
+import { type FC, useEffect, useRef } from 'react'
 import { PiWechatLogoBold } from 'react-icons/pi'
 import { RiLogoutCircleRLine } from 'react-icons/ri'
 import { VscAccount } from 'react-icons/vsc'
@@ -12,7 +12,7 @@ import styles from './modal.module.sass'
 
 export const UserModal: FC = () => {
 	const { userImage, userLogin } = useAppSelector(selectUserData)
-	const [logout] = useLogoutMutation()
+	const [logout, { isSuccess, isLoading }] = useLogoutMutation()
 	const dispatch = useAppDispatch()
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -22,11 +22,16 @@ export const UserModal: FC = () => {
 
 	function handleLogout() {
 		logout()
-		localStorage.removeItem('token')
-		sessionStorage.removeItem('token')
-		dispatch(setIsLogin(false))
-		dispatch(toggleUserModal())
 	}
+
+	useEffect(() => {
+		if (isSuccess && !isLoading) {
+			localStorage.removeItem('token')
+			sessionStorage.removeItem('token')
+			dispatch(setIsLogin(false))
+			dispatch(toggleUserModal())
+		}
+	}, [isSuccess, isLoading])
 
 	useOutsideClick(ref, handleClose)
 	return (

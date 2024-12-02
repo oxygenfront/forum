@@ -1,6 +1,7 @@
 import { selectUserData } from '@/features/Auth'
 import { CustomTextarea } from '@/features/CustomTextArea'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
+import type { ICreateMessageReq } from '@/shared/types'
 import { FC, KeyboardEvent } from 'react'
 import { useCreateMessageMutation, useUpdateMessageMutation } from './api'
 import styles from './create-message.module.sass'
@@ -18,8 +19,8 @@ export const CreateMessage: FC<ICreateMessageProps> = ({ themeId }) => {
 	const [createMessage, { isSuccess: isSuccessCreate }] = useCreateMessageMutation()
 	const [updateMessage, { isSuccess: isSuccessUpdate }] = useUpdateMessageMutation()
 
-	const dataMessage = {
-		content: selectDataMessage.content,
+	const dataMessage: ICreateMessageReq = {
+		content: selectDataMessage.content ?? '',
 		themeId,
 		userId: userId,
 	}
@@ -27,8 +28,8 @@ export const CreateMessage: FC<ICreateMessageProps> = ({ themeId }) => {
 	const handleActionMessage = () => {
 		if (selectDataMessage.isEdit) {
 			updateMessage({
-				id: selectDataMessage.messageId,
-				content: selectDataMessage.content,
+				id: selectDataMessage.messageId ?? '',
+				content: selectDataMessage.content ?? '',
 			})
 		} else {
 			createMessage(dataMessage)
@@ -40,7 +41,7 @@ export const CreateMessage: FC<ICreateMessageProps> = ({ themeId }) => {
 	}
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-		if (event.key === 'Enter' && !event.shiftKey) {
+		if (event.key === 'Enter' && event.shiftKey) {
 			event.preventDefault()
 			handleActionMessage()
 		}

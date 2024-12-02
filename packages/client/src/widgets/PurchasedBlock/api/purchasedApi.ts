@@ -1,5 +1,5 @@
 import { ApiTag, GET_PURCHASED, rootApi } from '@/shared/api'
-import type { IResponsePurchased } from '@/widgets/PurchasedBlock/types/purchased.types'
+import type { IResponsePurchased } from '@/shared/types'
 export const authApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getLatestPurchased: builder.query<IResponsePurchased[], void>({

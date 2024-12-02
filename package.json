@@ -25,7 +25,7 @@
     "client:start:dev": "yarn workspace client start:dev",
     "client:start:prod": "yarn workspace client start:prod",
     "client:format": "biome format --write packages/client",
-    "client:lint": "biome lint --apply-unsafe packages/client",
+    "client:lint": "biome lint --write --unsafe packages/client",
     "server:build": "yarn workspace server build",
     "server:start:dev": "yarn workspace server start:dev",
     "server:start:prod": "yarn workspace server start:prod",

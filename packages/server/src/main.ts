@@ -41,8 +41,8 @@ async function bootstrap() {
 
 	app.enableCors(corsOptions)
 	const config = new DocumentBuilder()
-		.setTitle('Darkforum')
-		.setDescription('Darkforum API description')
+		.setTitle('DarkForum')
+		.setDescription('DarkForum API description')
 		.setVersion('0.1')
 		.addBearerAuth()
 		.build()

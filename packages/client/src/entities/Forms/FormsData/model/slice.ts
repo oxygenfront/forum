@@ -1,4 +1,5 @@
-import type { IInitialState, TPayload } from '@/shared/model'
+import { ROLES } from '@/shared/constants'
+import type { IInitialState, TPayload } from '@/shared/types'
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState: IInitialState = {
@@ -11,7 +12,7 @@ const initialState: IInitialState = {
 		userEmail: '',
 		userPassword: '',
 		userConfirmPassword: '',
-		role: 'user',
+		role: ROLES.USER,
 	},
 	forgot: {
 		userEmail: '',

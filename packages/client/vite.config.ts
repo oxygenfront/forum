@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => {
 			port: Number(env.SCREENING_PORT),
 			strictPort: false,
 			proxy: setProxyConfig(mode),
-			open: mode === 'development',
+			open: false,
 		},
 		preview: {
 			port: Number(env.SCREENING_PORT),

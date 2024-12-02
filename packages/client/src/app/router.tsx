@@ -3,8 +3,8 @@ import { ChapterPage } from '@/pages/Chapter'
 import { Profile } from '@/pages/Profile'
 import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
+import { PATH } from '@/shared/constants'
 
-import { PATH } from '@/shared/model'
 import { ChaptersLinksBlock } from '@/widgets/ChaptersLinks'
 import { createBrowserRouter } from 'react-router-dom'
 

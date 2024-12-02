@@ -1,1 +1,1 @@
-export { useGetChapterPageQuery } from './getChapterPageApi'
+export { useGetChapterPageQuery } from './chapterPageApi'

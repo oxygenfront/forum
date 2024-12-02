@@ -1,4 +1,5 @@
-import { type ISearchRes, ResultElement } from '@/features/Search'
+import { ResultElement } from '@/features/Search'
+import type { ISearchRes } from '@/shared/types'
 import { Loader } from '@/shared/ui/Loader'
 import { FC } from 'react'
 import styles from './modal-results.module.sass'

@@ -2,9 +2,9 @@ import { type TypeForms, clearData, selectForms, setTypeForm } from '@/entities/
 import { toggleAuthModal } from '@/entities/Modal'
 
 import { setIsLogin, setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
-import type { IRegisterRes } from '@/features/Auth/types'
 
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import type { IRegisterRes } from '@/shared/types/auth.types'
 import { Forgot } from '@/widgets/ForgotPassword'
 import { Login } from '@/widgets/Login'
 import { setRememberMe } from '@/widgets/Login'
@@ -17,32 +17,27 @@ import { RxCross2 } from 'react-icons/rx'
 
 // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 export const useReturnsElements = (styles: CSSModuleClasses) => {
-	const [
-		login,
-		{ isLoading: isLoadingLogin, isSuccess: isSuccessLogin, data: fetchLoginData, isError: _isErrorLogin },
-	] = useLoginMutation()
+	const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin, data: fetchLoginData, error: errorLogin }] =
+		useLoginMutation()
 	const [
 		register,
-		{ isLoading: isLoadingRegister, isSuccess: isSuccessRegister, isError: _isErrorRegister, data: fetchRegisterData },
+		{ isLoading: isLoadingRegister, isSuccess: isSuccessRegister, data: fetchRegisterData, error: errorRegister },
 	] = useRegisterMutation()
 	const dispatch = useAppDispatch()
 
 	const { login: storeLoginData, register: storeRegisterData } = useAppSelector(selectForms)
 
 	const handleLogin = () => {
-		dispatch(clearData())
 		login({ userEmail: storeLoginData.userEmail, userPassword: storeLoginData.userPassword })
 	}
 
 	const handleRegister = () => {
-		dispatch(setRememberMe(true))
 		register({
 			userEmail: storeRegisterData.userEmail,
 			userLogin: storeRegisterData.userLogin,
 			userPassword: storeRegisterData.userPassword,
 			role: storeRegisterData.role,
 		})
-		dispatch(clearData())
 	}
 
 	useEffect(() => {
@@ -50,15 +45,22 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 			dispatch(setUserData(fetchData))
 		}
 
-		if ((!isLoadingLogin && isSuccessLogin) || (!isLoadingRegister && isSuccessRegister)) {
-			if (isSuccessLogin) {
-				handleAuthSuccess(fetchLoginData)
-			}
-			if (isSuccessRegister) {
-				handleAuthSuccess(fetchRegisterData)
-			}
+		if (isSuccessLogin) {
+			handleAuthSuccess(fetchLoginData)
+			dispatch(clearData())
 			dispatch(toggleAuthModal())
 			dispatch(setIsLogin(true))
+		} else if (errorLogin) {
+			//TODO написать логику для обработки хинтов и ошибок для логина
+		}
+		if (isSuccessRegister) {
+			handleAuthSuccess(fetchRegisterData)
+			dispatch(clearData())
+			dispatch(setRememberMe(true))
+			dispatch(toggleAuthModal())
+			dispatch(setIsLogin(true))
+		} else if (errorRegister) {
+			//TODO написать логику для обработки хинтов и ошибок для регистра
 		}
 	}, [isSuccessLogin, isLoadingLogin, isLoadingRegister, isSuccessRegister])
 

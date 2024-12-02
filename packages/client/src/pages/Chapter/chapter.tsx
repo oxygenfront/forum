@@ -1,5 +1,5 @@
 import { useGetChapterPageQuery } from '@/pages/Chapter'
-import { UI_COMPONENT } from '@/shared/model'
+import { UI_COMPONENT } from '@/shared/constants'
 import { BlockThemeContainer, ChapterLink } from '@/shared/ui'
 import { Loader } from '@/shared/ui/Loader'
 import { FC } from 'react'

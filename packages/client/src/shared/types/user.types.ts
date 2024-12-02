@@ -1,4 +1,4 @@
-import type { ROLES } from '@/shared/model'
+import { ROLES } from '@/shared/constants'
 
 export interface IUser {
 	id: string
@@ -12,4 +12,5 @@ export interface IUser {
 	is_show_status_online: boolean
 	is_private: boolean
 	refreshToken: string | null
+	avatarColor: string
 }

@@ -12,7 +12,7 @@ export const baseQueryFunction = async (args: string | FetchArgs, api: BaseQuery
 		prepareHeaders: (headers) => {
 			const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 			if (token) {
-				headers.set('authorization', `Bearer ${token}`)
+				headers.set('Authorization', `Bearer ${token}`)
 			}
 			return headers
 		},
@@ -22,13 +22,12 @@ export const baseQueryFunction = async (args: string | FetchArgs, api: BaseQuery
 
 	if (response.error?.status === 401) {
 		const refreshResponse = await baseQuery({ url: AUTH_REFRESH, method: 'GET' }, api, extraOptions)
-
 		if (refreshResponse.data && typeof refreshResponse.data === 'object' && 'accessToken' in refreshResponse.data) {
 			const { accessToken } = refreshResponse.data as { accessToken: string }
 			const state = api.getState() as RootState
 			const { rememberMe } = state.rememberMe
 
-			rememberMe || !localStorage.getItem('token')
+			rememberMe || localStorage.getItem('token')
 				? localStorage.setItem('token', accessToken)
 				: sessionStorage.setItem('token', accessToken)
 

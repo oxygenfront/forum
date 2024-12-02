@@ -1,5 +1,5 @@
 import { ApiTag, GET_STATS, rootApi } from '@/shared/api'
-import type { IStatsRes } from '@/widgets/StatsBlock/types'
+import type { IStatsRes } from '@/shared/types'
 
 export const authApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({

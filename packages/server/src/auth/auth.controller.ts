@@ -40,6 +40,7 @@ export class AuthController {
 			is_close_wall_on_change: user.is_close_wall_on_change,
 			is_show_status_online: user.is_show_status_online,
 			is_private: user.is_private,
+			avatarColor: user.avatarColor,
 		})
 	}
 
@@ -62,13 +63,14 @@ export class AuthController {
 			is_close_wall_on_change: user.is_close_wall_on_change,
 			is_show_status_online: user.is_show_status_online,
 			is_private: user.is_private,
+			avatarColor: user.avatarColor,
 		})
 	}
 
 	@Post(Route.LOGOUT)
 	async logout(@Req() req: Request, @Res() res: Response) {
 		// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-		const userId = req.user?.['sub']
+		const userId = req.user['sub']
 		if (!userId) {
 			return res.status(HttpStatus.FORBIDDEN).json({ message: 'Unauthorized' })
 		}
@@ -108,6 +110,7 @@ export class AuthController {
 			is_close_wall_on_change: user.is_close_wall_on_change,
 			is_show_status_online: user.is_show_status_online,
 			is_private: user.is_private,
+			avatarColor: user.avatarColor,
 		}
 	}
 }

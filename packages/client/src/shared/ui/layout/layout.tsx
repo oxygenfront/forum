@@ -1,6 +1,6 @@
-import { selectIsLogin, setIsLogin, setUserData, useGetAuthQuery, useLoginMutation } from '@/features/Auth'
+import { selectIsLogin, setUserData, useGetAuthQuery, useLoginMutation } from '@/features/Auth'
+import { PATH } from '@/shared/constants'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
-import { PATH } from '@/shared/model'
 import { Container } from '@/shared/ui'
 import { Aside } from '@/widgets/Aside'
 import { Footer } from '@/widgets/Footer'
@@ -15,12 +15,11 @@ export const Layout: FC = () => {
 	const { pathname } = useLocation()
 	const [_, { isSuccess: isSuccessLogin }] = useLoginMutation()
 	const isLogin = useAppSelector(selectIsLogin)
-	const { data, isSuccess } = useGetAuthQuery(undefined, { skip: !!isLogin })
+	const { data, isSuccess } = useGetAuthQuery(undefined, { skip: isLogin })
 	const dispatch = useAppDispatch()
 	useEffect(() => {
 		if (isSuccess || data) {
 			dispatch(setUserData(data))
-			dispatch(setIsLogin(true))
 		}
 	}, [data, isSuccessLogin])
 

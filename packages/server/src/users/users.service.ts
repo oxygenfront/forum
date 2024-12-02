@@ -22,6 +22,10 @@ export class UsersService {
 		return this.prisma.user.findFirst({ where: { userEmail: userEmail } })
 	}
 
+	findByLogin(userLogin: string) {
+		return this.prisma.user.findFirst({ where: { userLogin: userLogin } })
+	}
+
 	update(id: string, updateUserDto: UpdateUserDto) {
 		return this.prisma.user.updateMany({ where: { id: id }, data: updateUserDto })
 	}

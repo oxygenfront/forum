@@ -1,4 +1,4 @@
-import { ROLES } from '@/shared/model'
+import { ROLES } from '@/shared/constants'
 
 export interface IRegisterReq {
 	userEmail: string
@@ -23,3 +23,12 @@ export interface ILoginReq {
 }
 
 export type ILoginRes = IRegisterRes
+
+export interface ILoginError {
+	data: {
+		statusCode: number
+		message: { type: string; hintKey: string }[] | string
+		error: string
+	}
+	statusCode: number
+}

@@ -1,4 +1,3 @@
-import type { ILoginReq, ILoginRes, IRegisterReq, IRegisterRes } from '@/features/Auth'
 import {
 	AUTH_LOGIN_API,
 	AUTH_LOGOUT,
@@ -8,6 +7,7 @@ import {
 	RequestMethod,
 	rootApi,
 } from '@/shared/api'
+import type { ILoginReq, ILoginRes, IRegisterReq, IRegisterRes } from '@/shared/types'
 
 export const authApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({

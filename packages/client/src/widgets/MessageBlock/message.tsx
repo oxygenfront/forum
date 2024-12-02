@@ -1,17 +1,19 @@
+import { ROLES } from '@/shared/constants'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import type { IMessage } from '@/shared/types'
+import classNames from 'classnames'
 import styles from './message.module.sass'
 
 import { Action } from '@/features/Action'
 import { selectIsLogin, selectUserData } from '@/features/Auth'
 import { setValue, useDeleteMessageMutation } from '@/features/CreateMessage'
 import { ModalOptions } from '@/features/ModalSort'
-import { type IMessage, ROLES } from '@/shared/model'
 import { type FC } from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
 import { AiOutlineDislike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
 
-export const Message: FC<IMessage> = (message) => {
+export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (message) => {
 	const { content, user, userId: messageUserId, id: messageId, themeId } = message
 	const { id: userId } = useAppSelector(selectUserData)
 	const isLogin = useAppSelector(selectIsLogin)
@@ -31,31 +33,37 @@ export const Message: FC<IMessage> = (message) => {
 				<ModalOptions
 					arrayActions={[
 						<Action
-							nameAction='Удалить'
-							action={handleDeleteMessage}
-							key={`delete-${messageId}`}
-						/>,
-						<Action
 							nameAction='Редактировать'
 							action={handleUpdateMessage}
 							key={`edit-${messageId}`}
+						/>,
+						<Action
+							nameAction='Удалить'
+							action={handleDeleteMessage}
+							key={`delete-${messageId}`}
 						/>,
 					]}
 				/>
 			)}
 			<div className={styles.user_wrapper}>
 				<div className={styles.user}>
-					<img
-						src={user.userImage}
-						alt='Аватар'
-						className={styles.user_img}
-					/>
-					<div className={styles.user_desc}>
-						<div className={styles.user_name}>{user.userLogin}</div>
-						<div className={styles.user_role}>
-							{message.userThemeId === messageUserId ? ROLES.SELLER : 'Пользователь'}
+					{user.userImage ? (
+						<img
+							src={user.userImage}
+							alt='Аватар'
+							className={styles.user_img}
+						/>
+					) : (
+						<div
+							style={{ backgroundColor: message.user.avatarColor }}
+							className={classNames(styles.user_img, styles.noImg)}
+						>
+							{message.user.userLogin[0]}
 						</div>
-					</div>
+					)}
+
+					<div className={styles.user_name}>{user.userLogin}</div>
+					<div className={styles.user_role}>{message.userThemeId === messageUserId ? ROLES.SELLER : ROLES.USER}</div>
 				</div>
 				<div className={styles.content}>{content}</div>
 			</div>

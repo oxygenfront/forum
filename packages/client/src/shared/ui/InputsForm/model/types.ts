@@ -1,4 +1,4 @@
-import type { FORM_HINTS_ERRORS } from '@/shared/model/constants'
+import type { FORM_HINTS_ERRORS } from '@/shared/constants/constants'
 
 type ValueHint = { status: boolean; hintKey: keyof typeof FORM_HINTS_ERRORS | null }
 

@@ -1,5 +1,5 @@
-import type { ISearchRes } from '@/features/Search/types'
 import { SEARCH_ALL, rootApi } from '@/shared/api'
+import type { ISearchRes } from '@/shared/types'
 
 export const searchApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({

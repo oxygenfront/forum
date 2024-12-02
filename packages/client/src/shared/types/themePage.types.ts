@@ -1,6 +1,7 @@
-import { IMessage, IUser } from '@/shared/model'
+import type { IMessage } from './message.types'
+import type { IUser } from './user.types'
 
-export interface ITheme {
+export interface IThemePageRes {
 	id: string
 	chapterId: string
 	themeTitle: string
@@ -12,5 +13,5 @@ export interface ITheme {
 	countThemeMessages: number
 	latestThemeMessage: IMessage
 	themeMessages: IMessage[]
-	user: Pick<IUser, 'id' | 'userLogin' | 'userImage'>
+	user: Pick<IUser, 'id' | 'userLogin' | 'userImage' | 'avatarColor'>
 }
