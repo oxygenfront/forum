@@ -1,6 +1,7 @@
 import { toggleUserModal } from '@/entities/Modal'
 import { selectUserData, setIsLogin } from '@/features/Auth'
 import { useLogoutMutation } from '@/features/Auth/api'
+import { clearUserData } from '@/features/Auth/model'
 import { useOutsideClick } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { type FC, useEffect, useRef } from 'react'
@@ -29,6 +30,7 @@ export const UserModal: FC = () => {
 			localStorage.removeItem('token')
 			sessionStorage.removeItem('token')
 			dispatch(setIsLogin(false))
+			dispatch(clearUserData())
 			dispatch(toggleUserModal())
 		}
 	}, [isSuccess, isLoading])

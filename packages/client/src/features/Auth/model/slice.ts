@@ -33,7 +33,17 @@ export const userSlice = createSlice({
 		setIsLogin: (state, { payload }) => {
 			state.isLogin = payload
 		},
+		clearUserData: (state: IResponseUser) => {
+			state.isLogin = false
+			state.userData = {
+				userImage: initialState.userData.userImage,
+				role: initialState.userData.role,
+				userEmail: initialState.userData.userEmail,
+				userLogin: initialState.userData.userLogin,
+				id: initialState.userData.id,
+			}
+		},
 	},
 })
 
-export const { setUserData, setIsLogin } = userSlice.actions
+export const { setUserData, setIsLogin, clearUserData } = userSlice.actions
