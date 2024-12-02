@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import styles from './message.module.sass'
 
 import { Action } from '@/features/Action'
-import { selectUserData } from '@/features/Auth'
+import { selectIsLogin, selectUserData } from '@/features/Auth'
 import { setValue, useDeleteMessageMutation } from '@/features/CreateMessage'
 import { ModalOptions } from '@/features/ModalSort'
 import { type IMessage, ROLES } from '@/shared/model'
@@ -14,6 +14,7 @@ import { FaArrowTurnDown } from 'react-icons/fa6'
 export const Message: FC<IMessage> = (message) => {
 	const { content, user, userId: messageUserId, id: messageId, themeId } = message
 	const { id: userId } = useAppSelector(selectUserData)
+	const isLogin = useAppSelector(selectIsLogin)
 	const dispatch = useAppDispatch()
 	const [deleteMessage] = useDeleteMessageMutation()
 	const handleDeleteMessage = () => {
@@ -26,7 +27,7 @@ export const Message: FC<IMessage> = (message) => {
 
 	return (
 		<div className={styles.container}>
-			{message.user.id === userId && (
+			{message.user.id === userId && isLogin && (
 				<ModalOptions
 					arrayActions={[
 						<Action
