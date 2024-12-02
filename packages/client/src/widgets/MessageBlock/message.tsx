@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import styles from './message.module.sass'
 
 import { Action } from '@/features/Action'
-import { selectUserData } from '@/features/Auth'
+import { selectIsLogin, selectUserData } from '@/features/Auth'
 import { setValue, useDeleteMessageMutation } from '@/features/CreateMessage'
 import { ModalOptions } from '@/features/ModalSort'
 import { type FC } from 'react'
@@ -16,6 +16,7 @@ import { FaArrowTurnDown } from 'react-icons/fa6'
 export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (message) => {
 	const { content, user, userId: messageUserId, id: messageId, themeId } = message
 	const { id: userId } = useAppSelector(selectUserData)
+	const isLogin = useAppSelector(selectIsLogin)
 	const dispatch = useAppDispatch()
 	const [deleteMessage] = useDeleteMessageMutation()
 	const handleDeleteMessage = () => {
@@ -28,7 +29,7 @@ export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (
 
 	return (
 		<div className={styles.container}>
-			{message.user.id === userId && (
+			{message.user.id === userId && isLogin && (
 				<ModalOptions
 					arrayActions={[
 						<Action

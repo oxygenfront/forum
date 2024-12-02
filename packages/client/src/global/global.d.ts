@@ -1,6 +1,6 @@
 declare global {
-	type RootState = import('@/app/store.ts').RootState
-	type AppDispatch = import('@/app/store.ts').AppDispatch
+	declare type RootState = import('@/app/store').RootState
+	declare type AppDispatch = import('@/app/store').AppDispatch
 }
 
 export type {}
