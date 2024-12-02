@@ -1,4 +1,4 @@
-import { Accordeon } from '@/shared/ui/Accordion'
+import { Accordion } from '@/shared/ui/Accordion'
 import { Appearance } from '@/shared/ui/Appearance'
 import { Confidence } from '@/shared/ui/Confidence'
 import { GeneralSettings } from '@/shared/ui/GeneralSettings'
@@ -7,7 +7,7 @@ export const Profile = () => {
 	return (
 		<>
 			<UserBlock />
-			<Accordeon />
+			<Accordion />
 			<Appearance />
 			<Confidence />
 			<GeneralSettings />

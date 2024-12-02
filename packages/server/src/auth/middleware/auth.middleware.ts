@@ -10,35 +10,57 @@ export class AuthMiddleware implements NestMiddleware {
 		private configService: ConfigService,
 	) {}
 
-	async use(req: Request, _res: Response, next: NextFunction) {
-		// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-		const accessToken = req.cookies['accessToken'] || req.headers['authorization']?.split(' ')[1]
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
+	async use(req: Request, res: Response, next: NextFunction) {
+		const accessToken = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
+		const refreshToken = req.cookies.refreshToken
+
 		if (accessToken) {
 			try {
 				req.user = await this.jwtService.verifyAsync(accessToken, {
 					secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
 				})
-				next()
+				return next()
 			} catch (error) {
-				console.error('Access token verification failed', error)
-				throw new UnauthorizedException('Invalid or expired access token')
-			}
-		} else {
-			// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-			const refreshToken = req.cookies['refreshToken']
-			if (!refreshToken) {
-				throw new UnauthorizedException('Token not found')
-			}
+				if (error.name === 'TokenExpiredError' && refreshToken) {
+					try {
+						const decodedRefresh = await this.jwtService.verifyAsync(refreshToken, {
+							secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+						})
+						const newAccessToken = this.jwtService.sign(
+							{ userId: decodedRefresh.sub },
+							{ secret: this.configService.get<string>('JWT_ACCESS_SECRET'), expiresIn: '15m' },
+						)
 
+						return res.json({ accessToken: newAccessToken })
+					} catch (refreshError) {
+						console.error('Refresh token verification failed', refreshError)
+						throw new UnauthorizedException('Invalid or expired refresh token')
+					}
+				} else {
+					console.error('Access token verification failed', error)
+					throw new UnauthorizedException('Invalid or expired access token')
+				}
+			}
+		}
+
+		if (refreshToken) {
 			try {
-				req.user = await this.jwtService.verifyAsync(refreshToken, {
+				const decodedRefresh = await this.jwtService.verifyAsync(refreshToken, {
 					secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
 				})
-				next()
-			} catch (error) {
-				console.error('Refresh token verification failed', error)
+
+				const newAccessToken = this.jwtService.sign(
+					{ userId: decodedRefresh.sub },
+					{ secret: this.configService.get<string>('JWT_ACCESS_SECRET'), expiresIn: '15m' },
+				)
+
+				return res.json({ accessToken: newAccessToken })
+			} catch (refreshError) {
+				console.error('Refresh token verification failed', refreshError)
 				throw new UnauthorizedException('Invalid or expired refresh token')
 			}
 		}
+		throw new UnauthorizedException('No tokens provided')
 	}
 }

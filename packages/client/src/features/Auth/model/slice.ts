@@ -1,4 +1,4 @@
-import { ROLES } from '@/shared/model'
+import { ROLES } from '@/shared/constants'
 import { createSlice } from '@reduxjs/toolkit'
 
 type TUserData = {
@@ -10,7 +10,7 @@ type TUserData = {
 }
 
 type IResponseUser = {
-	isLogin: null | boolean
+	isLogin: boolean
 	userData: TUserData
 }
 

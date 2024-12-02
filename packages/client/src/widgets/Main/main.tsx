@@ -1,7 +1,7 @@
 import { selectStatusModal } from '@/entities/Modal'
 import { Auth } from '@/features/Auth'
+import { PATH } from '@/shared/constants'
 import { useAppSelector } from '@/shared/lib/hooks'
-import { PATH } from '@/shared/model'
 import { ButtonLogin } from '@/widgets/ButtonLogin'
 import { NavBlock } from '@/widgets/NavBlock'
 import type { FC } from 'react'

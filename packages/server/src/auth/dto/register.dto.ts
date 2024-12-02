@@ -29,4 +29,8 @@ export class RegisterDto {
 	@ApiProperty({ default: 'user' })
 	@IsString()
 	role: ROLES
+
+	@ApiProperty()
+	@IsString()
+	avatarColor: string
 }

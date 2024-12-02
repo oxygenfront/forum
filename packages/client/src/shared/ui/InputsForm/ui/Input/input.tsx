@@ -1,6 +1,6 @@
 import { changeData, selectForms } from '@/entities/Forms'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
-import type { InputProps, InputValue } from '@/shared/model'
+import type { InputProps, InputValue } from '@/shared/types'
 import { useRenderHint } from '@/shared/ui/InputsForm/lib/useRenderHint'
 import { selectHint } from '@/shared/ui/InputsForm/model/selector'
 import classNames from 'classnames'

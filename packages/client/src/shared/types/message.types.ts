@@ -1,4 +1,4 @@
-import { IUser } from '@/shared/model'
+import type { IUser } from './user.types'
 
 export interface IMessage {
 	id: string
@@ -7,5 +7,5 @@ export interface IMessage {
 	createdAt: Date
 	updateAt: Date
 	userId: string
-	user: Pick<IUser, 'id' | 'userImage' | 'userLogin'>
+	user: Pick<IUser, 'id' | 'userImage' | 'userLogin' | 'avatarColor'>
 }

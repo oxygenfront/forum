@@ -1,5 +1,6 @@
+import { UI_COMPONENT } from '@/shared/constants'
 import { generateThemeUrl, replaceMessage, timeSincePublication, trimmingText } from '@/shared/lib'
-import { IChapter, ITheme, UI_COMPONENT } from '@/shared/model'
+import { IChapterPageRes, IThemePageRes } from '@/shared/types'
 import classNames from 'classnames'
 import { BsChatText } from 'react-icons/bs'
 import { MdOutlineEdit } from 'react-icons/md'
@@ -7,19 +8,20 @@ import { PiWechatLogoBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import styles from './chapter-link.module.sass'
 
-type IChapterLinkProps = (IChapter & { ui: UI_COMPONENT }) | (ITheme & { ui: UI_COMPONENT })
+type IChapterLinkProps = (IChapterPageRes & { ui: UI_COMPONENT }) | (IThemePageRes & { ui: UI_COMPONENT })
 
-function renderAvatar(isChapter: boolean, props: IChapterLinkProps) {
+function renderAuthorAvatar(isChapter: boolean, props: IChapterLinkProps) {
 	if (isChapter) {
 		return <BsChatText />
 	}
-	const { latestThemeMessage } = props as ITheme & { ui: UI_COMPONENT }
+
 	return (
-		<img
-			src={latestThemeMessage?.user.userImage}
-			alt='Аватар пользователя'
-			className={styles.user_avatar}
-		/>
+		<div
+			className={classNames(styles.user_avatar, styles.noImg)}
+			style={{ backgroundColor: (props as IThemePageRes).user.avatarColor }}
+		>
+			{(props as IThemePageRes).user.userLogin[0]}
+		</div>
 	)
 }
 
@@ -31,7 +33,7 @@ export function ChapterLink(props: IChapterLinkProps) {
 			to={generateThemeUrl({ isChapter, props })}
 			className={classNames(styles.chapter, { [styles.theme]: !isChapter })}
 		>
-			{renderAvatar(isChapter, props)}
+			{renderAuthorAvatar(isChapter, props)}
 			<div className={styles.wrapper}>
 				<div className={styles.chapter__left}>
 					<div className={styles.chapter__left_title}>{isChapter ? props.titleChapter : props.themeTitle}</div>

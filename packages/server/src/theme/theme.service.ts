@@ -33,13 +33,14 @@ export class ThemeService {
 								id: true,
 								userLogin: true,
 								userImage: true,
+								avatarColor: true,
 							},
 						},
 					},
 				},
 				_count: {
 					select: {
-						themeMessages: true, // Получаем количество сообщений
+						themeMessages: true,
 					},
 				},
 				user: {
@@ -47,6 +48,7 @@ export class ThemeService {
 						id: true,
 						userLogin: true,
 						userImage: true,
+						avatarColor: true,
 					},
 				},
 			},

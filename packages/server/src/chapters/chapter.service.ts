@@ -65,25 +65,32 @@ export class ChapterService {
 		return chapters.map((chapter) => {
 			const { countThemes, countMessages } = calculateCounts(chapter.chapterThemes)
 			const latestMessage = findLatestMessage(chapter.chapterThemes)
-
+			if (latestMessage) {
+				return {
+					id: chapter.id,
+					titleChapter: chapter.titleChapter,
+					countThemes,
+					countMessages,
+					latestMessage: {
+						id: latestMessage.id,
+						content: latestMessage.content,
+						themeId: latestMessage.themeId,
+						createdAt: latestMessage.createdAt,
+						updateAt: latestMessage.updateAt,
+						user: {
+							id: latestMessage.user.id,
+							userLogin: latestMessage.user.userLogin,
+							userImage: latestMessage.user.userImage,
+						},
+						theme: latestMessage.theme,
+					},
+				}
+			}
 			return {
 				id: chapter.id,
 				titleChapter: chapter.titleChapter,
 				countThemes,
 				countMessages,
-				latestMessage: {
-					id: latestMessage.id,
-					content: latestMessage.content,
-					themeId: latestMessage.themeId,
-					createdAt: latestMessage.createdAt,
-					updateAt: latestMessage.updateAt,
-					user: {
-						id: latestMessage.user.id,
-						userLogin: latestMessage.user.userLogin,
-						userImage: latestMessage.user.userImage,
-					},
-					theme: latestMessage.theme,
-				},
 			}
 		})
 	}
@@ -124,6 +131,7 @@ export class ChapterService {
 								id: true,
 								userLogin: true,
 								userImage: true,
+								avatarColor: true,
 							},
 						},
 					},

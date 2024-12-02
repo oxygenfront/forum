@@ -11,9 +11,7 @@ export const useRenderHint = ({ hintForType, id }: UseRenderHintProps) => {
 
 	const renderHint = () => {
 		if (isError) {
-			const hintsForType = hintForType
-
-			const currentHintEntry = Object.entries(hintsForType).find(([key, value]) => key === id && value.status)
+			const currentHintEntry = Object.entries(hintForType).find(([key, value]) => key === id && value.status)
 
 			if (currentHintEntry) {
 				const currentHint = currentHintEntry[1]

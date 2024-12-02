@@ -24,7 +24,24 @@ export class AuthService {
 	async register(registerUserDto: RegisterDto): Promise<any> {
 		try {
 			const validationErrors: TValidationErrors = []
-
+			const avatarColors = [
+				'#FF6B6B', // Red
+				'#6BCB77', // Green
+				'#4D96FF', // Blue
+				'#FFCC00', // Yellow
+				'#FF7F50', // Coral
+				'#6A5ACD', // Slate Blue
+				'#40E0D0', // Turquoise
+				'#FF69B4', // Hot Pink
+				'#8A2BE2', // Blue Violet
+				'#FFA07A', // Light Salmon
+				'#00FA9A', // Medium Spring Green
+				'#FFD700', // Gold
+				'#7FFF00', // Chartreuse
+				'#FF4500', // Orange Red
+				'#00CED1', // Dark Turquoise
+			]
+			const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)]
 			this.validateRegistrationData(registerUserDto, validationErrors)
 
 			const userEmailExists = await this.usersService.findByEmail(registerUserDto.userEmail)
@@ -49,6 +66,7 @@ export class AuthService {
 			const newUser = await this.usersService.create({
 				...registerUserDto,
 				userPassword: hashedPassword,
+				avatarColor: randomColor,
 			})
 
 			const tokens = await this.getTokens(newUser.id, newUser.userEmail)
@@ -215,7 +233,7 @@ export class AuthService {
 				{ sub: userId, username },
 				{
 					secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-					expiresIn: '1m',
+					expiresIn: '15m',
 				},
 			),
 			this.jwtService.signAsync(

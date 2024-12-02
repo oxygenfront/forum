@@ -1,5 +1,5 @@
-import { IMessage } from '@/shared/model'
-import type { IThemePageRes } from '@/shared/types/themePage.types'
+import type { IMessage } from './message.types'
+import type { IThemePageRes } from './themePage.types'
 
 export interface IChapterPageRes {
 	id: string

@@ -1,1 +1,1 @@
-export type { UI_COMPONENT, PATH, FORM_HINTS_ERRORS, ROLES, ROUTES, THEME_STATUS } from './constants'
+export { PATH, ROUTES, UI_COMPONENT, ROLES, THEME_STATUS, FORM_HINTS_ERRORS } from './constants'

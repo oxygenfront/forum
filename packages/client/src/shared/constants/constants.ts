@@ -14,10 +14,10 @@ export enum UI_COMPONENT {
 }
 
 export enum ROLES {
-	ADMIN = 'Администратор',
-	USER = 'Пользователь',
-	WARRANTOR = 'Гарант',
-	SELLER = 'Продавец',
+	ADMIN = 'admin',
+	USER = 'user',
+	WARRANTOR = 'warrantor',
+	SELLER = 'seller',
 }
 
 export enum THEME_STATUS {

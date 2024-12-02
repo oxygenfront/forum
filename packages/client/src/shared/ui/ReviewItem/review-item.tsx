@@ -1,5 +1,5 @@
 import { createSlug, timeSincePublication } from '@/shared/lib/helpers'
-import type { IResponsePurchased } from '@/widgets/PurchasedBlock'
+import type { IResponsePurchased } from '@/shared/types'
 import type { FC } from 'react'
 import { GoDotFill } from 'react-icons/go'
 import { Link } from 'react-router-dom'

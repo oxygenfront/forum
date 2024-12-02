@@ -4,8 +4,8 @@ import { LoginButton } from '@/features/LoginButton'
 import { Search } from '@/features/Search'
 import { UserButton } from '@/features/UserButton'
 import { UserModal } from '@/features/UserModal'
+import { PATH } from '@/shared/constants'
 import { useAppSelector } from '@/shared/lib/hooks'
-import { PATH } from '@/shared/model'
 import classnames from 'classnames'
 import type { FC } from 'react'
 import { useState } from 'react'
@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom'
 import styles from './header.module.sass'
 
 export const Header: FC = () => {
-	const isLogin = useAppSelector(selectIsLogin) || !!localStorage.getItem('token')
+	const isLogin = useAppSelector(selectIsLogin) || !!localStorage.getItem('token') || !!sessionStorage.getItem('token')
 	const { userModal } = useAppSelector(selectStatusModal)
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 

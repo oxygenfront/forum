@@ -1,4 +1,4 @@
-import { ROLES } from '@/shared/model'
+import { ROLES } from '@/shared/constants'
 
 export interface IRegisterReq {
 	userEmail: string

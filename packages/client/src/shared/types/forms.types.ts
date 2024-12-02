@@ -1,4 +1,4 @@
-import type { ILoginReq, IRegisterReq } from '@/shared/types/auth.types'
+import type { ILoginReq, IRegisterReq } from './auth.types'
 
 export interface IForgot {
 	userEmail: string
@@ -7,7 +7,7 @@ export interface IForgot {
 export interface InputProps {
 	label: string
 	placeholder: string
-	id: keyof ILoginReq | keyof IRegisterReq | keyof IForgot
+	id: keyof ILoginReq | keyof (IRegisterReq & { userConfirmPassword: string }) | keyof IForgot
 	type: 'login' | 'register' | 'forgot'
 }
 
@@ -15,7 +15,7 @@ export type InputValue = ILoginReq | IRegisterReq | IForgot
 
 export interface IInitialState {
 	login: ILoginReq
-	register: IRegisterReq
+	register: IRegisterReq & { userConfirmPassword: string }
 	forgot: IForgot
 }
 

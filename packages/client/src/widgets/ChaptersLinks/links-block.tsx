@@ -1,4 +1,4 @@
-import { UI_COMPONENT } from '@/shared/model'
+import { UI_COMPONENT } from '@/shared/constants'
 import { ChapterLink, Title } from '@/shared/ui'
 import { useGetChaptersQuery } from '@/widgets/ChaptersLinks'
 import type { FC } from 'react'
