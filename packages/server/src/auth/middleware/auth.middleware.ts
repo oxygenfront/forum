@@ -14,7 +14,6 @@ export class AuthMiddleware implements NestMiddleware {
 	async use(req: Request, res: Response, next: NextFunction) {
 		const accessToken = req.cookies.accessToken || req.headers.authorization?.split(' ')[1]
 		const refreshToken = req.cookies.refreshToken
-
 		if (accessToken) {
 			try {
 				req.user = await this.jwtService.verifyAsync(accessToken, {
@@ -28,10 +27,15 @@ export class AuthMiddleware implements NestMiddleware {
 							secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
 						})
 						const newAccessToken = this.jwtService.sign(
-							{ userId: decodedRefresh.sub },
-							{ secret: this.configService.get<string>('JWT_ACCESS_SECRET'), expiresIn: '15m' },
+							{ sub: decodedRefresh.sub },
+							{ secret: this.configService.get<string>('JWT_ACCESS_SECRET'), expiresIn: '1m' },
 						)
-
+						if (req.originalUrl.split('/')[3] === 'logout') {
+							req.user = await this.jwtService.verifyAsync(newAccessToken, {
+								secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+							})
+							return next()
+						}
 						return res.json({ accessToken: newAccessToken })
 					} catch (refreshError) {
 						console.error('Refresh token verification failed', refreshError)
@@ -51,8 +55,8 @@ export class AuthMiddleware implements NestMiddleware {
 				})
 
 				const newAccessToken = this.jwtService.sign(
-					{ userId: decodedRefresh.sub },
-					{ secret: this.configService.get<string>('JWT_ACCESS_SECRET'), expiresIn: '15m' },
+					{ sub: decodedRefresh.sub },
+					{ secret: this.configService.get<string>('JWT_ACCESS_SECRET'), expiresIn: '1m' },
 				)
 
 				return res.json({ accessToken: newAccessToken })

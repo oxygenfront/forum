@@ -1,23 +1,32 @@
 .wrapper
+  display: flex
+  flex-direction: column
+  justify-content: flex-end
   width: 100%
   background-color: #202630
   border-radius: 25px
   padding: 25px
   margin-bottom: 15px
 
-
-.button_wrapper
-  width: 100%
+.header
   display: flex
-  justify-content: flex-end
-  gap: 20px
+  justify-content: space-between
+  align-items: center
+  height: 30px
 
-.button
-  background-color: transparent
-  border: 2px solid #00FFE0
-  color: #00FFE0
-  padding: 8px 12px
-  border-radius: 12px
+
+.textarea
+  width: 100%
+  padding: 20px
+  min-height: 100px
+  border: 2px solid #373E46
   font-size: 20px
-  transition: all .3s linear
+  background-color: transparent
+  color: white
+  border-radius: 20px
+  resize: none
+  overflow: hidden
+  margin-bottom: 15px
 
+  &.focus
+    border: 2px solid #00FFE0

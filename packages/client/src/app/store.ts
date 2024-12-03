@@ -5,6 +5,7 @@ import { breadCrumbsSlice } from '@/features/BreadCrumbs'
 import { messageSlice } from '@/features/CreateMessage'
 import { rootApi } from '@/shared/api'
 import { hintSlice } from '@/shared/ui/InputsForm'
+import { paginationSlice } from '@/shared/ui/Pagination'
 import { rememberMeSlice } from '@/widgets/Login/model'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
 	[hintSlice.name]: hintSlice.reducer,
 	[rememberMeSlice.name]: rememberMeSlice.reducer,
 	[messageSlice.name]: messageSlice.reducer,
+	[paginationSlice.name]: paginationSlice.reducer,
 })
 
 export const store = configureStore({

@@ -1,7 +1,7 @@
 import { type TypeForms, clearData, selectForms, setTypeForm } from '@/entities/Forms'
 import { toggleAuthModal } from '@/entities/Modal'
 
-import { setIsLogin, setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
+import { setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
 
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IRegisterRes } from '@/shared/types/auth.types'
@@ -49,7 +49,6 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 			handleAuthSuccess(fetchLoginData)
 			dispatch(clearData())
 			dispatch(toggleAuthModal())
-			dispatch(setIsLogin(true))
 		} else if (errorLogin) {
 			//TODO написать логику для обработки хинтов и ошибок для логина
 		}
@@ -58,7 +57,6 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 			dispatch(clearData())
 			dispatch(setRememberMe(true))
 			dispatch(toggleAuthModal())
-			dispatch(setIsLogin(true))
 		} else if (errorRegister) {
 			//TODO написать логику для обработки хинтов и ошибок для регистра
 		}

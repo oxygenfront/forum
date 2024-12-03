@@ -21,12 +21,14 @@ export class ThemeService {
 		return this.prisma.theme.findMany()
 	}
 
-	async findOne(id: string) {
+	async findOne(id: string, page: number, limit: number) {
 		const theme = await this.prisma.theme.findFirst({
 			where: { id },
 			include: {
 				themeMessages: {
 					orderBy: { createdAt: 'asc' },
+					skip: (page - 1) * limit, // Пропуск записей на основе текущей страницы
+					take: limit, // Количество сообщений на одной странице
 					include: {
 						user: {
 							select: {
@@ -40,7 +42,7 @@ export class ThemeService {
 				},
 				_count: {
 					select: {
-						themeMessages: true,
+						themeMessages: true, // Подсчет общего количества сообщений
 					},
 				},
 				user: {
@@ -58,6 +60,14 @@ export class ThemeService {
 			return null
 		}
 
+		const totalPages = Math.ceil(theme._count.themeMessages / limit)
+
+		const meta = {
+			totalItems: theme._count.themeMessages,
+			totalPages: totalPages,
+			currentPage: +page,
+			itemsPerPage: limit,
+		}
 		return {
 			id: theme.id,
 			userId: theme.userId,
@@ -68,8 +78,9 @@ export class ThemeService {
 			updateAt: theme.updateAt,
 			views: theme.views,
 			themeMessages: theme.themeMessages,
-			user: theme.user,
 			countThemeMessages: theme._count.themeMessages,
+			user: theme.user,
+			meta,
 		}
 	}
 

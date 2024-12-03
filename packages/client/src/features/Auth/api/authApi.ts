@@ -1,3 +1,5 @@
+import { setIsLogin, setUserData } from '@/features/Auth'
+import { clearUserData } from '@/features/Auth/model'
 import {
 	AUTH_LOGIN_API,
 	AUTH_LOGOUT,
@@ -11,8 +13,18 @@ import type { ILoginReq, ILoginRes, IRegisterReq, IRegisterRes } from '@/shared/
 
 export const authApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getAuth: builder.query<void, void>({
+		getAuth: builder.query<ILoginRes, void>({
 			query: () => AUTH_ME_API,
+			onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+				try {
+					const { data } = await queryFulfilled
+					dispatch(setUserData(data))
+					dispatch(setIsLogin(true))
+				} catch (error) {
+					dispatch(setIsLogin(false))
+					console.error('Error fetching auth:', error)
+				}
+			},
 		}),
 		login: builder.mutation<ILoginRes, ILoginReq>({
 			query: (body) => ({
@@ -21,13 +33,13 @@ export const authApi = rootApi.injectEndpoints({
 				body,
 			}),
 
-			async onQueryStarted(_, { queryFulfilled, getState }) {
+			async onQueryStarted(_, { queryFulfilled, getState, dispatch }) {
 				try {
 					const { data } = await queryFulfilled
 
 					// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 					const state = getState() as RootState
-
+					dispatch(setIsLogin(true))
 					const { rememberMe } = state.rememberMe
 					rememberMe
 						? localStorage.setItem('token', data.accessToken)
@@ -37,7 +49,6 @@ export const authApi = rootApi.injectEndpoints({
 				}
 			},
 		}),
-
 		register: builder.mutation<IRegisterRes, IRegisterReq>({
 			query: (body) => ({
 				url: AUTH_REGISTER_API,
@@ -48,9 +59,11 @@ export const authApi = rootApi.injectEndpoints({
 					'Content-Type': 'application/json',
 				},
 			}),
-			async onQueryStarted(_, { queryFulfilled }) {
+			async onQueryStarted(_, { queryFulfilled, dispatch }) {
 				try {
 					const { data } = await queryFulfilled
+					dispatch(setIsLogin(true))
+					dispatch(setUserData(data))
 					localStorage.setItem('token', data.accessToken)
 				} catch (error) {
 					console.error('Login failed:', error)
@@ -68,6 +81,18 @@ export const authApi = rootApi.injectEndpoints({
 				}
 
 				return [ApiTag.AUTH]
+			},
+			async onQueryStarted(_, { queryFulfilled, dispatch }) {
+				try {
+					await queryFulfilled
+
+					localStorage.removeItem('token')
+					sessionStorage.removeItem('token')
+					dispatch(clearUserData())
+					dispatch(authApi.endpoints.getAuth.initiate(undefined, { forceRefetch: true }))
+				} catch (error) {
+					console.error('Logout failed:', error)
+				}
 			},
 		}),
 	}),

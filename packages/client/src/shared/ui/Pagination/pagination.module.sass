@@ -1,0 +1,22 @@
+.pagination
+  display: flex
+  gap: 8px
+
+  &_item
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 4px 8px
+    border: 1px solid #3A4850
+    border-radius: 8px
+
+    &:disabled
+      background-color: #425162
+      color: #828F99
+      cursor: not-allowed
+
+    & svg
+      font-size: 24px
+
+    &.current
+      background-color: #425162

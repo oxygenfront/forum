@@ -4,8 +4,8 @@ import type { IThemePageRes } from '@/shared/types'
 
 export const chaptersApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getThemePage: builder.query<IThemePageRes, string | undefined>({
-			query: (id) => `${GET_THEMES}/${id}`,
+		getThemePage: builder.query<IThemePageRes, { id?: string; page?: number; limit?: number }>({
+			query: ({ id, page }) => `${GET_THEMES}/${id}${page && `?page=${page}`}`,
 			providesTags: [ApiTag.THEMES],
 		}),
 	}),

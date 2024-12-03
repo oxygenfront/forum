@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { Route, SwaggerApiTag } from '../../global/constants'
 import { CreateThemeDto } from './dto/create-theme.dto'
@@ -21,8 +21,10 @@ export class ThemeController {
 	}
 
 	@Get(Route.GET_BY_ID)
-	findOne(@Param('id') id: string) {
-		return this.themeService.findOne(id)
+	findOne(@Param('id') id: string, @Query() paginationQuery) {
+		const page = paginationQuery.page || 1
+		const limit = paginationQuery.limit || 10
+		return this.themeService.findOne(id, page, limit)
 	}
 
 	@Patch(Route.UPDATE_BY_ID)

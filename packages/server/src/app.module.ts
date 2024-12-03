@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/middleware/auth.middleware'
 import { ChaptersModule } from './chapters/chapters.module'
 import { MessageModule } from './message/message.module'
+import { PaginationModule } from './pagination/pagination.module'
 import { PurchasedModule } from './purchased/purchased.module'
 import { SearchModule } from './search/search.module'
 import { StatisticModule } from './statistic/statistic.module'
@@ -34,6 +35,7 @@ import { UsersModule } from './users/users.module'
 		StatisticModule,
 		PurchasedModule,
 		SearchModule,
+		PaginationModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

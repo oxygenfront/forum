@@ -88,6 +88,7 @@ export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (
 				<button
 					type='button'
 					className={styles.button}
+					disabled={!isLogin}
 				>
 					<FaArrowTurnDown />
 					<span className={styles.btnText}>Ответить</span>

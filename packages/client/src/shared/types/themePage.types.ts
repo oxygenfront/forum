@@ -14,4 +14,10 @@ export interface IThemePageRes {
 	latestThemeMessage: IMessage
 	themeMessages: IMessage[]
 	user: Pick<IUser, 'id' | 'userLogin' | 'userImage' | 'avatarColor'>
+	meta: {
+		totalItems: number
+		totalPages: number
+		currentPage: number
+		itemsPerPage: number
+	}
 }

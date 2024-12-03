@@ -1,77 +1,53 @@
-import { selectUserData } from '@/features/Auth'
-import { CustomTextarea } from '@/features/CustomTextArea'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
-import type { ICreateMessageReq } from '@/shared/types'
-import { FC, KeyboardEvent } from 'react'
-import { useCreateMessageMutation, useUpdateMessageMutation } from './api'
+import classNames from 'classnames'
+import { type ChangeEvent, FC, type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import styles from './create-message.module.sass'
 import { selectMessage, setValue } from './model'
 
 interface ICreateMessageProps {
-	themeId: string
+	onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void
 }
-
-export const CreateMessage: FC<ICreateMessageProps> = ({ themeId }) => {
-	const selectDataMessage = useAppSelector(selectMessage)
-	const { id: userId } = useAppSelector(selectUserData)
+export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown }) => {
 	const dispatch = useAppDispatch()
+	const selectData = useAppSelector(selectMessage)
 
-	const [createMessage, { isSuccess: isSuccessCreate }] = useCreateMessageMutation()
-	const [updateMessage, { isSuccess: isSuccessUpdate }] = useUpdateMessageMutation()
+	const [isFocused, setIsFocused] = useState(false)
+	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-	const dataMessage: ICreateMessageReq = {
-		content: selectDataMessage.content ?? '',
-		themeId,
-		userId: userId,
+	const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+		dispatch(setValue({ ...selectData, content: e.target.value }))
 	}
 
-	const handleActionMessage = () => {
-		if (selectDataMessage.isEdit) {
-			updateMessage({
-				id: selectDataMessage.messageId ?? '',
-				content: selectDataMessage.content ?? '',
-			})
-		} else {
-			createMessage(dataMessage)
+	useEffect(() => {
+		if (selectData.isEdit && textareaRef.current) {
+			textareaRef.current.focus()
+		}
+	}, [selectData.isEdit, selectData.content])
+
+	const adjustHeight = () => {
+		if (textareaRef.current) {
+			textareaRef.current.style.height = 'auto'
+			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
 		}
 	}
-
-	const handleCancelEdit = () => {
-		dispatch(setValue({ isEdit: false, content: '' }))
-	}
-
-	const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-		if (event.key === 'Enter' && event.shiftKey) {
-			event.preventDefault()
-			handleActionMessage()
-		}
-	}
+	useEffect(() => {
+		adjustHeight()
+	}, [selectData.content])
 
 	return (
 		<div className={styles.wrapper}>
-			<CustomTextarea
-				isSuccessCreate={isSuccessCreate}
-				isSuccessUpdate={isSuccessUpdate}
-				onKeyDown={handleKeyDown}
+			<textarea
+				ref={textareaRef}
+				className={classNames(styles.textarea, { [styles.focus]: isFocused })}
+				contentEditable
+				suppressContentEditableWarning={true}
+				onFocus={() => setIsFocused(true)}
+				onBlur={() => setIsFocused(false)}
+				onKeyDown={onKeyDown}
+				value={selectData.content}
+				onChange={handleChange}
+				placeholder='Написать комментарий...'
 			/>
-			<div className={styles.button_wrapper}>
-				{selectDataMessage.isEdit && (
-					<button
-						type='button'
-						className={styles.button}
-						onClick={handleCancelEdit}
-					>
-						Отменить редактирование
-					</button>
-				)}
-				<button
-					type='button'
-					className={styles.button}
-					onClick={handleActionMessage}
-				>
-					{selectDataMessage.isEdit ? 'Редактировать' : 'Комментировать'}
-				</button>
-			</div>
 		</div>
 	)
 }

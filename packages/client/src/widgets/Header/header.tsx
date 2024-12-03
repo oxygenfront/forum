@@ -34,7 +34,12 @@ export const Header: FC = () => {
 						<tspan />
 						<tspan />
 					</button>
-					<div className={styles.logo}>Лого</div>
+					<Link
+						to='/'
+						className={styles.logo}
+					>
+						Лого
+					</Link>
 				</div>
 
 				<nav className={classnames(styles.navbar, { [styles.navbar_open]: isMenuOpen })}>

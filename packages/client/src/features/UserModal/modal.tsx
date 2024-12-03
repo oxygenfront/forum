@@ -27,8 +27,6 @@ export const UserModal: FC = () => {
 
 	useEffect(() => {
 		if (isSuccess && !isLoading) {
-			localStorage.removeItem('token')
-			sessionStorage.removeItem('token')
 			dispatch(setIsLogin(false))
 			dispatch(clearUserData())
 			dispatch(toggleUserModal())
