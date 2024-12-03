@@ -20,6 +20,11 @@ export class MessageController {
 		return this.messageService.findOne(id)
 	}
 
+	@Get('replies/:id')
+	getReplies(@Param('id') id: string) {
+		return this.messageService.getRepliesToMessage(id)
+	}
+
 	@Patch(Route.UPDATE_BY_ID)
 	update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
 		return this.messageService.update(id, updateMessageDto)

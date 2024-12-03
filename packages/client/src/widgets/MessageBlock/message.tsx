@@ -1,6 +1,6 @@
-import { ROLES } from '@/shared/constants'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
-import type { IMessage } from '@/shared/types'
+import type { IMessageRes } from '@/shared/types'
+import { RepliedMessage, setReplyMessageId } from '@/shared/ui/ReplyedMessage'
 import classNames from 'classnames'
 import styles from './message.module.sass'
 
@@ -8,23 +8,34 @@ import { Action } from '@/features/Action'
 import { selectIsLogin, selectUserData } from '@/features/Auth'
 import { setValue, useDeleteMessageMutation } from '@/features/CreateMessage'
 import { ModalOptions } from '@/features/ModalSort'
-import { type FC } from 'react'
+import type { FC } from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
 import { AiOutlineDislike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
 
-export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (message) => {
-	const { content, user, userId: messageUserId, id: messageId, themeId } = message
+interface IMessageProps {
+	userId: string
+	userThemeId: string
+}
+export const Message: FC<IMessageRes & IMessageProps> = (message) => {
+	const { content, user, userId: messageUserId, id: messageId, themeId, respondedTo } = message
 	const { id: userId } = useAppSelector(selectUserData)
 	const isLogin = useAppSelector(selectIsLogin)
+
 	const dispatch = useAppDispatch()
+
 	const [deleteMessage] = useDeleteMessageMutation()
+
 	const handleDeleteMessage = () => {
 		deleteMessage(messageId)
 	}
 
 	const handleUpdateMessage = () => {
 		dispatch(setValue({ content, themeId, userId: message.userId, messageId: messageId, isEdit: true }))
+	}
+
+	const handleReplyMessage = () => {
+		dispatch(setReplyMessageId(messageId))
 	}
 
 	return (
@@ -45,6 +56,14 @@ export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (
 					]}
 				/>
 			)}
+			{respondedTo.length
+				? respondedTo.map((responded) => (
+						<RepliedMessage
+							key={responded.id}
+							{...responded}
+						/>
+					))
+				: null}
 			<div className={styles.user_wrapper}>
 				<div className={styles.user}>
 					{user.userImage ? (
@@ -63,7 +82,7 @@ export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (
 					)}
 
 					<div className={styles.user_name}>{user.userLogin}</div>
-					<div className={styles.user_role}>{message.userThemeId === messageUserId ? ROLES.SELLER : ROLES.USER}</div>
+					<div className={styles.user_role}>{message.userThemeId === messageUserId ? 'Продавец' : 'Пользователь'}</div>
 				</div>
 				<div className={styles.content}>{content}</div>
 			</div>
@@ -89,6 +108,7 @@ export const Message: FC<IMessage & { userId: string; userThemeId: string }> = (
 					type='button'
 					className={styles.button}
 					disabled={!isLogin}
+					onClick={handleReplyMessage}
 				>
 					<FaArrowTurnDown />
 					<span className={styles.btnText}>Ответить</span>

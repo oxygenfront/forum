@@ -8,12 +8,15 @@ import { PiWechatLogoBold } from 'react-icons/pi'
 import styles from './block.module.sass'
 interface BlockThemeContainer {
 	title: string
-	userLogin: string
 	createdAt: Date
 	views: number
 	countThemeMessages: number
 	flag: boolean
-	userImage: string
+	user: {
+		userLogin: string
+		userImage: string
+		avatarColor: string
+	}
 }
 
 type BlockThemeContainerProps = Partial<BlockThemeContainer>
@@ -23,8 +26,7 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 	countThemeMessages,
 	views,
 	createdAt,
-	userLogin,
-	userImage,
+	user,
 	flag,
 }) => {
 	return (
@@ -42,15 +44,24 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 					</div>
 					<ModalOptions arrayActions={[]} />
 				</div>
-				{flag && createdAt && (
+				{flag && createdAt && user && (
 					<div className={styles.down}>
 						<div className={styles.user}>
-							<img
-								src={userImage}
-								className={styles.avatar}
-								alt='Аватар'
-							/>
-							<div className={styles.name}>{userLogin}</div>
+							{user.userImage ? (
+								<img
+									src={user.userImage}
+									alt='Аватар'
+									className={styles.avatar}
+								/>
+							) : (
+								<div
+									style={{ backgroundColor: user.avatarColor }}
+									className={classNames(styles.user_img, styles.noImg)}
+								>
+									{user.userLogin[0]}
+								</div>
+							)}
+							<div className={styles.name}>{user.userLogin}</div>
 							<div className={styles.dot} />
 							<div className={styles.date_create}>{timeSincePublication(createdAt)}</div>
 						</div>

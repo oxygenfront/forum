@@ -1,5 +1,6 @@
-import { createSlug, timeSincePublication } from '@/shared/lib/helpers'
+import { createSlug, timeSincePublication, trimmingText } from '@/shared/lib/helpers'
 import type { IResponsePurchased } from '@/shared/types'
+import classNames from 'classnames'
 import type { FC } from 'react'
 import { GoDotFill } from 'react-icons/go'
 import { Link } from 'react-router-dom'
@@ -20,13 +21,22 @@ export const ReviewItem: FC<IResponsePurchased> = ({
 			className={styles.wrapper}
 		>
 			<div className={styles.review}>
-				<img
-					className={styles.review_avatar}
-					src={user.userImage || ''}
-					alt='Аватар пользователя'
-				/>
+				{user.userImage ? (
+					<img
+						src={user.userImage}
+						alt='Аватар'
+						className={styles.review_avatar}
+					/>
+				) : (
+					<div
+						style={{ backgroundColor: user.avatarColor }}
+						className={classNames(styles.review_avatar, styles.noImg)}
+					>
+						{user.userLogin[0]}
+					</div>
+				)}
 				<div className={styles.review_main}>
-					<div className={styles.review_text}>{content}</div>
+					<div className={styles.review_text}>{trimmingText(content, 30)}</div>
 					<div className={styles.review_info}>
 						Последнее: {user.userLogin} <GoDotFill />
 						<span>{timeSincePublication(createdAt)}</span>

@@ -2,29 +2,40 @@
   &:not(:last-child)
     border-bottom: 1px solid rgba(255, 255, 255, 0.12)
     margin-bottom: 12px
+
 .review
   display: flex
   align-items: center
   height: 50px
   margin-bottom: 12px
+
   &_avatar
     width: 51px
     height: 51px
     border-radius: 50%
     margin-right: 11px
+    display: flex
+    align-items: center
+    justify-content: center
+    font-size: 33px
+    object-fit: cover
+
   &_main
     height: 100%
     flex-grow: 1
     display: flex
     flex-direction: column
     justify-content: space-between
+
   &_info
     font-size: 12px
     display: flex
     align-items: center
     justify-content: flex-end
     color: rgba(142, 139, 139, 1)
+
     & svg
       margin: 0 6px
+
   &_text
     width: fit-content

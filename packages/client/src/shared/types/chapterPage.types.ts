@@ -1,4 +1,4 @@
-import type { IMessage } from './message.types'
+import type { IMessageRes } from './messageApi.types'
 import type { IThemePageRes } from './themePage.types'
 
 export interface IChapterPageRes {
@@ -6,6 +6,6 @@ export interface IChapterPageRes {
 	titleChapter: string
 	countThemes: number
 	countMessages: number
-	latestMessage: IMessage & { theme: { themeTitle: string } }
+	latestMessage: IMessageRes & { theme: { themeTitle: string } }
 	chapterThemes: IThemePageRes[]
 }

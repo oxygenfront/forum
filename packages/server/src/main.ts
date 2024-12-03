@@ -3,18 +3,20 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 import { ConfigService } from '@nestjs/config'
 import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-
+// biome-ignore lint/style/noNamespaceImport: <explanation>
+import * as morgan from 'morgan'
 import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma'
 import { Route } from '../global/constants'
 import { EnvironmentVariables } from '../global/types'
 
 // biome-ignore lint/style/noNamespaceImport: <explanation>
 import * as cookieParser from 'cookie-parser'
-
 import { AppModule } from './app.module'
+
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
 	app.use(cookieParser())
+	app.use(morgan('dev'))
 	app.setGlobalPrefix(Route.BASE)
 	const configService = app.get(ConfigService<EnvironmentVariables>)
 
@@ -31,6 +33,7 @@ async function bootstrap() {
 			transform: true,
 		}),
 	)
+	const { httpAdapter } = app.get(HttpAdapterHost)
 
 	const corsOptions: CorsOptions = {
 		origin: ['http://localhost:5678'],
@@ -50,15 +53,15 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config)
 	SwaggerModule.setup('swagger', app, document)
 
-	const { httpAdapter } = app.get(HttpAdapterHost)
-
+	app.enableShutdownHooks()
 	// biome-ignore lint/correctness/useHookAtTopLevel: <explanation>
 	app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
 
 	const port = configService.get('PORT', { infer: true })
 
 	await app.listen(port, () => {
-		console.info(`⚡ Server is running at http://localhost:${port}/api`)
+		console.info(`\n⚡ Server is running at http://localhost:${port}/api`)
+		console.info(`\n📄 Swagger is available at http://localhost:${port}/swagger`)
 	})
 }
 bootstrap()

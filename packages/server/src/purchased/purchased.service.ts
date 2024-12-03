@@ -27,6 +27,7 @@ export class PurchasedService {
 					select: {
 						userLogin: true,
 						userImage: true,
+						avatarColor: true,
 					},
 				},
 			},

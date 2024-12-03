@@ -12,7 +12,9 @@ import { BlockThemeContainer, LoginForAction } from '@/shared/ui'
 import { Loader } from '@/shared/ui/Loader'
 import { selectCurrentPage } from '@/shared/ui/Pagination'
 import { Pagination } from '@/shared/ui/Pagination/pagination'
+import { clearData, selectReply } from '@/shared/ui/ReplyedMessage'
 import { Message } from '@/widgets/MessageBlock'
+import classNames from 'classnames'
 import { FC, KeyboardEvent, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styles from './theme.module.sass'
@@ -24,6 +26,7 @@ export const ThemePage: FC = () => {
 
 	const { id: userId } = useAppSelector(selectUserData)
 	const selectDataMessage = useAppSelector(selectMessage)
+	const { replyMessages } = useAppSelector(selectReply)
 	const dispatch = useAppDispatch()
 	const [createMessage, { isSuccess: isSuccessCreate }] = useCreateMessageMutation()
 	const [updateMessage, { isSuccess: isSuccessUpdate }] = useUpdateMessageMutation()
@@ -58,11 +61,22 @@ export const ThemePage: FC = () => {
 				content: selectDataMessage.content ?? '',
 			})
 		} else if (selectDataMessage.content?.length) {
-			createMessage({
-				content: selectDataMessage.content,
-				themeId,
-				userId: userId,
-			})
+			if (replyMessages.length) {
+				createMessage({
+					content: selectDataMessage.content,
+					themeId,
+					userId: userId,
+					parentMessageIds: replyMessages.map((message) => message.id),
+				})
+			} else {
+				createMessage({
+					content: selectDataMessage.content,
+					themeId,
+					userId: userId,
+				})
+			}
+
+			dispatch(clearData())
 		}
 	}
 
@@ -77,37 +91,42 @@ export const ThemePage: FC = () => {
 	}
 	return (
 		<>
-			{!data || data.themeMessages.length ? (
+			{data ? (
 				<>
 					<BlockThemeContainer
 						flag
 						title={data.themeTitle}
-						createdAt={data.themeMessages[0].createdAt}
-						userLogin={data.user.userLogin}
-						userImage={data.user.userImage}
+						createdAt={data.createdAt}
+						user={data.user}
 						views={data.views ?? 0}
 						countThemeMessages={data.countThemeMessages}
 					/>
-					{data.themeMessages.map((message) => {
-						if (themeId === '') {
-							setThemeId(message.themeId)
-						}
-						return (
-							<Message
-								key={message.id}
-								{...message}
-								userThemeId={data.userId}
-							/>
-						)
-					})}
+					{data.themeMessages.length !== 0 ? (
+						<>
+							{data.themeMessages.map((message) => {
+								if (themeId === '') {
+									setThemeId(message.themeId)
+								}
+								return (
+									<Message
+										key={message.id}
+										{...message}
+										userThemeId={data.userId}
+									/>
+								)
+							})}
+						</>
+					) : (
+						'Сообщений по этой теме нет'
+					)}
 				</>
 			) : (
-				'Сообщений по этой теме нет'
+				'К сожалению тут ничего нет'
 			)}
 			<>
 				{isLogin && <CreateMessage onKeyDown={handleKeyDown} />}
-				<div className={styles.theme_actions}>
-					<Pagination meta={data.meta} />
+				<div className={classNames(styles.theme_actions, { [styles.noPagination]: !data.meta.totalPages })}>
+					{data.meta.totalPages ? <Pagination meta={data.meta} /> : null}
 					{isLogin ? (
 						<div className={styles.buttons}>
 							<button

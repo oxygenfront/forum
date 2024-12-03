@@ -27,8 +27,8 @@ export class ThemeService {
 			include: {
 				themeMessages: {
 					orderBy: { createdAt: 'asc' },
-					skip: (page - 1) * limit, // Пропуск записей на основе текущей страницы
-					take: limit, // Количество сообщений на одной странице
+					skip: (page - 1) * limit,
+					take: limit,
 					include: {
 						user: {
 							select: {
@@ -38,11 +38,25 @@ export class ThemeService {
 								avatarColor: true,
 							},
 						},
+						respondedTo: {
+							include: {
+								parentMessage: {
+									include: {
+										user: {
+											select: {
+												id: true,
+												userLogin: true,
+											},
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 				_count: {
 					select: {
-						themeMessages: true, // Подсчет общего количества сообщений
+						themeMessages: true,
 					},
 				},
 				user: {
@@ -68,6 +82,7 @@ export class ThemeService {
 			currentPage: +page,
 			itemsPerPage: limit,
 		}
+
 		return {
 			id: theme.id,
 			userId: theme.userId,
@@ -77,7 +92,16 @@ export class ThemeService {
 			createdAt: theme.createdAt,
 			updateAt: theme.updateAt,
 			views: theme.views,
-			themeMessages: theme.themeMessages,
+			themeMessages: theme.themeMessages.map((message) => ({
+				...message,
+				respondedTo: message.respondedTo.map((response) => ({
+					...response,
+					parentMessage: {
+						...response.parentMessage,
+						user: response.parentMessage.user,
+					},
+				})),
+			})),
 			countThemeMessages: theme._count.themeMessages,
 			user: theme.user,
 			meta,

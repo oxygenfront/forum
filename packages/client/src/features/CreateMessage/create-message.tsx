@@ -1,4 +1,8 @@
+import { useGetMessageByIdQuery } from '@/features/CreateMessage/api'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
+import type { IMessageRes } from '@/shared/types'
+import { RepliedMessage } from '@/shared/ui'
+import { addReplyMessage, selectReply } from '@/shared/ui/ReplyedMessage'
 import classNames from 'classnames'
 import { type ChangeEvent, FC, type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import styles from './create-message.module.sass'
@@ -7,9 +11,22 @@ import { selectMessage, setValue } from './model'
 interface ICreateMessageProps {
 	onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void
 }
+
 export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown }) => {
 	const dispatch = useAppDispatch()
+	const { replyMessageId, replyMessages } = useAppSelector(selectReply)
+
 	const selectData = useAppSelector(selectMessage)
+	const { data: messageById, isSuccess } = useGetMessageByIdQuery(replyMessageId, { skip: replyMessageId === '' })
+
+	const previousMessage = useRef<IMessageRes | null>(null)
+
+	useEffect(() => {
+		if (messageById && replyMessageId && isSuccess && previousMessage.current !== messageById) {
+			dispatch(addReplyMessage(messageById))
+			previousMessage.current = messageById
+		}
+	}, [replyMessageId, messageById, isSuccess, dispatch])
 
 	const [isFocused, setIsFocused] = useState(false)
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -33,9 +50,19 @@ export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown }) => {
 	useEffect(() => {
 		adjustHeight()
 	}, [selectData.content])
-
 	return (
 		<div className={styles.wrapper}>
+			<div>
+				{replyMessages.length
+					? replyMessages.map((replyMessage) => (
+							<RepliedMessage
+								key={replyMessage.id}
+								isCreate={true}
+								{...replyMessage}
+							/>
+						))
+					: null}
+			</div>
 			<textarea
 				ref={textareaRef}
 				className={classNames(styles.textarea, { [styles.focus]: isFocused })}

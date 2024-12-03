@@ -61,9 +61,21 @@ model ThemeMessage {
   theme         Theme           @relation(fields: [themeId], references: [id])
   themeId       String
   createdAt     DateTime        @default(now())
-  updateAt      DateTime        @updatedAt
+  updatedAt     DateTime        @updatedAt
   userReactions UserReactions[]
   user          User?           @relation(fields: [userId], references: [id])
+
+  replies     MessageReplies[] @relation("MessageRepliesToMessage")
+  respondedTo MessageReplies[] @relation("MessageRepliesToReply")
+}
+
+model MessageReplies {
+  id              String       @id @default(uuid())
+  parentMessage   ThemeMessage @relation("MessageRepliesToMessage", fields: [parentMessageId], references: [id])
+  parentMessageId String
+
+  childMessage   ThemeMessage @relation("MessageRepliesToReply", fields: [childMessageId], references: [id])
+  childMessageId String
 }
 
 model Theme {

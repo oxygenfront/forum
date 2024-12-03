@@ -8,31 +8,38 @@ import { PATH } from '@/shared/constants'
 import { ChaptersLinksBlock } from '@/widgets/ChaptersLinks'
 import { createBrowserRouter } from 'react-router-dom'
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+	[
+		{
+			path: PATH.BASE,
+			element: <App />,
+			children: [
+				{
+					path: PATH.BASE,
+					element: <ChaptersLinksBlock />,
+				},
+				{
+					path: PATH.WARRANTOR,
+					element: <WarrantorPage />,
+				},
+				{
+					path: PATH.CHAPTER,
+					element: <ChapterPage />,
+				},
+				{
+					path: PATH.THEME,
+					element: <ThemePage />,
+				},
+				{
+					path: PATH.PROFILE,
+					element: <Profile />,
+				},
+			],
+		},
+	],
 	{
-		path: PATH.BASE,
-		element: <App />,
-		children: [
-			{
-				path: PATH.BASE,
-				element: <ChaptersLinksBlock />,
-			},
-			{
-				path: PATH.WARRANTOR,
-				element: <WarrantorPage />,
-			},
-			{
-				path: PATH.CHAPTER,
-				element: <ChapterPage />,
-			},
-			{
-				path: PATH.THEME,
-				element: <ThemePage />,
-			},
-			{
-				path: PATH.PROFILE,
-				element: <Profile />,
-			},
-		],
+		future: {
+			v7_startTransition: false,
+		},
 	},
-])
+)

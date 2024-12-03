@@ -9,5 +9,6 @@ export interface IResponsePurchased {
 	user: {
 		userLogin: string
 		userImage: string | null
+		avatarColor: string
 	}
 }

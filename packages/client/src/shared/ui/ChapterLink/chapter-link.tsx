@@ -16,12 +16,22 @@ function renderAuthorAvatar(isChapter: boolean, props: IChapterLinkProps) {
 	}
 
 	return (
-		<div
-			className={classNames(styles.user_avatar, styles.noImg)}
-			style={{ backgroundColor: (props as IThemePageRes).user.avatarColor }}
-		>
-			{(props as IThemePageRes).user.userLogin[0]}
-		</div>
+		<>
+			{(props as IThemePageRes & { ui: UI_COMPONENT }).user.userImage ? (
+				<img
+					src={(props as IThemePageRes & { ui: UI_COMPONENT }).user.userImage}
+					alt=''
+					className={styles.user_avatar}
+				/>
+			) : (
+				<div
+					className={classNames(styles.user_avatar, styles.noImg)}
+					style={{ backgroundColor: (props as IThemePageRes).user.avatarColor }}
+				>
+					{(props as IThemePageRes).user.userLogin[0]}
+				</div>
+			)}
+		</>
 	)
 }
 
@@ -73,10 +83,7 @@ export function ChapterLink(props: IChapterLinkProps) {
 							Нет сообщений
 						</span>
 					) : (
-						<Link
-							to={generateThemeUrl({ isChapter, props, isMessage: true })}
-							className={styles.user}
-						>
+						<div className={styles.user}>
 							<img
 								src={isChapter ? props.latestMessage?.user.userImage : props.latestThemeMessage?.user.userImage}
 								alt='Аватар пользователя'
@@ -99,7 +106,7 @@ export function ChapterLink(props: IChapterLinkProps) {
 									</div>
 								</div>
 							</div>
-						</Link>
+						</div>
 					)}
 				</div>
 			</div>

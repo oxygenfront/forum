@@ -54,6 +54,7 @@ const messageApi = rootApi.injectEndpoints({
 		}),
 		getMessageById: builder.query<IMessageRes, string>({
 			query: (id) => `${GET_MESSAGE_BY_ID}/${id}`,
+			keepUnusedDataFor: 0,
 		}),
 	}),
 })

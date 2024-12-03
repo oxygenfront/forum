@@ -1,7 +1,27 @@
+import type { IUser } from '@/shared/types/user.types'
+
 export interface ICreateMessageReq {
 	content: string
 	themeId: string
 	userId: string
+	parentMessageIds?: string[]
+}
+
+// "respondedTo": [
+
+export interface IResponded {
+	id: string
+	parentMessageId: string
+	childMessageId: string
+	parentMessage: {
+		id: string
+		userId: string
+		content: string
+		themeId: string
+		createdAt: Date
+		updatedAt: Date
+		user: Pick<IUser, 'id' | 'userLogin'>
+	}
 }
 
 export interface IMessageRes {
@@ -9,6 +29,8 @@ export interface IMessageRes {
 	userId: string
 	content: string
 	themeId: string
-	createdAt: string
-	updateAt: string
+	createdAt: Date
+	updateAt: Date
+	respondedTo: IResponded[]
+	user: Pick<IUser, 'id' | 'userImage' | 'userLogin' | 'avatarColor'>
 }
