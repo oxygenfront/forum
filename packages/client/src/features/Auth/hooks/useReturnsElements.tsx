@@ -2,9 +2,11 @@ import { type TypeForms, clearData, selectForms, setTypeForm } from '@/entities/
 import { toggleAuthModal } from '@/entities/Modal'
 
 import { setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
+import { FORM_HINTS_ERRORS } from '@/shared/constants'
 
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IRegisterRes } from '@/shared/types/auth.types'
+import { clearHints, setHint } from '@/shared/ui/InputsForm'
 import { Forgot } from '@/widgets/ForgotPassword'
 import { Login } from '@/widgets/Login'
 import { setRememberMe } from '@/widgets/Login'
@@ -15,6 +17,13 @@ import { LiaKeySolid } from 'react-icons/lia'
 import { LuUser2 } from 'react-icons/lu'
 import { RxCross2 } from 'react-icons/rx'
 
+interface IAuthError {
+	data: {
+		statusCode: number
+		message: { hintKey: keyof typeof FORM_HINTS_ERRORS; inputType: 'userEmail' | 'userPassword' | 'userLogin' }[]
+		error: ''
+	}
+}
 // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 export const useReturnsElements = (styles: CSSModuleClasses) => {
 	const [login, { isLoading: isLoadingLogin, isSuccess: isSuccessLogin, data: fetchLoginData, error: errorLogin }] =
@@ -26,18 +35,25 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 	const dispatch = useAppDispatch()
 
 	const { login: storeLoginData, register: storeRegisterData } = useAppSelector(selectForms)
-
+	const passwordsMatches = storeRegisterData.userPassword === storeRegisterData.userConfirmPassword
 	const handleLogin = () => {
 		login({ userEmail: storeLoginData.userEmail, userPassword: storeLoginData.userPassword })
 	}
 
 	const handleRegister = () => {
-		register({
-			userEmail: storeRegisterData.userEmail,
-			userLogin: storeRegisterData.userLogin,
-			userPassword: storeRegisterData.userPassword,
-			role: storeRegisterData.role,
-		})
+		if (passwordsMatches) {
+			register({
+				userEmail: storeRegisterData.userEmail,
+				userLogin: storeRegisterData.userLogin,
+				userPassword: storeRegisterData.userPassword,
+				role: storeRegisterData.role,
+			})
+			dispatch(setHint({ hintKey: null, type: 'register', key: 'userPassword', status: false }))
+			dispatch(setHint({ hintKey: null, type: 'register', key: 'userConfirmPassword', status: false }))
+			return
+		}
+		dispatch(setHint({ hintKey: 'PASSWORDS_DO_NOT_MATCH', type: 'register', key: 'userPassword', status: true }))
+		dispatch(setHint({ hintKey: 'PASSWORDS_DO_NOT_MATCH', type: 'register', key: 'userConfirmPassword', status: true }))
 	}
 
 	useEffect(() => {
@@ -48,17 +64,34 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 		if (isSuccessLogin) {
 			handleAuthSuccess(fetchLoginData)
 			dispatch(clearData())
+			dispatch(clearHints('login'))
 			dispatch(toggleAuthModal())
 		} else if (errorLogin) {
-			//TODO написать логику для обработки хинтов и ошибок для логина
+			const loginError = errorLogin as IAuthError
+			if ((loginError as IAuthError).data?.message) {
+				const typedError = loginError.data
+
+				typedError.message.map((message) => {
+					dispatch(setHint({ hintKey: message.hintKey, type: 'login', key: message.inputType, status: true }))
+				})
+			}
 		}
 		if (isSuccessRegister) {
 			handleAuthSuccess(fetchRegisterData)
 			dispatch(clearData())
 			dispatch(setRememberMe(true))
+			dispatch(clearHints('register'))
 			dispatch(toggleAuthModal())
 		} else if (errorRegister) {
-			//TODO написать логику для обработки хинтов и ошибок для регистра
+			const registerError = errorRegister as IAuthError
+
+			if ((registerError as IAuthError).data?.message) {
+				const typedError = registerError.data
+
+				typedError.message.map((message) => {
+					dispatch(setHint({ hintKey: message.hintKey, type: 'register', key: message.inputType, status: true }))
+				})
+			}
 		}
 	}, [isSuccessLogin, isLoadingLogin, isLoadingRegister, isSuccessRegister])
 

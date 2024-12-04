@@ -102,16 +102,16 @@ export class AuthService {
 			const user = await this.usersService.findByEmail(data.userEmail)
 			if (!user) {
 				throw new BadRequestException([
-					{ hintType: 'INVALID_CREDENTIALS', type: 'userPassword' },
-					{ hintType: 'INVALID_CREDENTIALS', type: 'userEmail' },
+					{ hintKey: 'INVALID_CREDENTIALS', inputType: 'userPassword' },
+					{ hintKey: 'INVALID_CREDENTIALS', inputType: 'userEmail' },
 				])
 			}
 
 			const isPasswordValid = await argon2.verify(user.userPassword, data.userPassword)
 			if (!isPasswordValid) {
 				throw new BadRequestException([
-					{ hintType: 'INVALID_CREDENTIALS', type: 'userPassword' },
-					{ hintType: 'INVALID_CREDENTIALS', type: 'userEmail' },
+					{ hintKey: 'INVALID_CREDENTIALS', inputType: 'userPassword' },
+					{ hintKey: 'INVALID_CREDENTIALS', inputType: 'userEmail' },
 				])
 			}
 

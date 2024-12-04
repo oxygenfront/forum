@@ -66,7 +66,7 @@ export const authApi = rootApi.injectEndpoints({
 					dispatch(setUserData(data))
 					localStorage.setItem('token', data.accessToken)
 				} catch (error) {
-					console.error('Login failed:', error)
+					console.error('Register failed:', error)
 				}
 			},
 		}),

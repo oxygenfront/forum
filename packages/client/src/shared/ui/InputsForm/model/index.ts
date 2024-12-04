@@ -1,1 +1,1 @@
-export { hintSlice, setHint } from './slice'
+export { hintSlice, setHint, clearHints } from './slice'
