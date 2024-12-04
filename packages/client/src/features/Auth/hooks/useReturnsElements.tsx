@@ -154,7 +154,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 						</div>
 						<span className={styles.hello}>Восстановление доступа</span>
 						<span className={styles.about}>
-							Пожалуйста, введите данные для <br /> восстановление доступа к аккаунту
+							Пожалуйста, введите данные для <br /> восстановления доступа к аккаунту
 						</span>
 					</div>
 				)

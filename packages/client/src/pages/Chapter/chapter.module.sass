@@ -13,14 +13,31 @@
   &_right
     display: flex
     gap: 290px
+    @media(max-width: 1140px)
+      gap: 230px
+    @media(max-width: 1053px)
+      gap: 190px
+    @media(max-width: 1010px)
+      gap: 160px
+    @media(max-width: 980px)
+      gap: 140px
+    @media(max-width: 960px)
+      .title:nth-child(1)
+        display: none
+
+
+
 .title
   display: flex
   flex-direction: column
   gap: 8px
+
   &:after
     content: ''
     display: block
     width: 100%
     height: 2px
     background-color: #FFFFFF1F
+
+
 

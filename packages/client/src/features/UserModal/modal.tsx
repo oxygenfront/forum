@@ -4,6 +4,7 @@ import { useLogoutMutation } from '@/features/Auth/api'
 import { clearUserData } from '@/features/Auth/model'
 import { useOutsideClick } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import {trimmingText} from '@/shared/lib/'
 import { type FC, useEffect, useRef } from 'react'
 import { PiWechatLogoBold } from 'react-icons/pi'
 import { RiLogoutCircleRLine } from 'react-icons/ri'
@@ -40,7 +41,7 @@ export const UserModal: FC = () => {
 			ref={ref}
 		>
 			<div className={styles.user}>
-				<div className={styles.user_login}>{userLogin}</div>
+				<div className={styles.user_login}>{trimmingText(userLogin, 10)}</div>
 				{userImage ? (
 					<img
 						src={userImage}

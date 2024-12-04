@@ -30,9 +30,9 @@ export const Header: FC = () => {
 						className={classnames(styles.hamburger, { [styles.hamburger_active]: isMenuOpen })}
 						onClick={toggleMenu}
 					>
-						<tspan />
-						<tspan />
-						<tspan />
+						<span className={styles.hamburger_span} />
+						<span className={styles.hamburger_span} />
+						<span className={styles.hamburger_span} />
 					</button>
 					<Link
 						to='/'

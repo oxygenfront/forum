@@ -38,6 +38,7 @@ function renderAuthorAvatar(isChapter: boolean, props: IChapterLinkProps) {
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
 export function ChapterLink(props: IChapterLinkProps) {
 	const isChapter = 'titleChapter' in props
+	const title = isChapter ? props.titleChapter : props.themeTitle
 	return (
 		<Link
 			to={generateThemeUrl({ isChapter, props })}
@@ -46,7 +47,7 @@ export function ChapterLink(props: IChapterLinkProps) {
 			{renderAuthorAvatar(isChapter, props)}
 			<div className={styles.wrapper}>
 				<div className={styles.chapter__left}>
-					<div className={styles.chapter__left_title}>{isChapter ? props.titleChapter : props.themeTitle}</div>
+					<div className={styles.chapter__left_title}>{trimmingText(title, 12)}</div>
 					{isChapter ? null : (
 						<div className={styles.chapter__left_theme_info}>
 							<span className={styles.chapter__left_theme_info_item}>{props.user.userLogin}</span>
