@@ -1,4 +1,4 @@
-import type { IUser } from '@/shared/types/user.types'
+import type { IUser, IUserLessData } from '@/shared/types/user.types'
 
 export interface ICreateMessageReq {
 	content: string
@@ -6,8 +6,6 @@ export interface ICreateMessageReq {
 	userId: string
 	parentMessageIds?: string[]
 }
-
-// "respondedTo": [
 
 export interface IResponded {
 	id: string
@@ -32,5 +30,5 @@ export interface IMessageRes {
 	createdAt: Date
 	updateAt: Date
 	respondedTo: IResponded[]
-	user: Pick<IUser, 'id' | 'userImage' | 'userLogin' | 'avatarColor'>
+	user: IUserLessData
 }

@@ -1,4 +1,3 @@
-import type { UI_COMPONENT } from '@/shared/constants'
 import type { IChapterPageRes, IThemePageRes } from '@/shared/types'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -24,9 +23,12 @@ dayjs.updateLocale('ru', {
 		yy: '%d г.',
 	},
 })
-export const timeSincePublication = (date: Date) => {
+export const timeSincePublication = (date: Date, isChat?: boolean) => {
 	if (!date) {
 		return
+	}
+	if (isChat) {
+		return `в ${dayjs(date).format('HH:mm DD/MM/YYYY')}`
 	}
 	const transformedDate = dayjs(date).unix()
 	return dayjs(transformedDate * 1000)
@@ -98,7 +100,7 @@ export function trimmingText(str: string, maxLength = 20): string {
 	}
 	return str.substring(0, maxLength).concat('...')
 }
-type IChapterLinkProps = (IChapterPageRes & { ui: UI_COMPONENT }) | (IThemePageRes & { ui: UI_COMPONENT })
+type IChapterLinkProps = IChapterPageRes | IThemePageRes
 
 export function generateThemeUrl({
 	isChapter,
@@ -110,12 +112,12 @@ export function generateThemeUrl({
 	isMessage?: boolean
 }): string {
 	if (isChapter) {
-		const { titleChapter, id, latestMessage } = props as IChapterPageRes & { ui: UI_COMPONENT }
+		const { titleChapter, id, latestMessage } = props as IChapterPageRes
 		if (isMessage) {
 			return `chapter/${createSlug(titleChapter)}/${id}/theme/${createSlug(latestMessage?.theme.themeTitle)}/${latestMessage?.themeId}`
 		}
 		return `chapter/${createSlug(titleChapter)}/${id}`
 	}
-	const { id, themeTitle } = props as IThemePageRes & { ui: UI_COMPONENT }
+	const { id, themeTitle } = props as IThemePageRes
 	return `theme/${createSlug(themeTitle)}/${id}`
 }

@@ -4,12 +4,10 @@ import classNames from 'classnames'
 import type { FC, ReactNode } from 'react'
 import styles from './block.module.sass'
 
-type TMod = 'main' | 'stat' | 'purchased' | 'nav'
-
 interface IProps {
 	children: ReactNode
-	mod?: TMod
-	title?: string
+	mod?: string
+	title?: string | ReactNode
 	modalTitles?: string[]
 }
 
@@ -20,8 +18,13 @@ export const BlockContainer: FC<IProps> = ({ children, mod, title, modalTitles }
 				{title ? <Title>{title}</Title> : null}
 				{modalTitles ? <ModalOptions arrayActions={modalTitles} /> : null}
 			</div>
-			<hr className={styles.hr} />
-			{children}
+
+			{children ? (
+				<>
+					<hr className={styles.hr} />
+					<div className={styles.bottom}>{children}</div>
+				</>
+			) : null}
 		</div>
 	)
 }

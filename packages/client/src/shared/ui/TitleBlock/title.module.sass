@@ -2,4 +2,11 @@
   width: fit-content
   font-size: 24px
   font-weight: 500
-  padding: 24px 42px
+
+  &:has(> svg)
+    display: flex
+    align-items: center
+    gap: 10px
+
+    & svg
+      font-size: 30px

@@ -5,5 +5,6 @@ export type { ICreateMessageReq, IMessageRes, IResponded } from './messageApi.ty
 export type { ISearchRes } from './search.types'
 export type { IStatsRes } from './stats.types'
 export type { IResponsePurchased } from './purchased.types'
-export type { IUser } from './user.types'
+export type { IUser, IUserLessData } from './user.types'
 export type { IForgot, InputProps, InputValue, IInitialState, TPayload } from './forms.types'
+export type { IChat } from './chat.types'

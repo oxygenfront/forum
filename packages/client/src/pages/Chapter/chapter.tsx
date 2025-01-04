@@ -1,5 +1,4 @@
 import { useGetChapterPageQuery } from '@/pages/Chapter'
-import { UI_COMPONENT } from '@/shared/constants'
 import { BlockThemeContainer, ChapterLink } from '@/shared/ui'
 import { Loader } from '@/shared/ui/Loader'
 import { FC } from 'react'
@@ -24,14 +23,13 @@ export const ChapterPage: FC = () => {
 				</div>
 
 				{conditionalForShow ? (
-					<Loader loading={conditionalForShow} />
+					<Loader />
 				) : (
 					data.chapterThemes.map((el) => {
 						return (
 							<ChapterLink
 								{...el}
 								key={el.id}
-								ui={UI_COMPONENT.THEME_LINK}
 							/>
 						)
 					})

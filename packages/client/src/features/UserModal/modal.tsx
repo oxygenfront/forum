@@ -62,7 +62,7 @@ export const UserModal: FC = () => {
 					Мой профиль
 				</Link>
 				<Link
-					to='/chat'
+					to='/chats'
 					className={styles.links_item}
 				>
 					<PiWechatLogoBold />

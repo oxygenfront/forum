@@ -15,7 +15,24 @@
     align-items: center
     margin: 0
 
-.locked
+  &.chat
+    margin-bottom: 20px
+
+    .dot
+      margin: 0 11px
+      background-color: white
+
+.chat_info
+  display: flex
+  align-items: center
+
+.exit
+  font-size: 14px
+  padding: 7px 12px
+  border: 1px solid white
+  border-radius: 12px
+
+.plate
   border-radius: 8px
   background: #62FFEC26
   display: flex
@@ -27,17 +44,34 @@
   margin-left: 13px
   padding: 8px 6px
 
-.lockWithTitle
-  display: flex
+  &.chat
+    background-color: #00FFE0
+    border-radius: 15px
+    padding: 3px 15px
+    margin-left: 0
+
 
 .naming
   font-size: 13px
   font-weight: 500
   color: #D1DCDC73
 
+  &.chat
+    color: black
+    font-size: 14px
+
 .down
   display: flex
   justify-content: space-between
+
+  &.chat
+    flex-direction: column
+    gap: 6px
+
+.date_create
+  font-size: 12px
+  color: #8E8B8B
+  font-weight: 500
 
 .title
   font-size: 20px

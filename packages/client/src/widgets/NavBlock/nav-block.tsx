@@ -8,10 +8,7 @@ import banner4 from '/gif/4 banner.gif'
 import styles from './nav-block.module.sass'
 export const NavBlock: FC = () => {
 	return (
-		<BlockContainer
-			mod='nav'
-			title='Навигация'
-		>
+		<BlockContainer title='Навигация'>
 			<div className={styles.block__bottom}>
 				<Link
 					to=''

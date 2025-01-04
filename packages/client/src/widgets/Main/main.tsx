@@ -13,7 +13,7 @@ export const Main: FC = () => {
 	return (
 		<>
 			<div className={styles.main}>
-				{pathname !== PATH.PROFILE && <NavBlock />}
+				{pathname !== PATH.PROFILE && !pathname.split('/').includes('chats') && <NavBlock />}
 				<Outlet />
 				{pathname.split('/')[1] === 'warrantor' ? <ButtonLogin /> : null}
 			</div>

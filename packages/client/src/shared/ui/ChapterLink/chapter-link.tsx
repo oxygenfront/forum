@@ -1,4 +1,3 @@
-import { UI_COMPONENT } from '@/shared/constants'
 import { generateThemeUrl, replaceMessage, timeSincePublication, trimmingText } from '@/shared/lib'
 import { IChapterPageRes, IThemePageRes } from '@/shared/types'
 import classNames from 'classnames'
@@ -8,7 +7,7 @@ import { PiWechatLogoBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 import styles from './chapter-link.module.sass'
 
-type IChapterLinkProps = (IChapterPageRes & { ui: UI_COMPONENT }) | (IThemePageRes & { ui: UI_COMPONENT })
+type IChapterLinkProps = IChapterPageRes | IThemePageRes
 
 function renderAuthorAvatar(isChapter: boolean, props: IChapterLinkProps) {
 	if (isChapter) {
@@ -17,19 +16,19 @@ function renderAuthorAvatar(isChapter: boolean, props: IChapterLinkProps) {
 
 	return (
 		<>
-			{(props as IThemePageRes & { ui: UI_COMPONENT }).user.userImage ? (
+			{(props as IThemePageRes).user.userImage ? (
 				<img
-					src={(props as IThemePageRes & { ui: UI_COMPONENT }).user.userImage}
+					src={(props as IThemePageRes).user.userImage}
 					alt=''
 					className={styles.user_avatar}
 				/>
 			) : (
-				<div
+				<span
 					className={classNames(styles.user_avatar, styles.noImg)}
 					style={{ backgroundColor: (props as IThemePageRes).user.avatarColor }}
 				>
 					{(props as IThemePageRes).user.userLogin[0]}
-				</div>
+				</span>
 			)}
 		</>
 	)

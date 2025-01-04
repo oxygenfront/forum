@@ -23,7 +23,6 @@ export const ThemePage: FC = () => {
 	const { id } = useParams()
 	const storedCurrentPage = useAppSelector(selectCurrentPage)
 	const { data, isLoading } = useGetThemePageQuery({ id, page: storedCurrentPage }, { skip: !id })
-
 	const { id: userId } = useAppSelector(selectUserData)
 	const selectDataMessage = useAppSelector(selectMessage)
 	const { replyMessages } = useAppSelector(selectReply)
@@ -35,7 +34,11 @@ export const ThemePage: FC = () => {
 
 	const isLogin = useAppSelector(selectIsLogin)
 
-	const conditionalForShow = isLoading || !data
+	useEffect(() => {
+		return () => {
+			dispatch(clearData())
+		}
+	}, [dispatch])
 
 	useEffect(() => {
 		if (data) {
@@ -50,8 +53,8 @@ export const ThemePage: FC = () => {
 		}
 	}, [isSuccessUpdate, isSuccessCreate])
 
-	if (conditionalForShow) {
-		return <Loader loading={isLoading} />
+	if (isLoading) {
+		return <Loader />
 	}
 
 	const handleActionMessage = () => {
@@ -86,9 +89,11 @@ export const ThemePage: FC = () => {
 			handleActionMessage()
 		}
 	}
+
 	const handleCancelEdit = () => {
 		dispatch(setValue({ isEdit: false, content: '' }))
 	}
+
 	return (
 		<>
 			{data ? (
@@ -98,6 +103,7 @@ export const ThemePage: FC = () => {
 						title={data.themeTitle}
 						createdAt={data.createdAt}
 						user={data.user}
+						isPrivate={data.isPrivate}
 						views={data.views ?? 0}
 						countThemeMessages={data.countThemeMessages}
 					/>
@@ -117,41 +123,43 @@ export const ThemePage: FC = () => {
 							})}
 						</>
 					) : (
-						'Сообщений по этой теме нет'
+						'Сообщений по этой теме нет сообщений'
 					)}
 				</>
 			) : (
 				'К сожалению тут ничего нет'
 			)}
-			<>
-				{isLogin && <CreateMessage onKeyDown={handleKeyDown} />}
-				<div className={classNames(styles.theme_actions, { [styles.noPagination]: !data.meta.totalPages })}>
-					{data.meta.totalPages ? <Pagination meta={data.meta} /> : null}
-					{isLogin ? (
-						<div className={styles.buttons}>
-							<button
-								type='button'
-								className={styles.button}
-								onClick={handleActionMessage}
-								disabled={selectDataMessage.content === ''}
-							>
-								{selectDataMessage.isEdit ? 'Редактировать' : 'Комментировать'}
-							</button>
-							{selectDataMessage.isEdit && (
+			{data && (
+				<>
+					{isLogin && <CreateMessage onKeyDown={handleKeyDown} />}
+					<div className={classNames(styles.theme_actions, { [styles.noPagination]: !(data.meta.totalPages > 1) })}>
+						{data.meta.totalPages > 1 ? <Pagination meta={data.meta} /> : null}
+						{isLogin ? (
+							<div className={styles.buttons}>
 								<button
 									type='button'
 									className={styles.button}
-									onClick={handleCancelEdit}
+									onClick={handleActionMessage}
+									disabled={selectDataMessage.content === ''}
 								>
-									Отменить редактирование
+									{selectDataMessage.isEdit ? 'Редактировать' : 'Комментировать'}
 								</button>
-							)}
-						</div>
-					) : (
-						<LoginForAction />
-					)}
-				</div>
-			</>
+								{selectDataMessage.isEdit && (
+									<button
+										type='button'
+										className={styles.button}
+										onClick={handleCancelEdit}
+									>
+										Отменить редактирование
+									</button>
+								)}
+							</div>
+						) : (
+							<LoginForAction />
+						)}
+					</div>
+				</>
+			)}
 		</>
 	)
 }

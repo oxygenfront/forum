@@ -16,6 +16,7 @@ export const rootApi = createApi({
 		ApiTag.SEARCH,
 		ApiTag.STATS,
 		ApiTag.PURCHASED,
+		ApiTag.CHATS,
 	],
 	endpoints: () => ({}),
 })

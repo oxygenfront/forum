@@ -1,3 +1,4 @@
+import { timeSincePublication } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IMessageRes } from '@/shared/types'
 import { RepliedMessage, setReplyMessageId } from '@/shared/ui/ReplyedMessage'
@@ -13,15 +14,15 @@ import { AiOutlineLike } from 'react-icons/ai'
 import { AiOutlineDislike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
 
-interface IMessageProps {
+interface IMessageProps extends IMessageRes {
 	userId: string
 	userThemeId: string
+	isChat?: boolean
 }
-export const Message: FC<IMessageRes & IMessageProps> = (message) => {
-	const { content, user, userId: messageUserId, id: messageId, themeId, respondedTo } = message
+export const Message: FC<IMessageProps> = (message) => {
+	const { content, user, userId: messageUserId, id: messageId, themeId, respondedTo, isChat } = message
 	const { id: userId } = useAppSelector(selectUserData)
 	const isLogin = useAppSelector(selectIsLogin)
-
 	const dispatch = useAppDispatch()
 
 	const [deleteMessage] = useDeleteMessageMutation()
@@ -89,20 +90,28 @@ export const Message: FC<IMessageRes & IMessageProps> = (message) => {
 			<hr className={styles.hr} />
 			<div className={styles.down}>
 				<div className={styles.icons}>
-					<button
-						type='button'
-						className={styles.wrapper_icon}
-					>
-						<AiOutlineLike />
-						<span>103</span>
-					</button>
-					<button
-						type='button'
-						className={styles.wrapper_icon}
-					>
-						<AiOutlineDislike />
-						<span>103</span>
-					</button>
+					{isChat ? (
+						<span className={styles.created_at}>
+							{timeSincePublication(new Date('2024-12-09T16:20:45.007Z'), isChat)}
+						</span>
+					) : (
+						<>
+							<button
+								type='button'
+								className={styles.wrapper_icon}
+							>
+								<AiOutlineLike />
+								<span>103</span>
+							</button>
+							<button
+								type='button'
+								className={styles.wrapper_icon}
+							>
+								<AiOutlineDislike />
+								<span>103</span>
+							</button>
+						</>
+					)}
 				</div>
 				<button
 					type='button'

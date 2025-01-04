@@ -8,14 +8,15 @@ import { useGetStatsQuery } from './api'
 import styles from './stats-block.module.sass'
 export const StatsBlock: FC = () => {
 	const { data, isLoading } = useGetStatsQuery()
+
+	if (!data && isLoading) {
+		return <Loader />
+	}
+
 	return (
-		<BlockContainer
-			mod='stat'
-			modalTitles={['Новости', 'Недельные новости', 'Новости', 'Недельные новости', 'Новости']}
-			title='Статистика сайта'
-		>
-			{data ? (
-				<div className={styles.block__bottom}>
+		<BlockContainer title='Статистика сайта'>
+			{data && (
+				<>
 					<div className={styles.row}>
 						<span className={styles.row_title}>
 							<MdOutlineEdit />
@@ -37,9 +38,7 @@ export const StatsBlock: FC = () => {
 						</span>
 						<span className={styles.row_count}>{data.countUsers}</span>
 					</div>
-				</div>
-			) : (
-				<Loader loading={isLoading} />
+				</>
 			)}
 		</BlockContainer>
 	)

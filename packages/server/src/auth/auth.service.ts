@@ -135,8 +135,7 @@ export class AuthService {
 		}
 	}
 
-	async logout(userId: string, res: ExpressResponse) {
-		await this.usersService.update(userId, { refreshToken: null })
+	logout(userId: string, res: ExpressResponse) {
 		res.clearCookie('refreshToken')
 	}
 

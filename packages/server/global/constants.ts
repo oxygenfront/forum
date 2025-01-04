@@ -17,6 +17,9 @@ export enum Route {
 	SEARCH = 'search',
 	STATS = 'stats',
 	PURCHASED = 'purchased',
+	CHATS = 'chats',
+	CHATS_USER = ':userId',
+	ADD_USER_IN_CHAT = 'addUser',
 }
 
 export enum SwaggerApiTag {

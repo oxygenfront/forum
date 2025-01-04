@@ -23,7 +23,7 @@ export const Layout: FC = () => {
 				{pathname !== PATH.PROFILE && !isLoggedUser && <HelloBlock />}
 				<main className={styles.main}>
 					<Main />
-					<Aside />
+					{pathname !== PATH.ALL_CHATS && <Aside />}
 				</main>
 			</Container>
 			<Footer />

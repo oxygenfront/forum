@@ -14,3 +14,5 @@ export interface IUser {
 	refreshToken: string | null
 	avatarColor: string
 }
+
+export type IUserLessData = Pick<IUser, 'id' | 'userPassword' | 'userLogin' | 'avatarColor' | 'userImage'>

@@ -1,0 +1,1 @@
+export { ChatInfoAccordion } from './accordion'

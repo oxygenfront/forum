@@ -1,8 +1,6 @@
-import { UI_COMPONENT } from '@/shared/constants'
-import { ChapterLink, Title } from '@/shared/ui'
+import { BlockContainer, ChapterLink } from '@/shared/ui'
 import { useGetChaptersQuery } from '@/widgets/ChaptersLinks'
 import type { FC } from 'react'
-import styles from './links-block.module.sass'
 export const ChaptersLinksBlock: FC = () => {
 	const { data, isLoading } = useGetChaptersQuery()
 
@@ -11,19 +9,17 @@ export const ChaptersLinksBlock: FC = () => {
 	}
 	return (
 		<>
-			<div className={styles.container}>
-				<Title>Форум</Title>
-				<hr className={styles.hr} />
-				<div className={styles.bottom}>
-					{data.map((el) => (
-						<ChapterLink
-							ui={UI_COMPONENT.CHAPTER_LINK}
-							key={el.id}
-							{...el}
-						/>
-					))}
-				</div>
-			</div>
+			<BlockContainer
+				title='Форум'
+				mod='links-block'
+			>
+				{data.map((el) => (
+					<ChapterLink
+						key={el.id}
+						{...el}
+					/>
+				))}
+			</BlockContainer>
 		</>
 	)
 }

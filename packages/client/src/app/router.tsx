@@ -1,5 +1,7 @@
 import { BaseLayout as App } from '@/app/layout'
+import { AllChatsPages } from '@/pages/AllChats'
 import { ChapterPage } from '@/pages/Chapter'
+import { Chat } from '@/pages/Chat'
 import { Profile } from '@/pages/Profile'
 import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
@@ -33,6 +35,14 @@ export const router = createBrowserRouter(
 				{
 					path: PATH.PROFILE,
 					element: <Profile />,
+				},
+				{
+					path: PATH.ALL_CHATS,
+					element: <AllChatsPages />,
+				},
+				{
+					path: PATH.CHAT,
+					element: <Chat />,
 				},
 			],
 		},

@@ -6,6 +6,7 @@ import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { AuthMiddleware } from './auth/middleware/auth.middleware'
 import { ChaptersModule } from './chapters/chapters.module'
+import { ChatModule } from './chat/chat.module'
 import { MessageModule } from './message/message.module'
 import { PaginationModule } from './pagination/pagination.module'
 import { PurchasedModule } from './purchased/purchased.module'
@@ -36,6 +37,7 @@ import { UsersModule } from './users/users.module'
 		PurchasedModule,
 		SearchModule,
 		PaginationModule,
+		ChatModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

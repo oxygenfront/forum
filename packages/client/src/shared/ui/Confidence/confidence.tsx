@@ -24,7 +24,8 @@ export const Confidence = () => {
 						<div className={styles.up_about}>
 							<p className={styles.up_about_title}>Смена текущей почты</p>
 							<p className={styles.up_about_desc}>
-								Введите адрес новой почты для смены текущей <p>почты</p>
+								Введите адрес новой почты для смены текущей <br />
+								почты
 							</p>
 						</div>
 					</div>

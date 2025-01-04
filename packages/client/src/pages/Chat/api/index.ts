@@ -1,0 +1,1 @@
+export { useGetChatQuery } from './chatPageApi'

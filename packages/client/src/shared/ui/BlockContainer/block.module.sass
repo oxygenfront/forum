@@ -3,21 +3,31 @@
   border: 2px solid rgba(255, 255, 255, 0.12)
   border-radius: 25px
   background-color: rgba(32, 36, 45, 1)
+  display: flex
+  flex-direction: column
 
-  &.stat
-    display: flex
-    flex-direction: column
+  &.links-block
+    .bottom
+      padding: 18px 31px
 
-.top, .bottom
+.top
   display: flex
   justify-content: space-between
   align-items: center
-  padding: 18px 19px
+  padding: 18px 20px
 
 .top
-  padding: 0
+  padding: 24px 37px
+
+.bottom
+  display: flex
+  flex-direction: column
+  width: 100%
+  padding: 18px 19px
+
 
 .hr
   background-color: rgba(255, 255, 255, 0.12)
   width: 100%
-  height: 2px
+  height: 1px
+

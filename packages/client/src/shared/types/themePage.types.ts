@@ -1,5 +1,5 @@
 import type { IMessageRes } from '@/shared/types/messageApi.types'
-import type { IUser } from './user.types'
+import type { IUserLessData } from './user.types'
 
 export interface IThemePageRes {
 	id: string
@@ -13,7 +13,7 @@ export interface IThemePageRes {
 	countThemeMessages: number
 	latestThemeMessage: IMessageRes
 	themeMessages: IMessageRes[]
-	user: Pick<IUser, 'id' | 'userLogin' | 'userImage' | 'avatarColor'>
+	user: IUserLessData
 	meta: {
 		totalItems: number
 		totalPages: number

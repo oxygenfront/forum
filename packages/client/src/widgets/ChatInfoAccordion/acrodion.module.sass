@@ -1,0 +1,81 @@
+.hr
+  opacity: 0
+  width: 0
+  transition: all 0.5s ease-in-out
+
+  &.expanded
+    width: 100%
+    height: 1px
+    background-color: #FFFFFF1F
+    opacity: 1
+
+.add_member
+  position: absolute
+  z-index: 1
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 46px
+  height: 46px
+  border-radius: 50%
+  background-color: #3B3D46
+  bottom: -25px
+  left: -50px
+
+.title
+  display: flex
+  align-items: center
+  gap: 10px
+  margin-bottom: 7px
+  font-weight: 300
+
+.subtitle
+  color: #7B7D83
+  font-size: 14px
+
+.members
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 20px
+
+  &_right
+    position: relative
+    display: flex
+
+  &_avatar
+    position: absolute
+    bottom: -32px
+    width: 46px
+    height: 46px
+    border-radius: 50%
+    object-fit: cover
+
+    &:first-child
+      z-index: 3
+      width: 46px
+      height: 46px
+      border: 8px solid #20242D
+      left: -120px
+      box-sizing: content-box
+
+    &:nth-child(2)
+      z-index: 2
+      bottom: -25px
+      left: -80px
+
+.messages
+  margin-top: 11px
+
+.row
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+  &:not(:last-child)
+    margin-bottom: 12px
+
+.count
+  color: #00FFE0
+  font-weight: 600
+  font-size: 20px

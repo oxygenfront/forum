@@ -14,7 +14,7 @@ export const ModalResults: FC<IModalResultsProps> = ({ results, loading }) => {
 	return (
 		<div className={styles.wrapper}>
 			{loading || !results ? (
-				<Loader loading={true} />
+				<Loader />
 			) : results.length ? (
 				results?.map((result) => {
 					return (

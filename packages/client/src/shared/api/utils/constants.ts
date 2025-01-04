@@ -1,3 +1,6 @@
+// Base URL
+export const API_BASE_URL = 'http://localhost:3004/api'
+
 export enum ApiTag {
 	AUTH = 'auth',
 	CHAPTERS = 'chapters',
@@ -7,6 +10,7 @@ export enum ApiTag {
 	SEARCH = 'search',
 	STATS = 'stats',
 	PURCHASED = 'purchased',
+	CHATS = 'chats',
 }
 
 export enum RequestMethod {
@@ -20,11 +24,11 @@ const CREATE = 'create'
 const UPDATE = 'update'
 const DELETE = 'delete'
 
+// Routes
 const CHAPTERS = 'chapters'
 const USERS = 'users'
 const THEMES = 'themes'
 const MESSAGE = 'message'
-
 const AUTH = 'auth'
 const LOGIN = 'login'
 const REGISTER = 'register'
@@ -32,9 +36,9 @@ const AUTH_ME = 'auth_me'
 const LOGOUT = 'logout'
 const REFRESH = 'refresh'
 const SEARCH = 'search'
-
-// Base URL
-export const API_BASE_URL = 'http://localhost:3004/api'
+const STATS = 'stats'
+const PURCHASED = 'purchased'
+const CHATS = 'chats'
 
 // Authentication
 export const AUTH_ME_API = `${AUTH}/${AUTH_ME}`
@@ -76,7 +80,14 @@ export const SEARCH_ALL = `${SEARCH}/all`
 export const SEARCH_USERS = `${SEARCH}/${USERS}`
 
 // Stats
-export const GET_STATS = 'stats'
+export const GET_STATS = `${STATS}`
 
 // Latest purchased
-export const GET_PURCHASED = 'purchased'
+export const GET_PURCHASED = `${PURCHASED}`
+
+// Chats
+export const CREATE_CHAT = `${CHATS}/${CREATE}`
+export const GET_USER_CHATS = `${CHATS}`
+export const GET_CHAT = `${CHATS}/current`
+export const ADD_USER_IN_CHAT = `${CHATS}/addUser`
+export const DELETE_USER_IN_CHAT = `${CHATS}/deleteUser`
