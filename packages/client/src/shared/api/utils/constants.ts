@@ -88,6 +88,6 @@ export const GET_PURCHASED = `${PURCHASED}`
 // Chats
 export const CREATE_CHAT = `${CHATS}/${CREATE}`
 export const GET_USER_CHATS = `${CHATS}`
-export const GET_CHAT = `${CHATS}/current`
 export const ADD_USER_IN_CHAT = `${CHATS}/addUser`
 export const DELETE_USER_IN_CHAT = `${CHATS}/deleteUser`
+export const GET_CHAT = `${CHATS}/current`

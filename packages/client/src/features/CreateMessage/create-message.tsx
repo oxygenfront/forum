@@ -14,7 +14,7 @@ interface ICreateMessageProps {
 
 export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown }) => {
 	const dispatch = useAppDispatch()
-	const { replyMessageId, replyMessages } = useAppSelector(selectReply)
+	const { replyMessageId, replyMessages, chatReplyMessages } = useAppSelector(selectReply)
 
 	const selectData = useAppSelector(selectMessage)
 	const { data: messageById, isSuccess } = useGetMessageByIdQuery(replyMessageId, { skip: replyMessageId === '' })
@@ -61,7 +61,15 @@ export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown }) => {
 								{...replyMessage}
 							/>
 						))
-					: null}
+					: chatReplyMessages.length
+						? chatReplyMessages.map((replyMessage) => (
+								<RepliedMessage
+									key={replyMessage.id}
+									isCreate={true}
+									{...replyMessage}
+								/>
+							))
+						: null}
 			</div>
 			<textarea
 				ref={textareaRef}

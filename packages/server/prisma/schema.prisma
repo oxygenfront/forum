@@ -70,6 +70,29 @@ model ThemeMessage {
   respondedTo MessageReplies[] @relation("MessageRepliesToReply")
 }
 
+model ChatMessage {
+  id        String   @id @default(uuid())
+  chatId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  replies     ChatMessageReplies[] @relation("ChatMessageRepliesToMessage")
+  respondedTo ChatMessageReplies[] @relation("ChatMessageRepliesToReply")
+}
+
+model ChatMessageReplies {
+  id              String      @id @default(uuid())
+  parentMessage   ChatMessage @relation("ChatMessageRepliesToMessage", fields: [parentMessageId], references: [id])
+  parentMessageId String
+
+  childMessage   ChatMessage @relation("ChatMessageRepliesToReply", fields: [childMessageId], references: [id])
+  childMessageId String
+}
+
 model MessageReplies {
   id              String       @id @default(uuid())
   parentMessage   ThemeMessage @relation("MessageRepliesToMessage", fields: [parentMessageId], references: [id])
@@ -121,15 +144,4 @@ model ChatUser {
   user   User   @relation(fields: [userId], references: [id])
 
   @@unique([chatId, userId])
-}
-
-model ChatMessage {
-  id        String   @id @default(uuid())
-  chatId    String
-  userId    String
-  message   String
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
 }

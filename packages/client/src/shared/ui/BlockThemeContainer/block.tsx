@@ -99,7 +99,7 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 								) : (
 									<div
 										style={{ backgroundColor: user.avatarColor }}
-										className={classNames(styles.user_img, styles.noImg)}
+										className={classNames(styles.avatar, styles.noImg)}
 									>
 										{user.userLogin[0]}
 									</div>

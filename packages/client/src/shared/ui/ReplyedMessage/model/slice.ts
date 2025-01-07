@@ -1,16 +1,15 @@
 import type { IMessageRes } from '@/shared/types'
+import type { IChatMessage } from '@/shared/types/chat.types'
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 interface IInitialStateReplayed {
 	replyMessageId: string
-	chatReplyMessageId: string
 	replyMessages: IMessageRes[]
-	chatReplyMessages: IMessageRes[]
+	chatReplyMessages: IChatMessage[]
 }
 
 const initialState: IInitialStateReplayed = {
 	replyMessageId: '',
-	chatReplyMessageId: '',
 	replyMessages: [],
 	chatReplyMessages: [],
 }
@@ -35,7 +34,7 @@ export const replayedSlice = createSlice({
 			state.replyMessageId = ''
 		},
 
-		addChatReplyMessage: (state, { payload }: PayloadAction<IMessageRes>) => {
+		addChatReplyMessage: (state, { payload }: PayloadAction<IChatMessage>) => {
 			const newMessage = payload
 
 			if (!state.chatReplyMessages.some((existingMessage) => existingMessage.id === newMessage.id)) {
@@ -44,17 +43,14 @@ export const replayedSlice = createSlice({
 			return
 		},
 
-		setChatReplyMessageId: (state, { payload }: PayloadAction<string>) => {
-			state.chatReplyMessageId = payload
-		},
 		removeChatReplyMessage: (state, { payload }: PayloadAction<string>) => {
 			state.chatReplyMessages = state.chatReplyMessages.filter((message) => message.id !== payload)
-			state.chatReplyMessageId = ''
 		},
 
 		clearData: (state) => {
 			state.replyMessageId = ''
 			state.replyMessages = []
+			state.chatReplyMessages = []
 		},
 	},
 })
@@ -65,6 +61,5 @@ export const {
 	removeReplyMessage,
 	addChatReplyMessage,
 	removeChatReplyMessage,
-	setChatReplyMessageId,
 	clearData,
 } = replayedSlice.actions

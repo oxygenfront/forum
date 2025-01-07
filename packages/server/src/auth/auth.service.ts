@@ -135,7 +135,7 @@ export class AuthService {
 		}
 	}
 
-	logout(userId: string, res: ExpressResponse) {
+	logout(_userId: string, res: ExpressResponse) {
 		res.clearCookie('refreshToken')
 	}
 

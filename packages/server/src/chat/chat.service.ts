@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Chat, ChatUser } from '@prisma/client'
+import { Chat } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 @Injectable()
@@ -41,7 +41,7 @@ export class ChatService {
 				},
 				chatMessages: {
 					select: {
-						message: true,
+						content: true,
 						createdAt: true,
 						user: {
 							select: {
@@ -74,7 +74,54 @@ export class ChatService {
 		return this.prisma.chat.findUnique({
 			where: { id },
 			include: {
-				chatMessages: true,
+				chatMessages: {
+					include: {
+						user: {
+							select: {
+								id: true,
+								avatarColor: true,
+								userImage: true,
+								userLogin: true,
+							},
+						},
+						replies: {
+							include: {
+								childMessage: {
+									select: {
+										id: true,
+										content: true,
+										user: {
+											select: {
+												id: true,
+												avatarColor: true,
+												userImage: true,
+												userLogin: true,
+											},
+										},
+									},
+								},
+							},
+						},
+						respondedTo: {
+							include: {
+								parentMessage: {
+									select: {
+										id: true,
+										content: true,
+										user: {
+											select: {
+												id: true,
+												avatarColor: true,
+												userImage: true,
+												userLogin: true,
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
 				users: {
 					select: {
 						chatId: true,
@@ -89,24 +136,6 @@ export class ChatService {
 						},
 					},
 				},
-			},
-		})
-	}
-
-	addUserToChat(chatId: string, userId: string): Promise<ChatUser> {
-		return this.prisma.chatUser.create({
-			data: {
-				chatId,
-				userId,
-			},
-		})
-	}
-
-	async removeUserFromChat(chatId: string, userId: string): Promise<void> {
-		await this.prisma.chatUser.deleteMany({
-			where: {
-				chatId,
-				userId,
 			},
 		})
 	}

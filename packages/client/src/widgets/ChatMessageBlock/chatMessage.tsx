@@ -1,41 +1,43 @@
-import { timeSincePublication } from '@/shared/lib'
-import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
-import type { IMessageRes } from '@/shared/types'
-import { RepliedMessage, setReplyMessageId } from '@/shared/ui/ReplyedMessage'
-import classNames from 'classnames'
-import styles from './message.module.sass'
-
 import { Action } from '@/features/Action'
 import { selectIsLogin, selectUserData } from '@/features/Auth'
-import { setValue, useDeleteMessageMutation } from '@/features/CreateMessage'
+import { setValue } from '@/features/CreateMessage'
 import { ModalOptions } from '@/features/ModalSort'
+import { timeSincePublication } from '@/shared/lib'
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import type { IChatMessage } from '@/shared/types/chat.types'
+import { RepliedMessage } from '@/shared/ui/ReplyedMessage'
+import { addChatReplyMessage } from '@/shared/ui/ReplyedMessage/model'
+import classNames from 'classnames'
 import type { FC } from 'react'
-import { AiOutlineLike } from 'react-icons/ai'
-import { AiOutlineDislike } from 'react-icons/ai'
+import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
+import styles from './message.module.sass'
 
-interface IMessageProps extends IMessageRes {
-	userThemeId: string
+interface IMessageProps extends IChatMessage {
 	isChat?: boolean
+	deleteMessageAction: (id: string) => void
 }
-export const Message: FC<IMessageProps> = (message) => {
-	const { content, user, userId: messageUserId, id: messageId, themeId, respondedTo, isChat, createdAt } = message
+
+export const ChatMessage: FC<IMessageProps> = (message) => {
+	const { content, user, id: messageId, respondedTo, isChat, createdAt, deleteMessageAction } = message
+
 	const { id: userId } = useAppSelector(selectUserData)
 	const isLogin = useAppSelector(selectIsLogin)
 	const dispatch = useAppDispatch()
 
-	const [deleteMessage] = useDeleteMessageMutation()
-
-	const handleDeleteMessage = () => {
-		deleteMessage(messageId)
-	}
-
 	const handleUpdateMessage = () => {
-		dispatch(setValue({ content, themeId, userId: message.userId, messageId: messageId, isEdit: true }))
+		dispatch(
+			setValue({
+				content,
+				userId: message.userId,
+				messageId: messageId,
+				isEdit: true,
+			}),
+		)
 	}
 
 	const handleReplyMessage = () => {
-		dispatch(setReplyMessageId(messageId))
+		dispatch(addChatReplyMessage(message))
 	}
 
 	return (
@@ -50,13 +52,13 @@ export const Message: FC<IMessageProps> = (message) => {
 						/>,
 						<Action
 							nameAction='Удалить'
-							action={handleDeleteMessage}
+							action={() => deleteMessageAction(messageId)}
 							key={`delete-${messageId}`}
 						/>,
 					]}
 				/>
 			)}
-			{respondedTo.length
+			{respondedTo?.length
 				? respondedTo.map((responded) => (
 						<RepliedMessage
 							key={responded.id}
@@ -77,12 +79,12 @@ export const Message: FC<IMessageProps> = (message) => {
 							style={{ backgroundColor: message.user.avatarColor }}
 							className={classNames(styles.user_img, styles.noImg)}
 						>
-							{message.user.userLogin[0]}
+							{message.user.userLogin[0].toUpperCase()}
 						</div>
 					)}
 
 					<div className={styles.user_name}>{user.userLogin}</div>
-					<div className={styles.user_role}>{message.userThemeId === messageUserId ? 'Продавец' : 'Пользователь'}</div>
+					{/*<div className={styles.user_role}>{message.userThemeId === messageUserId ? 'Продавец' : 'Пользователь'}</div>*/}
 				</div>
 				<div className={styles.content}>{content}</div>
 			</div>

@@ -6,6 +6,5 @@ export {
 	removeReplyMessage,
 	addChatReplyMessage,
 	removeChatReplyMessage,
-	setChatReplyMessageId,
 } from './slice'
 export { selectReply } from './selector'
