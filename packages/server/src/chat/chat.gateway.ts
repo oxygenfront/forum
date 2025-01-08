@@ -1,380 +1,498 @@
 import {
-	ConnectedSocket,
-	MessageBody,
-	OnGatewayConnection,
-	OnGatewayDisconnect,
-	OnGatewayInit,
-	SubscribeMessage,
-	WebSocketGateway,
+    ConnectedSocket,
+    MessageBody,
+    OnGatewayConnection,
+    OnGatewayDisconnect,
+    OnGatewayInit,
+    SubscribeMessage,
+    WebSocketGateway,
 } from '@nestjs/websockets'
 import { PrismaService } from 'nestjs-prisma'
 import { Server, Socket } from 'socket.io'
 import { ChatService } from './chat.service'
 
 @WebSocketGateway(8080, {
-	transports: ['websocket'],
-	cors: {
-		origin: '*',
-		methods: ['GET', 'POST'],
-		allowedHeaders: ['Content-Type'],
-		credentials: true,
-	},
+    transports: [ 'websocket' ],
+    cors: {
+        origin: '*',
+        methods: [ 'GET', 'POST' ],
+        allowedHeaders: [ 'Content-Type' ],
+        credentials: true,
+    },
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-	constructor(
-		private readonly chatService: ChatService,
-		private readonly prisma: PrismaService,
-		private server: Server,
-	) {}
+    constructor(
+        private readonly chatService: ChatService,
+        private readonly prisma: PrismaService,
+        private server: Server,
+    ) {
+    }
 
-	private users: Map<string, Socket> = new Map()
+    private users: Map<string, Socket> = new Map()
 
-	afterInit(server: Server) {
-		this.server = server
-	}
+    private async sendChatMessages( chatId: string ) {
+        const chatMessages = await this.prisma.chatMessage.findMany({
+            where: { chatId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        userLogin: true,
+                        userImage: true,
+                        avatarColor: true,
+                    },
+                },
+                respondedTo: {
+                    include: {
+                        parentMessage: {
+                            select: {
+                                id: true,
+                                content: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                        userLogin: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        })
 
-	handleConnection(client: Socket) {
-		try {
-			// Извлечение userId и chatId из query
-			const userId = client.handshake.query.userId as string
-			const chatId = client.handshake.query.chatId as string
+        const formattedMessages = chatMessages.map(( message ) => ({
+            ...message,
+            respondedTo: message.respondedTo.map(( response ) => ({
+                id: response.parentMessageId,
+                content: response.parentMessage?.content,
+                user: response.parentMessage?.user,
+            })),
+        }))
 
-			if (!(userId && chatId)) {
-				client.disconnect()
-				return
-			}
+        this.server.to(chatId).emit('chatMessages', formattedMessages)
+    }
 
-			// Сохраняем сокет клиента с его userId
-			this.users.set(userId, client)
+    private async getChat( id: string ) {
+        const chat = await this.prisma.chat.findUnique({
+            where: { id },
+            include: {
+                chatMessages: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                avatarColor: true,
+                                userImage: true,
+                                userLogin: true,
+                            },
+                        },
+                        replies: {
+                            include: {
+                                childMessage: {
+                                    select: {
+                                        id: true,
+                                        content: true,
+                                        user: {
+                                            select: {
+                                                id: true,
+                                                avatarColor: true,
+                                                userImage: true,
+                                                userLogin: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        respondedTo: {
+                            include: {
+                                parentMessage: {
+                                    select: {
+                                        id: true,
+                                        content: true,
+                                        user: {
+                                            select: {
+                                                id: true,
+                                                avatarColor: true,
+                                                userImage: true,
+                                                userLogin: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                users: {
+                    select: {
+                        chatId: true,
+                        userId: true,
+                        user: {
+                            select: {
+                                id: true,
+                                avatarColor: true,
+                                userImage: true,
+                                userLogin: true,
+                            },
+                        },
+                    },
+                },
+                _count: {
+                    select: {
+                        users: true,
+                        chatMessages: true,
+                    },
+                },
+            },
+        })
 
-			// Присоединяем пользователя к чату
-			client.join(chatId)
+        if ( !chat ) {
+            throw new Error('Chat not found')
+        }
 
-			// Отправляем все сообщения чата при подключении
-			this.sendChatMessages(chatId, client)
+        return {
+            chatMessages: chat.chatMessages,
+            createdAt: chat.createdAt,
+            creatorId: chat.creatorId,
+            id: chat.id,
+            title: chat.title,
+            users: chat.users,
+            usersCount: chat._count.users,
+            messagesCount: chat._count.chatMessages,
+            firstMessageDate: chat.chatMessages[0]?.createdAt,
+            latestMessageDate: chat.chatMessages[chat.chatMessages.length - 1]?.createdAt,
+        }
+    }
 
-			// Отправляем событие клиенту
-			client.emit('connected', { userId })
-		} catch (error) {
-			console.error(`Error during connection: ${error.message}`)
-			client.disconnect()
-		}
-	}
+    afterInit( server: Server ) {
+        this.server = server
+    }
 
-	handleDisconnect(client: Socket) {
-		this.users.forEach((value, key) => {
-			if (value === client) {
-				this.users.delete(key)
-			}
-		})
-	}
+    async handleConnection( client: Socket ) {
+        try {
+            const userId = client.handshake.query.userId as string
 
-	async remove(id: string) {
-		const repliesToRemove = await this.prisma.chatMessageReplies.findMany({
-			where: { OR: [{ parentMessageId: id }, { childMessageId: id }] },
-		})
+            // Проверка наличия userId в запросе
+            if ( !userId ) {
+                client.disconnect()
+                return
+            }
 
-		if (repliesToRemove.length) {
-			await this.prisma.chatMessageReplies.deleteMany({
-				where: { OR: [{ parentMessageId: id }, { childMessageId: id }] },
-			})
-		}
+            // Получение чатов для пользователя
+            const chats = await this.prisma.chatUser.findMany({
+                where: { userId },
+                select: { chatId: true },
+            })
 
-		return this.prisma.chatMessage.delete({
-			where: { id },
-		})
-	}
+            const chatIds = chats.map(( chat ) => chat.chatId)
 
-	update(currentMessageId: string, updateMessage: string) {
-		return this.prisma.chatMessage.update({
-			where: { id: currentMessageId },
-			data: { content: updateMessage },
-		})
-	}
+            for ( const chatId of chatIds ) {
+                client.join(chatId)
+            }
 
-	addUserToChat(chatId: string, userId: string) {
-		return this.prisma.chatUser.create({
-			data: {
-				chatId,
-				userId,
-			},
-		})
-	}
+            this.users.set(userId, client)
 
-	async removeUserFromChat(chatId: string, userId: string): Promise<void> {
-		await this.prisma.chatUser.deleteMany({
-			where: {
-				chatId,
-				userId,
-			},
-		})
-	}
+            // Отправка информации о подключении клиенту
+            client.emit('connected', { userId, chatIds })
 
-	@SubscribeMessage('addUserToChat')
-	handleAddUserToChat(
-		@MessageBody() data: {
-			chatId: string
-			userId: string
-		},
-	) {
-		const { chatId, userId } = data
-		return this.addUserToChat(chatId, userId)
-	}
+            const userChats = await this.chatService.getChatsForUser(userId)
+            for ( const chatId of chatIds ) {
+                this.server.to(chatId).emit('updateChat', userChats)
+            }
+        } catch ( error ) {
+            console.error(`Error during connection: ${error.message}`)
+            client.disconnect()
+        }
+    }
 
-	@SubscribeMessage('removeUserFromChat')
-	handleRemoveUserFromChat(
-		@MessageBody() data: {
-			chatId: string
-			userId: string
-		},
-	): Promise<void> {
-		const { chatId, userId } = data
-		return this.removeUserFromChat(chatId, userId)
-	}
+    handleDisconnect( client: Socket ) {
+        this.users.forEach(( value, key ) => {
+            if ( value === client ) {
+                this.users.delete(key)
+            }
+        })
+    }
 
-	@SubscribeMessage('removeMessage')
-	async handleRemoveMessage(
-		@MessageBody() data: {
-			id: string
-			chatId: string
-		},
-	) {
-		const { id, chatId } = data
+    async remove( id: string ) {
+        const repliesToRemove = await this.prisma.chatMessageReplies.findMany({
+            where: { OR: [ { parentMessageId: id }, { childMessageId: id } ] },
+        })
 
-		await this.remove(id)
+        if ( repliesToRemove.length ) {
+            await this.prisma.chatMessageReplies.deleteMany({
+                where: { OR: [ { parentMessageId: id }, { childMessageId: id } ] },
+            })
+        }
 
-		this.server.to(chatId).emit('messageRemoved', { id })
-	}
+        return this.prisma.chatMessage.delete({
+            where: { id },
+        })
+    }
 
-	@SubscribeMessage('updateMessage')
-	async handleUpdateMessage(
-		@MessageBody() data: {
-			chatId: string
-			messageId: string
-			content: string
-		},
-	) {
-		const { messageId, content, chatId } = data
+    update( currentMessageId: string, updateMessage: string ) {
+        return this.prisma.chatMessage.update({
+            where: { id: currentMessageId },
+            data: { content: updateMessage },
+        })
+    }
 
-		// Обновляем сообщение
-		await this.update(messageId, content)
+    addUserToChat( chatId: string, userId: string ) {
+        return this.prisma.chatUser.create({
+            data: {
+                chatId,
+                userId,
+            },
+        })
+    }
 
-		// Загружаем обновленное сообщение с необходимыми связями
-		const updatedMessage = await this.prisma.chatMessage.findUnique({
-			where: { id: messageId },
-			include: {
-				user: {
-					select: {
-						id: true,
-						userLogin: true,
-						userImage: true,
-						avatarColor: true,
-					},
-				},
-				respondedTo: {
-					include: {
-						parentMessage: {
-							select: {
-								id: true,
-								content: true,
-								user: {
-									select: {
-										id: true,
-										userLogin: true,
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		})
+    async removeUserFromChat( chatId: string, userId: string ): Promise<void> {
+        await this.prisma.chatUser.deleteMany({
+            where: {
+                chatId,
+                userId,
+            },
+        })
+    }
 
-		// Форматируем сообщение так же, как в sendChatMessages
-		const formattedMessage = {
-			...updatedMessage,
-			respondedTo: updatedMessage.respondedTo.map((response) => ({
-				id: response.parentMessageId,
-				content: response.parentMessage?.content,
-				user: response.parentMessage?.user,
-			})),
-		}
+    @SubscribeMessage('getChat')
+    async handleGetChat(
+        @MessageBody() data: {
+            chatId: string
+        },
+        @ConnectedSocket() client: Socket,
+    ) {
+        try {
+            const chatData = await this.getChat(data.chatId)
+            client.emit('chatData', chatData)
+        } catch ( error ) {
+            client.emit('error', 'Error retrieving chat data')
+            console.error(`Error retrieving chat data: ${error.message}`)
+        }
+    }
 
-		// Уведомляем всех клиентов в чате о том, что сообщение обновлено
-		this.server.to(chatId).emit('messageUpdated', formattedMessage)
-	}
+    @SubscribeMessage('addUserToChat')
+    async handleAddUserToChat(
+        @MessageBody() data: {
+            chatId: string
+            userId: string
+        },
+    ) {
+        const { chatId, userId } = data
+        this.server.to(chatId).emit('updateChat', await this.chatService.getChatsForUser(userId))
+        this.addUserToChat(chatId, userId)
+    }
 
-	@SubscribeMessage('joinChat')
-	async handleJoinChat(
-		@MessageBody() data: {
-			userId: string
-			chatId: string
-		},
-		@ConnectedSocket() client: Socket,
-	) {
-		const { userId, chatId } = data
+    @SubscribeMessage('removeUserFromChat')
+    async handleRemoveUserFromChat(
+        @MessageBody() data: {
+            chatId: string
+            userId: string
+        },
+    ): Promise<void> {
+        const { chatId, userId } = data
+        await this.removeUserFromChat(chatId, userId)
+        this.server.to(chatId).emit('updateChat', await this.chatService.getChatsForUser(userId))
+    }
 
-		const user = await this.prisma.user.findUnique({
-			where: { id: userId },
-		})
+    @SubscribeMessage('removeMessage')
+    async handleRemoveMessage(
+        @MessageBody() data: {
+            id: string
+            chatId: string
+            userId: string
+        },
+    ) {
+        const { id, chatId, userId } = data
 
-		if (!user) {
-			client.emit('error', 'User not found')
-			return
-		}
+        await this.remove(id)
 
-		const chat = await this.prisma.chat.findUnique({
-			where: { id: chatId },
-			include: { users: true },
-		})
+        this.server.to(chatId).emit('messageRemoved', { id })
+        this.server.to(chatId).emit('updateChat', await this.chatService.getChatsForUser(userId))
+    }
 
-		if (!chat?.users.some((user) => user.userId === userId)) {
-			client.emit('error', 'User is not part of this chat')
-			return
-		}
+    @SubscribeMessage('updateMessage')
+    async handleUpdateMessage(
+        @MessageBody() data: {
+            chatId: string
+            messageId: string
+            content: string
+        },
+    ) {
+        const { messageId, content, chatId } = data
 
-		client.join(chatId)
-		client.emit('joinedChat', chatId)
+        // Обновляем сообщение
+        await this.update(messageId, content)
 
-		// Отправляем все сообщения чата
-		await this.sendChatMessages(chatId, client)
-	}
+        const updatedMessage = await this.prisma.chatMessage.findUnique({
+            where: { id: messageId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        userLogin: true,
+                        userImage: true,
+                        avatarColor: true,
+                    },
+                },
+                respondedTo: {
+                    include: {
+                        parentMessage: {
+                            select: {
+                                id: true,
+                                content: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                        userLogin: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        })
 
-	@SubscribeMessage('sendMessage')
-	async handleSendMessage(
-		@MessageBody() data: {
-			chatId: string
-			content: string
-			userId: string
-			parentMessageId?: string[]
-		},
-		@ConnectedSocket() client: Socket,
-	) {
-		const { chatId, content, userId, parentMessageId } = data
+        const formattedMessage = {
+            ...updatedMessage,
+            respondedTo: updatedMessage.respondedTo.map(( response ) => ({
+                id: response.parentMessageId,
+                content: response.parentMessage?.content,
+                user: response.parentMessage?.user,
+            })),
+        }
 
-		// Проверяем существование пользователя
-		const user = await this.prisma.user.findUnique({
-			where: { id: userId },
-		})
+        this.server.to(chatId).emit('messageUpdated', formattedMessage)
 
-		if (!user) {
-			client.emit('error', 'User not found')
-			return
-		}
+        this.server.to(chatId).emit('updateChat', await this.chatService.getChatsForUser(updatedMessage.user.id))
+    }
 
-		// Создаем новое сообщение
-		const newMessage = await this.prisma.chatMessage.create({
-			data: {
-				chatId,
-				userId: user.id,
-				content,
-			},
-			include: {
-				user: {
-					select: {
-						id: true,
-						userLogin: true,
-						userImage: true,
-						avatarColor: true,
-					},
-				},
-			},
-		})
+    @SubscribeMessage('joinChat')
+    async handleJoinChat(
+        @MessageBody() data: {
+            userId: string
+            chatId: string
+        },
+        @ConnectedSocket() client: Socket,
+    ) {
+        const { userId, chatId } = data
 
-		// Если `parentMessageId` передан как массив, связываем все указанные сообщения
-		if (parentMessageId && Array.isArray(parentMessageId)) {
-			const parentLinks = parentMessageId.map((parentId) => ({
-				parentMessageId: parentId,
-				childMessageId: newMessage.id,
-			}))
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+        })
 
-			await this.prisma.chatMessageReplies.createMany({
-				data: parentLinks,
-			})
-		}
+        if ( !user ) {
+            client.emit('error', 'User not found')
+            return
+        }
 
-		// Загружаем сообщение с вложенной структурой
-		const fullMessage = await this.prisma.chatMessage.findUnique({
-			where: { id: newMessage.id },
-			include: {
-				user: {
-					select: {
-						id: true,
-						userLogin: true,
-						userImage: true,
-						avatarColor: true,
-					},
-				},
-				respondedTo: {
-					include: {
-						parentMessage: {
-							select: {
-								id: true,
-								content: true,
-								user: {
-									select: {
-										id: true,
-										userLogin: true,
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		})
+        const chat = await this.prisma.chat.findUnique({
+            where: { id: chatId },
+            include: { users: true },
+        })
 
-		// Отправляем новое сообщение всем пользователям в чате
-		this.server.to(chatId).emit('newMessage', {
-			...fullMessage,
-			respondedTo: fullMessage.respondedTo.map((response) => ({
-				id: response.parentMessageId,
-				content: response.parentMessage?.content,
-				user: response.parentMessage?.user,
-			})),
-		})
-	}
+        if ( !chat?.users.some(( user ) => user.userId === userId) ) {
+            client.emit('error', 'User is not part of this chat')
+            return
+        }
 
-	private async sendChatMessages(chatId: string, _client: Socket) {
-		const chatMessages = await this.prisma.chatMessage.findMany({
-			where: { chatId },
-			include: {
-				user: {
-					select: {
-						id: true,
-						userLogin: true,
-						userImage: true,
-						avatarColor: true,
-					},
-				},
-				respondedTo: {
-					include: {
-						parentMessage: {
-							select: {
-								id: true,
-								content: true,
-								user: {
-									select: {
-										id: true,
-										userLogin: true,
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		})
+        client.join(chatId)
+        client.emit('joinedChat', chatId)
 
-		const formattedMessages = chatMessages.map((message) => ({
-			...message,
-			respondedTo: message.respondedTo.map((response) => ({
-				id: response.parentMessageId,
-				content: response.parentMessage?.content,
-				user: response.parentMessage?.user,
-			})),
-		}))
+        await this.sendChatMessages(chatId)
+    }
 
-		this.server.to(chatId).emit('chatMessages', formattedMessages)
-	}
+    @SubscribeMessage('sendMessage')
+    async handleSendMessage(
+        @MessageBody() data: {
+            chatId: string
+            content: string
+            userId: string
+            parentMessageId?: string[]
+        },
+        @ConnectedSocket() client: Socket,
+    ) {
+        const { chatId, content, userId, parentMessageId } = data
+
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+        })
+
+        if ( !user ) {
+            client.emit('error', 'User not found')
+            return
+        }
+
+        const newMessage = await this.prisma.chatMessage.create({
+            data: {
+                chatId,
+                userId: user.id,
+                content,
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        userLogin: true,
+                        userImage: true,
+                        avatarColor: true,
+                    },
+                },
+            },
+        })
+
+        if ( parentMessageId && Array.isArray(parentMessageId) ) {
+            const parentLinks = parentMessageId.map(( parentId ) => ({
+                parentMessageId: parentId,
+                childMessageId: newMessage.id,
+            }))
+
+            await this.prisma.chatMessageReplies.createMany({
+                data: parentLinks,
+            })
+        }
+
+        const fullMessage = await this.prisma.chatMessage.findUnique({
+            where: { id: newMessage.id },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        userLogin: true,
+                        userImage: true,
+                        avatarColor: true,
+                    },
+                },
+                respondedTo: {
+                    include: {
+                        parentMessage: {
+                            select: {
+                                id: true,
+                                content: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                        userLogin: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        })
+
+        this.server.to(chatId).emit('newMessage', {
+            ...fullMessage,
+            respondedTo: fullMessage.respondedTo.map(( response ) => ({
+                id: response.parentMessageId,
+                content: response.parentMessage?.content,
+                user: response.parentMessage?.user,
+            })),
+        })
+
+        this.server.to(chatId).emit('updateChat', await this.chatService.getChatsForUser(user.id))
+    }
 }

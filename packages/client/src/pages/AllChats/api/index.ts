@@ -1,1 +1,0 @@
-export { useGetUserChatsQuery } from './allChatsPageApi'

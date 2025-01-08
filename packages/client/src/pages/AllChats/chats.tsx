@@ -1,31 +1,63 @@
 import { selectUserData } from '@/features/Auth'
-import { useGetUserChatsQuery } from '@/pages/AllChats/api'
 import { useAppSelector } from '@/shared/lib/hooks'
+import type { IChat } from '@/shared/types'
 import { BlockContainer, Loader } from '@/shared/ui'
 import { ChatLink } from '@/widgets/ChatLink'
-import { type FC, Fragment } from 'react'
+import { type FC, Fragment, useEffect, useState } from 'react'
+import { io, type Socket } from 'socket.io-client'
 import styles from './chats.module.sass'
-export const AllChatsPages: FC = () => {
-	const { id } = useAppSelector(selectUserData)
-	const { data, isLoading } = useGetUserChatsQuery(id, { skip: !id })
 
-	if (isLoading) {
-		return <Loader />
-	}
-	return (
-		<>
-			{data?.length ? (
-				<BlockContainer title='Мои чаты'>
-					{data.map((el, i) => (
-						<Fragment key={el.id}>
-							<ChatLink {...el} />
-							{i !== data.length - 1 && <hr className={styles.hr} />}
-						</Fragment>
-					))}
-				</BlockContainer>
-			) : (
-				'У вас нет активных чатов, желаете создать ?'
-			)}
-		</>
-	)
+export const AllChatsPages: FC = () => {
+    const { id } = useAppSelector(selectUserData)
+    const [ chats, setChats ] = useState<IChat[]>([])
+    const [ socket, setSocket ] = useState<Socket | null>(null)
+
+    useEffect(() => {
+        if ( !id ) {
+            return
+        }
+
+        // Подключение к сокету
+        const socketConnection = io('http://localhost:8080', {
+            transports: [ 'websocket' ],
+            query: { userId: id },
+        })
+
+        setSocket(socketConnection)
+
+        socketConnection.on('updateChat', ( updatedChat: IChat[] ) => {
+            setChats(updatedChat)
+        })
+
+        return () => {
+            socketConnection.disconnect()
+            setSocket(null)
+        }
+    }, [ id ])
+
+    if ( !socket ) {
+        return <Loader/>
+    }
+    return (
+        <>
+            {chats?.length ? (
+                <BlockContainer title='Мои чаты'>
+                    {chats.map(( el, i ) => (
+                        <Fragment key={el.id}>
+                            <ChatLink
+                                id={el.id}
+                                usersCount={el.usersCount}
+                                title={el.title}
+                                messagesCount={el.messagesCount}
+                            />
+                            {i !== chats.length - 1 &&
+                                <hr className={styles.hr}/>}
+                        </Fragment>
+                    ))}
+                </BlockContainer>
+            ) : (
+                'У вас нет активных чатов, желаете создать ?'
+            )}
+        </>
+    )
 }
