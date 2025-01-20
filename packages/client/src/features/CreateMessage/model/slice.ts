@@ -40,4 +40,4 @@ export const messageSlice = createSlice({
 	},
 })
 
-export const { setValue, setIsEdit } = messageSlice.actions
+export const { setValue, setIsEdit, clearData } = messageSlice.actions

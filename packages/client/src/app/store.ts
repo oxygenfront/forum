@@ -8,6 +8,7 @@ import { hintSlice } from '@/shared/ui/InputsForm'
 import { paginationSlice } from '@/shared/ui/Pagination'
 import { replayedSlice } from '@/shared/ui/ReplyedMessage'
 import { rememberMeSlice } from '@/widgets/Login/model'
+import { newChatSlice } from '@/widgets/ModalCreateNewChat/model'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
 	[messageSlice.name]: messageSlice.reducer,
 	[paginationSlice.name]: paginationSlice.reducer,
 	[replayedSlice.name]: replayedSlice.reducer,
+	[newChatSlice.name]: newChatSlice.reducer,
 })
 
 export const store = configureStore({

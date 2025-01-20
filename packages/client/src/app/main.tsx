@@ -9,11 +9,14 @@ import { RouterProvider } from 'react-router-dom'
 import './global.sass'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-                <RouterProvider router={router}/>
-            </SnackbarProvider>
-        </Provider>
-    </React.StrictMode>,
+	<React.StrictMode>
+		<Provider store={store}>
+			<SnackbarProvider
+				maxSnack={3}
+				autoHideDuration={3000}
+			>
+				<RouterProvider router={router} />
+			</SnackbarProvider>
+		</Provider>
+	</React.StrictMode>,
 )

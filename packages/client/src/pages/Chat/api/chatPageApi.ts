@@ -4,7 +4,9 @@ import type { ChatRes } from '@/shared/types'
 const chatPageApi = rootApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getChat: builder.query<ChatRes, unknown>({
-			query: (chatId) => `${GET_CHAT}/${chatId}`,
+			query: ({ chatId, userId }) => ({
+				url: `${GET_CHAT}/${chatId}?userId=${userId}`,
+			}),
 		}),
 	}),
 })

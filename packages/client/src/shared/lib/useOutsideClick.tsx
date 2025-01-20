@@ -9,7 +9,14 @@ export function useOutsideClick<T extends HTMLElement>(ref: RefObject<T>, onClos
 		}
 
 		function handleClickOutside(event: MouseEvent) {
-			if (ref.current && !ref.current.contains(event.target as Node)) {
+			const target = event.target as Node
+
+			const autocompletePopper = document.querySelector('.MuiAutocomplete-popper')
+			if (autocompletePopper?.contains(target)) {
+				return
+			}
+
+			if (ref.current && !ref.current.contains(target)) {
 				onClose()
 			}
 		}

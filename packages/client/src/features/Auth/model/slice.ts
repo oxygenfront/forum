@@ -7,6 +7,7 @@ type TUserData = {
 	role: ROLES
 	userLogin: string
 	userImage?: string
+	avatarColor?: string
 }
 
 type IResponseUser = {
@@ -29,6 +30,7 @@ export const userSlice = createSlice({
 			userData.userEmail = payload.userEmail
 			userData.userLogin = payload.userLogin
 			userData.userImage = payload.userImage
+			userData.avatarColor = payload.avatarColor
 		},
 		setIsLogin: (state, { payload }) => {
 			state.isLogin = payload
@@ -41,6 +43,7 @@ export const userSlice = createSlice({
 				userEmail: initialState.userData.userEmail,
 				userLogin: initialState.userData.userLogin,
 				id: initialState.userData.id,
+				avatarColor: initialState.userData.avatarColor,
 			}
 		},
 	},

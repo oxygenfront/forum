@@ -105,7 +105,7 @@ export const ThemePage: FC = () => {
 						user={data.user}
 						isPrivate={data.isPrivate}
 						views={data.views ?? 0}
-						countThemeMessages={data.countThemeMessages}
+						countMessages={data.countThemeMessages}
 					/>
 					{data.themeMessages.length !== 0 ? (
 						<>

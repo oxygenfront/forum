@@ -11,19 +11,21 @@ interface BlockThemeContainer {
 	title: string
 	createdAt: Date
 	views: number
-	countThemeMessages: number
+	countMessages: number
 	flag: boolean
 	isPrivate: boolean
 	isChat: boolean
 	isImportant: boolean
 	user: Omit<IUserLessData, 'userPassword'>
+	actionMoveFromChat?: () => void
 }
 
-type BlockThemeContainerProps = Partial<BlockThemeContainer>
+type BlockThemeContainerProps = Partial<Omit<BlockThemeContainer, 'actionMoveFromChat'>> &
+	Pick<BlockThemeContainer, 'actionMoveFromChat'>
 
 export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 	title,
-	countThemeMessages,
+	countMessages,
 	views,
 	createdAt,
 	user,
@@ -31,6 +33,7 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 	isImportant,
 	isChat,
 	isPrivate,
+	actionMoveFromChat,
 }) => {
 	return (
 		<>
@@ -49,6 +52,7 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 						<button
 							className={styles.exit}
 							type='button'
+							onClick={() => (actionMoveFromChat as () => void)()}
 						>
 							Покинуть чат
 						</button>
@@ -65,9 +69,9 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 								) : (
 									<div
 										style={{ backgroundColor: user.avatarColor }}
-										className={classNames(styles.user_img, styles.noImg)}
+										className={classNames(styles.avatar)}
 									>
-										{'userLogin' in user && user.userLogin[0]}
+										{'userLogin' in user && user.userLogin[0].toUpperCase()}
 									</div>
 								)}
 								<div className={styles.name}>{user.userLogin}</div>
@@ -114,7 +118,7 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 								<div className={styles.dot} />
 								<div className={styles.messages}>
 									<PiWechatLogoBold />
-									{countThemeMessages}
+									{countMessages}
 								</div>
 							</div>
 						</div>

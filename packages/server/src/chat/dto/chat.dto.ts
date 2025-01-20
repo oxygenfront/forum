@@ -8,7 +8,10 @@ export class CreateChatDto {
 	userIds: string[]
 
 	@ApiProperty()
-	name: string
+	title: string
+
+	@ApiProperty()
+	message: string
 }
 
 // DTO для добавления пользователя в чат

@@ -10,9 +10,10 @@ import { selectMessage, setValue } from './model'
 
 interface ICreateMessageProps {
 	onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void
+	placeholder?: string
 }
 
-export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown }) => {
+export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown, placeholder }) => {
 	const dispatch = useAppDispatch()
 	const { replyMessageId, replyMessages, chatReplyMessages } = useAppSelector(selectReply)
 
@@ -81,7 +82,7 @@ export const CreateMessage: FC<ICreateMessageProps> = ({ onKeyDown }) => {
 				onKeyDown={onKeyDown}
 				value={selectData.content}
 				onChange={handleChange}
-				placeholder='Написать комментарий...'
+				placeholder={placeholder || 'Написать комментарий...'}
 			/>
 		</div>
 	)

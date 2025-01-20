@@ -59,7 +59,7 @@
     "prisma:studio": "yarn prisma studio",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
-    "start:dev": "yarn prisma generate && yarn prisma db push && nest start --watch & yarn prisma studio --browser none",
+    "start:dev": "yarn prisma generate && yarn prisma db push && nest start --watch & yarn prisma studio --browser none --port 5000",
     "start:prod": "node dist/main"
   },
   "version": "0.0.1"

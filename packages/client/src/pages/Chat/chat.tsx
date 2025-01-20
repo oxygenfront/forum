@@ -1,143 +1,129 @@
 import { selectUserData } from '@/features/Auth'
-import {
-    CreateMessage,
-    selectMessage,
-    setValue
-} from '@/features/CreateMessage'
+import { CreateMessage, clearData, selectMessage } from '@/features/CreateMessage'
 import { useGetChatQuery } from '@/pages/Chat/api'
+import { useSocket } from '@/shared/lib/SocketContext'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IChatMessage } from '@/shared/types/chat.types'
-import { BlockThemeContainer, Loader } from '@/shared/ui'
-import { clearData, selectReply } from '@/shared/ui/ReplyedMessage'
+import { BlockThemeContainer } from '@/shared/ui'
+import { selectReply } from '@/shared/ui/ReplyedMessage'
 import { ChatMessage } from '@/widgets/ChatMessageBlock'
-import { KeyboardEvent, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { io, Socket } from 'socket.io-client'
+import { KeyboardEvent, useCallback, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export const Chat = () => {
-    const dispatch = useAppDispatch()
+	const dispatch = useAppDispatch()
 
-    const { id: chatId } = useParams()
-    const [ socket, setSocket ] = useState<Socket | null>(null)
-    const [ connected, setConnected ] = useState(false)
-    const [ messages, setMessages ] = useState<IChatMessage[]>([])
+	const { id: chatId } = useParams()
+	const [messages, setMessages] = useState<IChatMessage[]>([])
+	const navigate = useNavigate()
+	const { id: userId } = useAppSelector(selectUserData)
+	const selectDataMessage = useAppSelector(selectMessage)
+	const { chatReplyMessages } = useAppSelector(selectReply)
+	const { data, error } = useGetChatQuery({ chatId, userId }, { skip: !(chatId && userId) })
 
-    const { id: userId } = useAppSelector(selectUserData)
-    const selectDataMessage = useAppSelector(selectMessage)
-    const { chatReplyMessages } = useAppSelector(selectReply)
-    const { data } = useGetChatQuery(chatId, { skip: !chatId })
+	const { socket } = useSocket()
+	useEffect(() => {
+		if (chatId && socket) {
+			socket.on('chatMessages', (chatMessages) => {
+				setMessages(chatMessages)
+			})
 
-    useEffect(() => {
-        if ( chatId && userId ) {
-            const socketConnection = io('http://localhost:8080', {
-                transports: [ 'websocket' ],
-                query: { userId, chatId },
-            })
+			socket.on('messageRemoved', ({ id }) => {
+				setMessages((prevMessages) => prevMessages.filter((message) => message.id !== id))
+			})
 
-            socketConnection.on('connect', () => {
-                setConnected(true)
-                // Подключаем пользователя к чату
-                socketConnection.emit('joinChat', { chatId, userId })
-            })
+			socket.on('messageUpdated', (updatedMessage) => {
+				setMessages((prevMessages) =>
+					prevMessages.map((message) =>
+						message.id === updatedMessage.id
+							? {
+									...message,
+									content: updatedMessage.content,
+								}
+							: message,
+					),
+				)
+			})
 
-            socketConnection.on('disconnect', () => {
-                setConnected(false)
-            })
+			socket.on('newMessage', (message) => {
+				setMessages((prevMessages) => [...prevMessages, message])
+			})
+		}
+	}, [chatId, socket])
 
-            socketConnection.on('messageRemoved', ( { id } ) => {
-                setMessages(( prevMessages ) => prevMessages.filter(( message ) => message.id !== id))
-            })
+	const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+		if (!socket) {
+			return
+		}
+		if (event.key === 'Enter' && selectDataMessage.content?.trim().length) {
+			event.preventDefault()
+			const messageData = {
+				chatId,
+				content: selectDataMessage.content,
+				userId,
+				parentMessageId: chatReplyMessages.map((message) => message.id),
+			}
+			if (selectDataMessage.isEdit) {
+				socket.emit('updateMessage', {
+					chatId,
+					messageId: selectDataMessage.messageId,
+					content: selectDataMessage.content,
+				})
+				dispatch(clearData())
+			} else {
+				socket.emit('sendMessage', messageData)
+				dispatch(clearData())
+			}
+		}
+	}
 
-            socketConnection.on('messageUpdated', ( updatedMessage ) => {
-                setMessages(( prevMessages ) =>
-                    prevMessages.map(( message ) =>
-                        message.id === updatedMessage.id
-                            ? {
-                                ...message,
-                                content: updatedMessage.content,
-                            }
-                            : message,
-                    ),
-                )
-            })
+	const handleLeaveChat = useCallback(() => {
+		if (socket) {
+			socket.emit('leaveChat', { userId, chatId })
+			socket.disconnect()
 
-            socketConnection.on('chatMessages', ( chatMessages ) => {
-                setMessages(chatMessages)
-            })
+			navigate(-1)
+		}
+	}, [chatId, socket, userId, navigate])
 
-            // Получаем новое сообщение
-            socketConnection.on('newMessage', ( message ) => {
-                setMessages(( prevMessages ) => [ ...prevMessages, message ])
-            })
+	const handleDeleteMessage = (id: string) => {
+		if (socket) {
+			socket.emit('removeMessage', { id, chatId, userId })
 
-            // Сохраняем сокет в состояние
-            setSocket(socketConnection)
-            return () => {
-                socketConnection.disconnect()
-                setSocket(null)
-            }
-        }
-    }, [ chatId, userId ])
-    const handleKeyDown = ( event: KeyboardEvent<HTMLTextAreaElement> ) => {
-        if ( event.key === 'Enter' && socket ) {
-            event.preventDefault()
-            const messageData = {
-                chatId,
-                content: selectDataMessage.content,
-                userId,
-                parentMessageId: chatReplyMessages.map(( message ) => message.id),
-            }
-            if ( selectDataMessage.isEdit ) {
-                socket.emit('updateMessage', {
-                    chatId,
-                    messageId: selectDataMessage.messageId,
-                    content: selectDataMessage.content,
-                })
-                dispatch(setValue({ content: '' }))
-                dispatch(clearData())
-            } else {
-                socket.emit('sendMessage', messageData)
-                dispatch(setValue({ content: '' }))
-                dispatch(clearData())
-            }
-        }
-    }
+			setMessages((prevMessages) => prevMessages.filter((message) => message.id !== id))
+		}
+	}
 
-    const handleDeleteMessage = ( id: string ) => {
-        if ( socket ) {
-            socket.emit('removeMessage', { id, chatId, userId })
+	if ((error as { status: number })?.status === 403) {
+		return 'Чат не найден'
+	}
 
-            setMessages(( prevMessages ) => prevMessages.filter(( message ) => message.id !== id))
-        }
-    }
-
-    if ( !connected ) {
-        return <Loader/>
-    }
-
-    return (
-        <>
-            {data?.title ? (
-                <BlockThemeContainer
-                    title={data.title}
-                    user={data.users.find(( obj ) => obj.user.id === data.creatorId)?.user}
-                    createdAt={data.createdAt}
-                    flag
-                />
-            ) : null}
-            {messages.length
-                ? messages.map(( message ) => {
-                    return (
-                        <ChatMessage
-                            deleteMessageAction={handleDeleteMessage}
-                            isChat
-                            key={message.id}
-                            {...message}
-                        />
-                    )
-                })
-                : 'Напишите свое первое сообщение'}
-            <CreateMessage onKeyDown={handleKeyDown}/>
-        </>
-    )
+	return (
+		<>
+			{data?.title ? (
+				<BlockThemeContainer
+					title={data.title}
+					user={data.users.find((obj) => obj.user.id === data.creatorId)?.user}
+					countMessages={messages.length}
+					createdAt={data.createdAt}
+					actionMoveFromChat={handleLeaveChat}
+					flag
+					isChat
+				/>
+			) : null}
+			{messages.length
+				? messages.map((message) => {
+						return (
+							<ChatMessage
+								deleteMessageAction={handleDeleteMessage}
+								isChat
+								key={message.id}
+								{...message}
+							/>
+						)
+					})
+				: 'Напишите свое первое сообщение'}
+			<CreateMessage onKeyDown={handleKeyDown} />
+		</>
+	)
 }

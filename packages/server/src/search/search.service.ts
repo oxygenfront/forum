@@ -6,6 +6,9 @@ export class SearchService {
 	constructor(private prisma: PrismaService) {}
 
 	searchUsers(query: string) {
+		if (!query) {
+			return []
+		}
 		return this.prisma.user.findMany({
 			where: {
 				OR: [
@@ -13,12 +16,18 @@ export class SearchService {
 					{ userEmail: { contains: query, mode: 'insensitive' } },
 				],
 			},
+			select: {
+				id: true,
+				avatarColor: true,
+				userImage: true,
+				userLogin: true,
+				userEmail: true,
+			},
 		})
 	}
 
 	async searchAll(query: string) {
 		try {
-			// Параллельные запросы для повышения производительности
 			const [findChapters, findThemes] = await Promise.all([
 				this.prisma.chapter.findMany({
 					where: {

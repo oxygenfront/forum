@@ -1,3 +1,5 @@
+import type { IUserLessData } from '@/shared/types/user.types'
+
 export interface ISearchRes {
 	themeId: string
 	titleTheme: string
@@ -12,3 +14,5 @@ export interface ISearchRes {
 	}
 	type: 'theme' | 'chapter'
 }
+
+export type TSearchUserRes = Omit<IUserLessData, 'userPassword'> & { userEmail: string }
