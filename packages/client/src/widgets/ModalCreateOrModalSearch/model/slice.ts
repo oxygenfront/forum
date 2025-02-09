@@ -1,26 +1,32 @@
 import type { TSearchUserRes } from '@/shared/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-interface INewChatSlice {
+interface IModalNewChatOrSearchUsersSlice {
 	title: string
 	message: string
 	createModalOpen: boolean
 	addedUsers: TSearchUserRes[]
+	searchUsersModalOpen: boolean
 }
 
-const initialState: INewChatSlice = {
+const initialState: IModalNewChatOrSearchUsersSlice = {
 	title: '',
 	addedUsers: [],
 	message: '',
 	createModalOpen: false,
+	searchUsersModalOpen: false,
 }
 
-export const newChatSlice = createSlice({
-	name: 'newChatSlice',
+export const modalNewChatOrSearchUsersSlice = createSlice({
+	name: 'modalNewChatOrSearchUsersSlice',
 	initialState,
 	reducers: {
 		toggleCreateModalOpen: (state) => {
 			state.createModalOpen = !state.createModalOpen
+		},
+
+		toggleSearchUserModalOpen: (state) => {
+			state.searchUsersModalOpen = !state.searchUsersModalOpen
 		},
 
 		addUserInChat: (state, action: PayloadAction<TSearchUserRes>) => {
@@ -46,8 +52,17 @@ export const newChatSlice = createSlice({
 			state.addedUsers = []
 			state.createModalOpen = false
 			state.title = ''
+			state.searchUsersModalOpen = false
 		},
 	},
 })
 
-export const { toggleCreateModalOpen, addUserInChat, changeTitle, changeMessage, clearData } = newChatSlice.actions
+export const {
+	toggleCreateModalOpen,
+	toggleSearchUserModalOpen,
+
+	addUserInChat,
+	changeTitle,
+	changeMessage,
+	clearData,
+} = modalNewChatOrSearchUsersSlice.actions

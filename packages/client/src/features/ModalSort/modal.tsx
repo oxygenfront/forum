@@ -47,7 +47,7 @@ export const ModalOptions: FC<{ arrayActions: ReactNode[] }> = ({ arrayActions }
 				>
 					<BsThreeDotsVertical />
 				</button>
-				{isOpen && arrayActions.length > 0 && (
+				{isOpen && arrayActions.length && (
 					<div className={styles.modal}>
 						{arrayActions.map((el, i) => (
 							<React.Fragment key={(el as React.ReactElement).key || undefined}>

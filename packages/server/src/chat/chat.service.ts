@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 import { Server } from 'socket.io'
 import { ChatGateway } from './chat.gateway'
@@ -16,13 +16,7 @@ export class ChatService {
 		return userSocket ? userSocket.id : undefined
 	}
 
-	async createChat(
-		creatorId: string,
-		userIds: string[],
-		title: string,
-		message: string,
-		server: Server, // Внедряем сервер сокетов для отправки событий
-	) {
+	async createChat(creatorId: string, userIds: string[], title: string, message: string, server: Server) {
 		const chat = await this.prisma.chat.create({
 			data: {
 				creatorId,
@@ -107,10 +101,10 @@ export class ChatService {
 		}))
 	}
 
-	async getChat(id: string, userId: string) {
+	async getChat(chatId: string, userId: string) {
 		const chat = await this.prisma.chat.findFirst({
 			where: {
-				id: id,
+				id: chatId,
 				users: {
 					some: {
 						userId: userId,
@@ -121,7 +115,7 @@ export class ChatService {
 
 		if (chat) {
 			const chatDetails = await this.prisma.chat.findUnique({
-				where: { id },
+				where: { id: chatId },
 				include: {
 					chatMessages: {
 						include: {
@@ -207,11 +201,11 @@ export class ChatService {
 				latestMessageDate: chatDetails.chatMessages[chatDetails.chatMessages.length - 1]?.createdAt ?? null,
 			}
 		}
-
-		// Генерация ошибки с нужной структурой
-		throw new HttpException(
-			{ message: 'Пользователь не имеет доступа к чату', status: HttpStatus.FORBIDDEN },
-			HttpStatus.FORBIDDEN,
-		)
+		return
+		//
+		// throw new HttpException(
+		// 	{ message: 'Пользователь не имеет доступа к чату', status: HttpStatus.FORBIDDEN },
+		// 	HttpStatus.FORBIDDEN,
+		// )
 	}
 }

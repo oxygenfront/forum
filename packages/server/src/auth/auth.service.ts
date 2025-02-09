@@ -3,9 +3,9 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 // biome-ignore lint/style/noNamespaceImport: <explanation>
 import * as argon2 from 'argon2'
-import { FORM_HINTS_ERRORS } from 'client/src/shared/constants'
 import { Response as ExpressResponse } from 'express'
 import { UsersService } from 'src/users/users.service'
+import type { FORM_HINTS_ERRORS } from '../../global/constants'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
 
@@ -99,7 +99,7 @@ export class AuthService {
 				throw new BadRequestException(validationErrors)
 			}
 
-			const user = await this.usersService.findByEmail(data.userEmail)
+			const user = await this.usersService.getUserForAuthByEmail(data.userEmail)
 			if (!user) {
 				throw new BadRequestException([
 					{ hintKey: 'INVALID_CREDENTIALS', inputType: 'userPassword' },
@@ -144,7 +144,7 @@ export class AuthService {
 		refreshToken: string,
 		res: ExpressResponse,
 	): Promise<{ accessToken: string; refreshToken: string }> {
-		const user = await this.usersService.findById(userId)
+		const user = await this.usersService.getUserForAuthById(userId)
 		if (!user.refreshToken) {
 			throw new ForbiddenException('Доступ запрещен')
 		}

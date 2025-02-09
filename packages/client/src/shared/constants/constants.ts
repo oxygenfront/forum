@@ -4,10 +4,9 @@ export enum PATH {
 	WARRANTOR = '/garant-service',
 	CHAPTER = '/chapter/:slug/:id',
 	THEME = '/chapter/:slug/:id/theme/:slug/:id',
-	MESSAGE = '/message/',
-	PROFILE = '/profile',
+	PROFILE = '/profile/:userLogin',
 	ALL_CHATS = '/chats',
-	CHAT = '/chats/:id',
+	CHAT = '/chats/:chatId',
 }
 
 export enum ROLES {
@@ -15,6 +14,31 @@ export enum ROLES {
 	USER = 'user',
 	WARRANTOR = 'warrantor',
 	SELLER = 'seller',
+}
+
+export enum ROLES_UI {
+	ADMIN = 'Администратор',
+	WARRANTOR = 'Гарант-сервис',
+	SELLER = 'Продавец',
+	USER = 'Пользователь',
+	USER1 = 'Шкет',
+	USER2 = 'Бродяга',
+	USER3 = 'Бывалый',
+	USER4 = 'Авторитет',
+	USER_VIP = 'VIP',
+}
+
+export const initChatData = {
+	chatMessages: [],
+	createdAt: null as unknown as Date,
+	creatorId: '',
+	firstMessageDate: null as unknown as Date,
+	latestMessageDate: null as unknown as Date,
+	id: '',
+	title: '',
+	messagesCount: 0,
+	users: [],
+	usersCount: 0,
 }
 
 export enum FORM_HINTS_ERRORS {

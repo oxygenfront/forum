@@ -7,6 +7,7 @@ const chatPageApi = rootApi.injectEndpoints({
 			query: ({ chatId, userId }) => ({
 				url: `${GET_CHAT}/${chatId}?userId=${userId}`,
 			}),
+			keepUnusedDataFor: 0,
 		}),
 	}),
 })

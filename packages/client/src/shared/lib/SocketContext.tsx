@@ -1,6 +1,7 @@
 import { selectUserData } from '@/features/Auth'
 import { useAppSelector } from '@/shared/lib/hooks'
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Socket, io } from 'socket.io-client'
 
 interface SocketContextType {
@@ -12,40 +13,41 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined)
 
 export const useSocket = (): SocketContextType => {
 	const context = useContext(SocketContext)
-	if (!context) {
-		throw new Error('useSocket must be used within a SocketProvider')
-	}
-	return context
+
+	return context as SocketContextType
 }
 
 interface SocketProviderProps {
 	children: React.ReactNode
-	chatId?: string // chatId теперь опциональный
+	chatId?: string
 }
 
-export const SocketProvider: React.FC<SocketProviderProps> = ({ children, chatId }) => {
+export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 	const [socket, setSocket] = useState<Socket | null>(null)
 	const [connected, setConnected] = useState(false)
+	const { chatId } = useParams()
 	const { id } = useAppSelector(selectUserData)
-
 	useEffect(() => {
 		if (!id) {
 			return
 		}
 
-		// Создаем подключение к сокету с использованием только userId
 		const socketOptions: { query: { userId: string; chatId?: string } } = {
-			transports: ['websocket'],
 			query: { userId: id },
 		}
 
-		// Если chatId существует, добавляем его в параметры
 		if (chatId) {
 			socketOptions.query.chatId = chatId
 		}
 
-		// Создаем соединение
-		const socketConnection = io('http://localhost:8080', socketOptions)
+		const socketConnection = io('http://localhost:8080', {
+			...socketOptions,
+			reconnection: true,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 1000,
+			reconnectionAttempts: 5,
+			transports: ['websocket'],
+		})
 
 		socketConnection.on('connect', () => {
 			setConnected(true)
@@ -61,7 +63,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children, chatId
 			socketConnection.disconnect()
 			setSocket(null)
 		}
-	}, [id, chatId]) // Подключение зависит от id и chatId (если он есть)
+	}, [id, chatId])
 
 	return <SocketContext.Provider value={{ socket, connected }}>{children}</SocketContext.Provider>
 }

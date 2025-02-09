@@ -6,6 +6,7 @@ import { Profile } from '@/pages/Profile'
 import { ThemePage } from '@/pages/Theme'
 import { WarrantorPage } from '@/pages/Warrantor'
 import { PATH } from '@/shared/constants'
+import { SocketProvider } from '@/shared/lib/SocketContext'
 
 import { ChaptersLinksBlock } from '@/widgets/ChaptersLinks'
 import { createBrowserRouter } from 'react-router-dom'
@@ -14,7 +15,11 @@ export const router = createBrowserRouter(
 	[
 		{
 			path: PATH.BASE,
-			element: <App />,
+			element: (
+				<SocketProvider>
+					<App />
+				</SocketProvider>
+			),
 			children: [
 				{
 					path: PATH.BASE,

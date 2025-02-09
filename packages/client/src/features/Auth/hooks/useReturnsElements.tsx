@@ -14,7 +14,7 @@ import { Register } from '@/widgets/Register'
 
 import { useEffect } from 'react'
 import { LiaKeySolid } from 'react-icons/lia'
-import { LuUser2 } from 'react-icons/lu'
+import { LuUser } from 'react-icons/lu'
 import { RxCross2 } from 'react-icons/rx'
 
 interface IAuthError {
@@ -109,7 +109,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 						</button>
 
 						<div className={styles.icon}>
-							<LuUser2 />
+							<LuUser />
 						</div>
 						<span className={styles.hello}>Вход в аккаунт</span>
 						<span className={styles.about}>
@@ -129,7 +129,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 						</button>
 
 						<div className={styles.icon}>
-							<LuUser2 />
+							<LuUser />
 						</div>
 						<span className={styles.hello}>Регистрация</span>
 						<span className={styles.about}>

@@ -1,6 +1,5 @@
 import { selectStatusModal } from '@/entities/Modal'
 import { Auth } from '@/features/Auth'
-import { PATH } from '@/shared/constants'
 import { useAppSelector } from '@/shared/lib/hooks'
 import { ButtonLogin } from '@/widgets/ButtonLogin'
 import { NavBlock } from '@/widgets/NavBlock'
@@ -13,7 +12,7 @@ export const Main: FC = () => {
 	return (
 		<>
 			<div className={styles.main}>
-				{pathname !== PATH.PROFILE && !pathname.split('/').includes('chats') && <NavBlock />}
+				{!(pathname.split('/').includes('profile') || pathname.split('/').includes('chats')) && <NavBlock />}
 				<Outlet />
 				{pathname.split('/')[1] === 'warrantor' ? <ButtonLogin /> : null}
 			</div>

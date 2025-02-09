@@ -1,7 +1,8 @@
+import { ModalOptions } from '@/features/ModalSort'
 import { timeSincePublication } from '@/shared/lib/helpers'
 import type { IUserLessData } from '@/shared/types'
 import classNames from 'classnames'
-import type { FC } from 'react'
+import { type FC, ReactNode } from 'react'
 import { CiLock, CiUnlock } from 'react-icons/ci'
 import { PiWechatLogoBold } from 'react-icons/pi'
 // import { PiWechatLogoBold } from 'react-icons/pi'
@@ -18,6 +19,7 @@ interface BlockThemeContainer {
 	isImportant: boolean
 	user: Omit<IUserLessData, 'userPassword'>
 	actionMoveFromChat?: () => void
+	arrayActions?: ReactNode[]
 }
 
 type BlockThemeContainerProps = Partial<Omit<BlockThemeContainer, 'actionMoveFromChat'>> &
@@ -30,10 +32,11 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 	createdAt,
 	user,
 	flag,
-	isImportant,
+	isImportant: _isImportant,
 	isChat,
 	isPrivate,
 	actionMoveFromChat,
+	arrayActions,
 }) => {
 	return (
 		<>
@@ -42,12 +45,12 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 					<div className={classNames(styles.up, { [styles.chat]: isChat })}>
 						<div className={styles.chat_info}>
 							<p className={styles.title}>{title}</p>
-							<span className={styles.dot} />
-							<div className={classNames(styles.plate, { [styles.chat]: isChat })}>
-								<span
-									className={classNames(styles.naming, { [styles.chat]: isChat })}
-								>{`${isImportant ? 'Важные' : 'Неважные'}`}</span>
-							</div>
+							{/*<span className={styles.dot} />*/}
+							{/*<div className={classNames(styles.plate, { [styles.chat]: isChat })}>*/}
+							{/*	<span*/}
+							{/*		className={classNames(styles.naming, { [styles.chat]: isChat })}*/}
+							{/*	>{`${isImportant ? 'Важные' : 'Неважные'}`}</span>*/}
+							{/*</div>*/}
 						</div>
 						<button
 							className={styles.exit}
@@ -57,26 +60,31 @@ export const BlockThemeContainer: FC<BlockThemeContainerProps> = ({
 							Покинуть чат
 						</button>
 					</div>
-					{user && createdAt && (
-						<div className={classNames(styles.down, { [styles.chat]: isChat })}>
-							<div className={styles.user}>
-								{user.userImage ? (
-									<img
-										src={user.userImage}
-										alt='Аватар'
-										className={styles.avatar}
-									/>
-								) : (
-									<div
-										style={{ backgroundColor: user.avatarColor }}
-										className={classNames(styles.avatar)}
-									>
-										{'userLogin' in user && user.userLogin[0].toUpperCase()}
+					{createdAt && (
+						<div className={styles.down}>
+							<div className={classNames(styles.left, { [styles.chat]: isChat })}>
+								{user && (
+									<div className={styles.user}>
+										{user.userImage ? (
+											<img
+												src={user.userImage}
+												alt='Аватар'
+												className={styles.avatar}
+											/>
+										) : (
+											<div
+												style={{ backgroundColor: user.avatarColor }}
+												className={classNames(styles.avatar)}
+											>
+												{'userLogin' in user && user.userLogin[0].toUpperCase()}
+											</div>
+										)}
+										<div className={styles.name}>{user.userLogin}</div>
 									</div>
 								)}
-								<div className={styles.name}>{user.userLogin}</div>
+								<div className={styles.date_create}>{timeSincePublication(createdAt, { isChat })}</div>
 							</div>
-							<div className={styles.date_create}>{timeSincePublication(createdAt, isChat)}</div>
+							{arrayActions && <ModalOptions arrayActions={arrayActions} />}
 						</div>
 					)}
 				</div>

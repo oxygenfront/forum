@@ -14,6 +14,7 @@ import { SearchModule } from './search/search.module'
 import { StatisticModule } from './statistic/statistic.module'
 import { ChapterThemeModule } from './theme/theme.module'
 import { UsersModule } from './users/users.module'
+import { FileModule } from './file/file.module';
 
 @Module({
 	imports: [
@@ -38,6 +39,7 @@ import { UsersModule } from './users/users.module'
 		SearchModule,
 		PaginationModule,
 		ChatModule,
+		FileModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

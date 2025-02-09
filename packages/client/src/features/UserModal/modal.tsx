@@ -55,7 +55,7 @@ export const UserModal: FC = () => {
 			<hr className={styles.hr} />
 			<div className={styles.links}>
 				<Link
-					to='/profile'
+					to={`/profile/${userLogin}`}
 					className={styles.links_item}
 				>
 					<VscAccount />

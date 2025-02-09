@@ -97,7 +97,7 @@ export const Message: FC<IMessageProps> = (message) => {
 			<div className={styles.down}>
 				<div className={styles.icons}>
 					{isChat ? (
-						<span className={styles.created_at}>{timeSincePublication(new Date(createdAt), isChat)}</span>
+						<span className={styles.created_at}>{timeSincePublication(new Date(createdAt), { isChat })}</span>
 					) : (
 						<>
 							<button

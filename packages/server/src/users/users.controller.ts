@@ -27,7 +27,7 @@ export class UsersController {
 
 	@Get(Route.GET_BY_USERNAME)
 	findByUsername(@Param('username') username: string) {
-		return this.usersService.findByEmail(username)
+		return this.usersService.findByLogin(username)
 	}
 
 	@Get(Route.GET_BY_EMAIL)

@@ -9,11 +9,11 @@ import styles from './aside.module.sass'
 
 export const Aside: FC = () => {
 	const { pathname } = useLocation()
-	const { id } = useParams()
+	const { chatId } = useParams()
 
 	const renderBlocks = () => {
 		switch (pathname) {
-			case `${PATH.ALL_CHATS}/${id}`:
+			case `${PATH.ALL_CHATS}/${chatId}`:
 				return (
 					<>
 						<ChatInfoAccordion />

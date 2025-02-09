@@ -55,25 +55,15 @@ export const DELETE_CHAPTER_BY_ID = `${CHAPTERS}/${DELETE}/:id`
 
 //Users
 export const GET_USERS = `${USERS}`
-export const GET_USERS_BY_ID = `${USERS}/:id`
-export const GET_USERS_BY_USERNAME = `${USERS}/:username`
-export const GET_USER_BY_EMAIL = `${USERS}/:email`
-export const CREATE_USER = `${USERS}/${CREATE}`
-export const UPDATE_USERS_BY_ID = `${USERS}/${UPDATE}/:id`
-export const DELETE_USERS_BY_ID = `${USERS}/${DELETE}:id`
 
 // Theme Chapter
 export const GET_THEMES = `${THEMES}`
-export const GET_THEME_ID = `${THEMES}/:id`
-export const CREATE_THEME_BY_ID = `${THEMES}/${CREATE}`
-export const DELETE_THEME_BY_ID = `${THEMES}/${DELETE}`
-export const UPDATE_THEME_BY_ID = `${THEMES}/${UPDATE}`
 
 // Message
+export const GET_MESSAGE_BY_ID = `${MESSAGE}`
 export const UPDATE_MESSAGE = `${MESSAGE}/${UPDATE}`
 export const CREATE_MESSAGE = `${MESSAGE}/${CREATE}`
 export const DELETE_MESSAGE_BY_ID = `${MESSAGE}/${DELETE}`
-export const GET_MESSAGE_BY_ID = `${MESSAGE}`
 
 // Search
 export const SEARCH_ALL = `${SEARCH}/all`

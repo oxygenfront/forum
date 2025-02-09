@@ -3,12 +3,13 @@ import { modalSlice } from '@/entities/Modal'
 import { userSlice } from '@/features/Auth'
 import { breadCrumbsSlice } from '@/features/BreadCrumbs'
 import { messageSlice } from '@/features/CreateMessage'
+import { chatSlice } from '@/pages/Chat'
 import { rootApi } from '@/shared/api'
 import { hintSlice } from '@/shared/ui/InputsForm'
 import { paginationSlice } from '@/shared/ui/Pagination'
 import { replayedSlice } from '@/shared/ui/ReplyedMessage'
-import { rememberMeSlice } from '@/widgets/Login/model'
-import { newChatSlice } from '@/widgets/ModalCreateNewChat/model'
+import { rememberMeSlice } from '@/widgets/Login'
+import { modalNewChatOrSearchUsersSlice } from '@/widgets/ModalCreateOrModalSearch'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
 	[messageSlice.name]: messageSlice.reducer,
 	[paginationSlice.name]: paginationSlice.reducer,
 	[replayedSlice.name]: replayedSlice.reducer,
-	[newChatSlice.name]: newChatSlice.reducer,
+	[modalNewChatOrSearchUsersSlice.name]: modalNewChatOrSearchUsersSlice.reducer,
+	[chatSlice.name]: chatSlice.reducer,
 })
 
 export const store = configureStore({

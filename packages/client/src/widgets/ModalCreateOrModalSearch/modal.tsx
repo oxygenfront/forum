@@ -1,36 +1,60 @@
 import { selectUserData } from '@/features/Auth'
 import { useDebounce, useOutsideClick } from '@/shared/lib'
+import { useSocket } from '@/shared/lib/SocketContext'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import type { IChatUser } from '@/shared/types/chat.types'
 import {
 	addUserInChat,
 	changeMessage,
 	changeTitle,
 	clearData,
-	selectNewChat,
+	selectModalNewChatOrSearchUsersSlice,
 	toggleCreateModalOpen,
+	toggleSearchUserModalOpen,
 	useCreateChatMutation,
 	useSearchUsersQuery,
-} from '@/widgets/ModalCreateNewChat'
+} from '@/widgets/ModalCreateOrModalSearch'
 import { Autocomplete, Chip, TextField, Typography } from '@mui/material'
+import classnames from 'classnames'
 import classNames from 'classnames'
 import { FC, type KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import styles from './modal.module.sass'
 
-export const CreateNewChatModal: FC = () => {
-	const dispatch = useAppDispatch()
+interface IModalCreateOrModalSearch {
+	isSearchUsers?: boolean
+	usersInChat?: IChatUser[]
+}
 
+export const ModalCreateOrModalSearch: FC<IModalCreateOrModalSearch> = ({ isSearchUsers, usersInChat }) => {
+	const dispatch = useAppDispatch()
+	const { chatId } = useParams()
 	const { id, userLogin, userEmail, avatarColor = '', userImage = '' } = useAppSelector(selectUserData)
-	const { addedUsers, title, message } = useAppSelector(selectNewChat)
+	const { addedUsers, title, message } = useAppSelector(selectModalNewChatOrSearchUsersSlice)
 	const ref = useRef<HTMLDivElement | null>(null)
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 	const [inputValue, setInputValue] = useState('')
+	const { socket, connected } = useSocket()
 	const [isFocused, setIsFocused] = useState(false)
 	const debouncedValue = useDebounce(inputValue, 500)
-
-	const { data: users = [] } = useSearchUsersQuery(debouncedValue)
+	const { data: users = [], isLoading } = useSearchUsersQuery(debouncedValue)
 	const [createChat, { isSuccess }] = useCreateChatMutation()
 
 	useEffect(() => {
+		if (isSearchUsers && usersInChat) {
+			for (const user of usersInChat) {
+				dispatch(
+					addUserInChat({
+						id: user.user.id,
+						userLogin: user.user.userLogin,
+						userEmail: user.user.userEmail,
+						avatarColor: user.user.avatarColor,
+						userImage: user.user.userImage,
+					}),
+				)
+			}
+			return
+		}
 		dispatch(addUserInChat({ id, userLogin, userEmail, avatarColor, userImage }))
 	}, [])
 
@@ -41,12 +65,18 @@ export const CreateNewChatModal: FC = () => {
 	}, [isSuccess])
 
 	const adjustHeight = () => {
+		if (isSearchUsers) {
+			return
+		}
 		if (textareaRef.current) {
 			textareaRef.current.style.height = 'auto'
 			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
 		}
 	}
 	useEffect(() => {
+		if (isSearchUsers) {
+			return
+		}
 		if (textareaRef.current) {
 			textareaRef.current.focus()
 		}
@@ -98,7 +128,7 @@ export const CreateNewChatModal: FC = () => {
 				</Typography>
 			)
 		}
-		if (!users.length) {
+		if ((isLoading || debouncedValue) && !users.length) {
 			return (
 				<Typography
 					sx={{
@@ -111,6 +141,17 @@ export const CreateNewChatModal: FC = () => {
 				</Typography>
 			)
 		}
+		return (
+			<Typography
+				sx={{
+					color: 'white',
+					fontSize: '14px',
+					textAlign: 'center',
+				}}
+			>
+				Поиск ...
+			</Typography>
+		)
 	}
 
 	const handleTitleChange = (event: any) => {
@@ -121,16 +162,28 @@ export const CreateNewChatModal: FC = () => {
 		createChat({ creatorId: id, userIds: addedUsers.map((u) => u.id), title, message })
 	}
 
-	useOutsideClick(ref, () => dispatch(toggleCreateModalOpen()))
+	const handleOnCloseModal = () => {
+		dispatch(toggleCreateModalOpen())
+		dispatch(toggleSearchUserModalOpen())
+	}
+
+	const handleUpdateUsersChat = () => {
+		if (socket && connected) {
+			socket.emit('updateUsersInChat', { chatId, userIds: addedUsers.map((u) => u.id) })
+		}
+		handleOnCloseModal()
+	}
+
+	useOutsideClick(ref, handleOnCloseModal)
 
 	return (
 		<div className={styles.wrapper}>
 			<div
-				className={styles.modal}
+				className={classnames(styles.modal, { [styles.isSearchUsers]: isSearchUsers })}
 				ref={ref}
 			>
 				<div className={styles.input_block}>
-					<p>Получатели:</p>
+					<p>{isSearchUsers ? 'Добавить пользователей в чат:' : 'Получатели:'}:</p>
 					<Autocomplete
 						multiple
 						getOptionLabel={(option) => option.userLogin}
@@ -167,7 +220,13 @@ export const CreateNewChatModal: FC = () => {
 												},
 											},
 										}}
-										disabled={option.id === id}
+										disabled={
+											isSearchUsers
+												? false
+												: addedUsers.map((us) => us.id).includes(option.id) /*usersInChat && usersInChat.length === 1
+												? usersInChat.map((us) => us.user.id).includes(option.id)
+												: addedUsers.map((us) => us.id).includes(option.id)*/
+										}
 									/>
 								)
 							})
@@ -253,75 +312,89 @@ export const CreateNewChatModal: FC = () => {
 					<p className={styles.subtitle}>*Можно добавить несколько участников в чат</p>
 				</div>
 
-				<div className={styles.input_block}>
-					<p>Заголовок:</p>
-					<TextField
-						onChange={handleTitleChange}
-						value={title}
-						sx={{
-							'& .MuiInputLabel-root': {
-								color: '#666',
-							},
-							'& .MuiInputLabel-root.Mui-focused': {
-								color: '#1976d2',
-							},
-							'& .MuiOutlinedInput-root': {
-								color: 'white',
-								'& fieldset': {
-									transition: 'all .2s linear',
-									border: '2px solid #FFFFFF59',
-								},
-								'&:hover fieldset': {
-									borderColor: 'rgba(255,255,245,0.6)',
-								},
-								'&.Mui-focused fieldset': {
-									borderColor: '#1976d2',
-								},
-							},
-							'& .MuiAutocomplete-popupIndicator': {
-								color: '#00FFE0',
-								'&:hover': {
-									color: '#1976d2',
-								},
-							},
-							'& .MuiAutocomplete-clearIndicator': {
-								color: '#00FFE0',
-								'&:hover': {
-									color: '#d32f2f',
-								},
-							},
-							'& .MuiInputBase-input::placeholder': {
-								color: '#666',
-								opacity: 1,
-							},
-						}}
-						placeholder='Введите заголовок чата'
-					/>
-				</div>
+				{isSearchUsers ? (
+					<div className={styles.button}>
+						<button
+							type='button'
+							className={styles.button_create}
+							onClick={handleUpdateUsersChat}
+						>
+							Обновить пользователей чата
+						</button>
+					</div>
+				) : (
+					<>
+						<div className={styles.input_block}>
+							<p>Заголовок:</p>
+							<TextField
+								onChange={handleTitleChange}
+								value={title}
+								sx={{
+									'& .MuiInputLabel-root': {
+										color: '#666',
+									},
+									'& .MuiInputLabel-root.Mui-focused': {
+										color: '#1976d2',
+									},
+									'& .MuiOutlinedInput-root': {
+										color: 'white',
+										'& fieldset': {
+											transition: 'all .2s linear',
+											border: '2px solid #FFFFFF59',
+										},
+										'&:hover fieldset': {
+											borderColor: 'rgba(255,255,245,0.6)',
+										},
+										'&.Mui-focused fieldset': {
+											borderColor: '#1976d2',
+										},
+									},
+									'& .MuiAutocomplete-popupIndicator': {
+										color: '#00FFE0',
+										'&:hover': {
+											color: '#1976d2',
+										},
+									},
+									'& .MuiAutocomplete-clearIndicator': {
+										color: '#00FFE0',
+										'&:hover': {
+											color: '#d32f2f',
+										},
+									},
+									'& .MuiInputBase-input::placeholder': {
+										color: '#666',
+										opacity: 1,
+									},
+								}}
+								placeholder='Введите заголовок чата'
+							/>
+						</div>
 
-				<div className={styles.input_block}>
-					<textarea
-						ref={textareaRef}
-						className={classNames(styles.textarea, { [styles.focus]: isFocused })}
-						contentEditable
-						suppressContentEditableWarning={true}
-						onFocus={() => setIsFocused(true)}
-						onBlur={() => setIsFocused(false)}
-						value={message}
-						onChange={(e) => dispatch(changeMessage(e.target.value))}
-						placeholder='Написать сообщение'
-					/>
-				</div>
+						<div className={styles.input_block}>
+							<textarea
+								ref={textareaRef}
+								className={classNames(styles.textarea, { [styles.focus]: isFocused })}
+								contentEditable
+								suppressContentEditableWarning={true}
+								onFocus={() => setIsFocused(true)}
+								onBlur={() => setIsFocused(false)}
+								value={message}
+								onChange={(e) => dispatch(changeMessage(e.target.value))}
+								placeholder='Написать сообщение'
+							/>
+						</div>
 
-				<div className={styles.button}>
-					<button
-						type='button'
-						className={styles.button_create}
-						onClick={() => handleCreateChat()}
-					>
-						Создать новый чат
-					</button>
-				</div>
+						<div className={styles.button}>
+							<button
+								type='button'
+								className={styles.button_create}
+								onClick={() => handleCreateChat()}
+							>
+								Создать новый чат
+							</button>
+						</div>
+					</>
+				)}
 			</div>
 		</div>
 	)

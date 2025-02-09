@@ -8,9 +8,9 @@ export enum Route {
 	CREATE = 'create',
 	GET_BY_ID = ':id',
 	AUTH_ME = 'auth_me',
-	GET_BY_USERNAME = ':username',
+	GET_BY_USERNAME = 'username/:username',
 	UPDATE_BY_ID = 'update/:id',
-	GET_BY_EMAIL = ':email',
+	GET_BY_EMAIL = 'email/:email',
 	USERS = 'users',
 	DELETE_BY_ID = 'delete/:id',
 	CHAPTERS = 'chapters/',
@@ -19,7 +19,18 @@ export enum Route {
 	PURCHASED = 'purchased',
 	CHATS = 'chats',
 	CHATS_USER = ':userId',
-	ADD_USER_IN_CHAT = 'addUser',
+}
+
+export enum FORM_HINTS_ERRORS {
+	EMPTY_EMAIL = 'Поле почты не может быть пустым',
+	EMPTY_LOGIN = 'Поле логина не может быть пустым',
+	EMPTY_PASSWORD = 'Поле пароля не может быть пустым',
+	PASSWORDS_DO_NOT_MATCH = 'Пароли не совпадают',
+	INVALID_CREDENTIALS = 'Неверная почта или пароль',
+	EMAIL_ALREADY_REGISTERED = 'Пользователь с такой почтой уже зарегистрирован',
+	LOGIN_ALREADY_REGISTERED = 'Пользователь с таким логином уже зарегистрирован',
+	INVALID_EMAIL = 'Некорректный email',
+	INVALID_PASSWORD = 'Пароль должен содержать минимум 8 символов, включая цифры, буквы верхнего и нижнего регистра и специальные символы',
 }
 
 export enum SwaggerApiTag {

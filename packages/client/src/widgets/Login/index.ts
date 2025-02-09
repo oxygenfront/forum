@@ -1,2 +1,2 @@
 export { Login } from './login'
-export { setRememberMe } from './model'
+export { setRememberMe, rememberMeSlice, selectRememberMe } from './model'

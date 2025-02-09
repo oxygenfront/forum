@@ -75,6 +75,7 @@ model ChatMessage {
   chatId    String
   userId    String
   content   String
+  imagePath String?
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
   chat      Chat     @relation(fields: [chatId], references: [id])

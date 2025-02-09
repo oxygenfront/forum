@@ -74,145 +74,45 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.server.to(chatId).emit('chatMessages', formattedMessages)
 	}
 
-	/*private async getChat(id: string) {
-		const chat = await this.prisma.chat.findUnique({
-			where: { id },
-			include: {
-				chatMessages: {
-					include: {
-						user: {
-							select: {
-								id: true,
-								avatarColor: true,
-								userImage: true,
-								userLogin: true,
-							},
-						},
-						replies: {
-							include: {
-								childMessage: {
-									select: {
-										id: true,
-										content: true,
-										user: {
-											select: {
-												id: true,
-												avatarColor: true,
-												userImage: true,
-												userLogin: true,
-											},
-										},
-									},
-								},
-							},
-						},
-						respondedTo: {
-							include: {
-								parentMessage: {
-									select: {
-										id: true,
-										content: true,
-										user: {
-											select: {
-												id: true,
-												avatarColor: true,
-												userImage: true,
-												userLogin: true,
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-				users: {
-					select: {
-						chatId: true,
-						userId: true,
-						user: {
-							select: {
-								id: true,
-								avatarColor: true,
-								userImage: true,
-								userLogin: true,
-							},
-						},
-					},
-				},
-				_count: {
-					select: {
-						users: true,
-						chatMessages: true,
-					},
-				},
-			},
-		})
-
-		if (!chat) {
-			throw new Error('Chat not found')
-		}
-
-		return {
-			chatMessages: chat.chatMessages,
-			createdAt: chat.createdAt,
-			creatorId: chat.creatorId,
-			id: chat.id,
-			title: chat.title,
-			users: chat.users,
-			usersCount: chat._count.users,
-			messagesCount: chat._count.chatMessages,
-			firstMessageDate: chat.chatMessages[0]?.createdAt,
-			latestMessageDate: chat.chatMessages[chat.chatMessages.length - 1]?.createdAt,
-		}
-	}*/
-
 	afterInit(server: Server) {
 		this.server = server
 	}
 
 	async handleConnection(client: Socket) {
-		try {
-			const userId = client.handshake.query.userId as string
-			const chatId = client.handshake.query.chatId as string | undefined // chatId может быть не определен
+		const userId = client.handshake.query.userId as string
+		const chatId = client.handshake.query.chatId as string | undefined
+		if (!userId) {
+			client.disconnect()
+			return
+		}
 
-			if (!userId) {
+		if (chatId) {
+			const chatUser = await this.prisma.chatUser.findUnique({
+				where: {
+					chatId_userId: {
+						chatId: chatId,
+						userId: userId,
+					},
+				},
+			})
+
+			if (!chatUser) {
+				client.emit('error', { message: 'Пользователь не имеет доступа к чату', status: 403 })
 				client.disconnect()
 				return
 			}
 
-			if (chatId) {
-				const chatUser = await this.prisma.chatUser.findUnique({
-					where: {
-						chatId_userId: {
-							chatId: chatId,
-							userId: userId,
-						},
-					},
-				})
+			client.join(chatId)
+			await this.sendChatMessages(chatId)
+			client.emit('connected', { userId, chatId })
 
-				if (!chatUser) {
-					client.emit('error', { message: 'Пользователь не имеет доступа к чату', status: 403 })
-					client.disconnect()
-					return
-				}
-
-				// Подключаем к конкретному чату
-				client.join(chatId)
-				await this.sendChatMessages(chatId)
-				client.emit('connected', { userId, chatId })
-
-				const userChats = await this.chatService.getChatsForUser(userId)
-				this.server.to(chatId).emit('updateChat', userChats)
-			} else {
-				client.emit('updateChat', await this.chatService.getChatsForUser(userId))
-			}
-
-			this.users.set(userId, client)
-		} catch (error) {
-			console.error(`Error during connection: ${error.message}`)
-			client.disconnect()
+			const userChats = await this.chatService.getChatsForUser(userId)
+			this.server.to(chatId).emit('updateChat', userChats)
+		} else {
+			client.emit('updateChat', await this.chatService.getChatsForUser(userId))
 		}
+
+		this.users.set(userId, client)
 	}
 
 	handleDisconnect(client: Socket) {
@@ -265,68 +165,74 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		})
 	}
 
-	async addUserToChat(chatId: string, userId: string) {
-		const chat = await this.chatService.getChat(chatId, userId)
-		for (const userChatId of chat.users.map((u) => u.userId)) {
-			const socket = this.users.get(userChatId)
-			if (socket) {
-				socket.emit('updateChat', await this.chatService.getChatsForUser(userChatId))
-			}
-		}
-		return this.prisma.chatUser.create({
-			data: {
-				chatId,
-				userId,
-			},
-		})
-	}
-
-	async removeUserFromChat(chatId: string, userId: string): Promise<void> {
-		await this.prisma.chatUser.deleteMany({
-			where: {
-				chatId,
-				userId,
-			},
-		})
-		const chat = await this.chatService.getChat(chatId, userId)
-		for (const userChatId of chat.users.map((u) => u.userId)) {
-			const socket = this.users.get(userChatId)
-			if (socket) {
-				socket.emit('updateChat', await this.chatService.getChatsForUser(userChatId))
-			}
-		}
+	@SubscribeMessage('getInfoChat')
+	async handleGetInfoChat(@MessageBody() data: { userId: string; chatId: string }, @ConnectedSocket() client: Socket) {
+		const { userId, chatId } = data
+		client.emit('getInfoChat', await this.chatService.getChat(chatId, userId))
 	}
 
 	@SubscribeMessage('updateChat')
 	async handleUpdateChat(@MessageBody() data: { userId: string }, @ConnectedSocket() client: Socket) {
 		const { userId } = data
-
 		const userChats = await this.chatService.getChatsForUser(userId)
 		client.emit('updateChat', userChats)
 	}
 
-	@SubscribeMessage('addUserToChat')
-	async handleAddUserToChat(
-		@MessageBody() data: {
-			chatId: string
-			userId: string
-		},
+	@SubscribeMessage('updateUsersInChat')
+	async handleUpdateUsersInChat(
+		@MessageBody() data: { chatId: string; userIds: string[] },
+		@ConnectedSocket() client: Socket,
 	) {
-		const { chatId, userId } = data
-		this.server.to(chatId).emit('updateChat', await this.chatService.getChatsForUser(userId))
-		await this.addUserToChat(chatId, userId)
-	}
+		const { chatId, userIds } = data
 
-	@SubscribeMessage('removeUserFromChat')
-	async handleRemoveUserFromChat(
-		@MessageBody() data: {
-			chatId: string
-			userId: string
-		},
-	): Promise<void> {
-		const { chatId, userId } = data
-		await this.removeUserFromChat(chatId, userId)
-		this.server.to(chatId).emit('updateChat', await this.chatService.getChatsForUser(userId))
+		const currentUsers = await this.prisma.chatUser.findMany({
+			where: { chatId },
+			select: { userId: true },
+		})
+
+		const currentUserIds = currentUsers.map((user) => user.userId)
+
+		const usersToRemove = currentUserIds.filter((id) => !userIds.includes(id))
+		const usersToAdd = userIds.filter((id) => !currentUserIds.includes(id))
+
+		if (usersToRemove.length) {
+			await this.prisma.chatUser.deleteMany({
+				where: {
+					chatId,
+					userId: { in: usersToRemove },
+				},
+			})
+
+			for (const userId of usersToRemove) {
+				const socket = this.users.get(userId)
+				if (socket) {
+					socket.leave(chatId)
+					socket.emit('removedFromChat', { chatId })
+				}
+			}
+		}
+
+		if (usersToAdd.length) {
+			await this.prisma.chatUser.createMany({
+				data: usersToAdd.map((userId) => ({ chatId, userId })),
+			})
+
+			for (const userId of usersToAdd) {
+				const socket = this.users.get(userId)
+				if (socket) {
+					socket.join(chatId)
+					socket.emit('addedToChat', { chatId, userId })
+				}
+			}
+		}
+
+		for (const userChatId of [...usersToAdd, ...currentUsers.map((el) => el.userId)]) {
+			const socket = this.users.get(userChatId)
+			if (socket) {
+				socket.emit('getInfoChat', await this.chatService.getChat(chatId, userChatId))
+				socket.emit('updateChat', await this.chatService.getChatsForUser(userChatId))
+			}
+		}
 	}
 
 	@SubscribeMessage('leaveChat')
@@ -334,26 +240,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		@MessageBody() data: { userId: string; chatId: string },
 		@ConnectedSocket() client: Socket,
 	) {
-		try {
-			const { userId, chatId } = data
-			const chat = await this.chatService.getChat(chatId, userId)
+		const { userId, chatId } = data
+		const chat = await this.chatService.getChat(chatId, userId)
 
-			const remainingUsers = chat.users.filter((u) => u.userId !== userId).map((u) => u.userId)
+		const remainingUsers = chat.users.filter((u) => u.userId !== userId).map((u) => u.userId)
 
-			await this.handleLeaveChat(client, userId, chatId)
+		await this.handleLeaveChat(client, userId, chatId)
+		client.emit('leftChat', { userId, chatId })
 
-			// Отправляем подтверждение пользователю
-			client.emit('leftChat', { userId, chatId })
-
-			for (const userChatId of remainingUsers) {
-				const socket = this.users.get(userChatId)
-				if (socket) {
-					socket.emit('updateChat', await this.chatService.getChatsForUser(userChatId))
-				}
+		for (const userChatId of remainingUsers) {
+			const socket = this.users.get(userChatId)
+			if (socket) {
+				socket.emit('getInfoChat', await this.chatService.getChat(chatId, userChatId))
+				socket.emit('updateChat', await this.chatService.getChatsForUser(userChatId))
 			}
-		} catch (error) {
-			client.emit('error', 'Error while leaving the chat')
-			console.error('Error in handleLeaveChatEvent:', error)
 		}
 	}
 
@@ -368,12 +268,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		const { id, chatId, userId } = data
 
 		await this.remove(id)
-
 		this.server.to(chatId).emit('messageRemoved', { id })
 		const chat = await this.chatService.getChat(chatId, userId)
 		for (const userChatId of chat.users.map((u) => u.userId)) {
 			const socket = this.users.get(userChatId)
 			if (socket) {
+				socket.emit('getInfoChat', await this.chatService.getChat(chatId, userChatId))
 				socket.emit('updateChat', await this.chatService.getChatsForUser(userChatId))
 			}
 		}
@@ -477,11 +377,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			chatId: string
 			content: string
 			userId: string
+			imagePath?: string // Ссылка на изображение
 			parentMessageId?: string[]
 		},
 		@ConnectedSocket() client: Socket,
 	) {
-		const { chatId, content, userId, parentMessageId } = data
+		const { chatId, content, userId, imagePath, parentMessageId } = data
 
 		const user = await this.prisma.user.findUnique({
 			where: { id: userId },
@@ -492,11 +393,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			return
 		}
 
+		// Сохраняем сообщение в базе данных
 		const newMessage = await this.prisma.chatMessage.create({
 			data: {
 				chatId,
 				userId: user.id,
 				content,
+				imagePath, // Сохраняем URL изображения
 			},
 			include: {
 				user: {
@@ -510,6 +413,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			},
 		})
 
+		// Обработка родительских сообщений (если есть)
 		if (parentMessageId && Array.isArray(parentMessageId)) {
 			const parentLinks = parentMessageId.map((parentId) => ({
 				parentMessageId: parentId,
@@ -521,6 +425,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			})
 		}
 
+		// Отправка сообщения через сокеты
 		const fullMessage = await this.prisma.chatMessage.findUnique({
 			where: { id: newMessage.id },
 			include: {
@@ -551,20 +456,21 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			},
 		})
 
-		this.server.to(chatId).emit('newMessage', {
-			...fullMessage,
-			respondedTo: fullMessage.respondedTo.map((response) => ({
-				id: response.parentMessageId,
-				content: response.parentMessage?.content,
-				user: response.parentMessage?.user,
-			})),
-		})
-
+		// Отправляем сообщение всем участникам чата
 		const chat = await this.chatService.getChat(chatId, userId)
 		for (const userChatId of chat.users.map((u) => u.userId)) {
 			const socket = this.users.get(userChatId)
 			if (socket) {
+				socket.emit('getInfoChat', await this.chatService.getChat(chatId, userChatId))
 				socket.emit('updateChat', await this.chatService.getChatsForUser(userChatId))
+				socket.emit('newMessage', {
+					...fullMessage,
+					respondedTo: fullMessage.respondedTo.map((response) => ({
+						id: response.parentMessageId,
+						content: response.parentMessage?.content,
+						user: response.parentMessage?.user,
+					})),
+				})
 			}
 		}
 	}

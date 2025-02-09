@@ -21,7 +21,7 @@ export class ThemeController {
 	}
 
 	@Get(Route.GET_BY_ID)
-	findOne(@Param('id') id: string, @Query() paginationQuery) {
+	findOne(@Param('id') id: string, @Query() paginationQuery: { page: number; limit: number }) {
 		const page = paginationQuery.page || 1
 		const limit = paginationQuery.limit || 10
 		return this.themeService.findOne(id, page, limit)

@@ -23,12 +23,17 @@ dayjs.updateLocale('ru', {
 		yy: '%d г.',
 	},
 })
-export const timeSincePublication = (date: Date, isChat?: boolean) => {
+export const timeSincePublication = (date: Date, options?: { isChat?: boolean; isProfile?: boolean }) => {
 	if (!date) {
 		return
 	}
+	const { isChat, isProfile } = options || {}
+
 	if (isChat) {
 		return `в ${dayjs(date).format('HH:mm DD/MM/YYYY')}`
+	}
+	if (isProfile) {
+		return dayjs(date).format('DD.MM.YY')
 	}
 	const transformedDate = dayjs(date).unix()
 	return dayjs(transformedDate * 1000)

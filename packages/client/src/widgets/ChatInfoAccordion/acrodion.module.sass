@@ -45,12 +45,16 @@
 
   &_avatar
     position: absolute
-    bottom: -32px
+    bottom: -34px
     width: 46px
     height: 46px
     border-radius: 50%
     object-fit: cover
-
+    &.noImg
+      display: flex
+      justify-content: center
+      align-items: center
+      font-size: 25px
     &:first-child
       z-index: 3
       width: 46px

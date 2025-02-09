@@ -46,3 +46,21 @@ export interface ICreateChatReq {
 	title: string
 	message: string
 }
+
+export interface IChatData {
+	chatMessages: IChatMessage[]
+	createdAt: Date
+	creatorId: string
+	id: string
+	title: string
+	users: IChatUser[]
+	usersCount: number
+	messagesCount: number
+	firstMessageDate: Date
+	latestMessageDate: Date
+}
+
+export interface IError {
+	message: string
+	status: number
+}

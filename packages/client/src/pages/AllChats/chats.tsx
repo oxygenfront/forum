@@ -1,30 +1,44 @@
+import { selectUserData } from '@/features/Auth'
 import { useSocket } from '@/shared/lib/SocketContext'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IChat } from '@/shared/types'
-import { BlockContainer } from '@/shared/ui'
+import { BlockContainer, Loader } from '@/shared/ui'
 import { ChatLink } from '@/widgets/ChatLink'
-import { CreateNewChatModal } from '@/widgets/ModalCreateNewChat'
-import { toggleCreateModalOpen } from '@/widgets/ModalCreateNewChat/model'
-import { selectNewChat } from '@/widgets/ModalCreateNewChat/model/selector'
+import {
+	ModalCreateOrModalSearch,
+	selectModalNewChatOrSearchUsersSlice,
+	toggleCreateModalOpen,
+} from '@/widgets/ModalCreateOrModalSearch'
 import { type FC, Fragment, useEffect, useState } from 'react'
 import styles from './chats.module.sass'
 
 export const AllChatsPages: FC = () => {
-	const { createModalOpen } = useAppSelector(selectNewChat)
+	const { createModalOpen } = useAppSelector(selectModalNewChatOrSearchUsersSlice)
+	const { id: userId } = useAppSelector(selectUserData)
 	const dispatch = useAppDispatch()
 	const [chats, setChats] = useState<IChat[]>([])
-	const { socket } = useSocket()
-
+	const { socket, connected } = useSocket()
 	useEffect(() => {
-		if (!socket) {
+		if (!(socket && connected)) {
 			return
 		}
 
+		if (!chats.length) {
+			socket.emit('updateChat', { userId })
+		}
+
 		socket.on('updateChat', (updatedChat: IChat[]) => {
-			console.log(updatedChat)
 			setChats(updatedChat)
 		})
-	}, [socket])
+
+		return () => {
+			socket.off('updateChat')
+		}
+	}, [socket, connected])
+
+	if (!(connected && socket)) {
+		return <Loader />
+	}
 
 	return (
 		<>
@@ -55,7 +69,7 @@ export const AllChatsPages: FC = () => {
 				Создать чат
 			</button>
 
-			{createModalOpen && <CreateNewChatModal />}
+			{createModalOpen && <ModalCreateOrModalSearch />}
 		</>
 	)
 }

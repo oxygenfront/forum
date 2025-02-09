@@ -1,7 +1,11 @@
-import { trimmingText } from '@/shared/lib'
+import { selectChatData } from '@/pages/Chat/model'
+import { timeSincePublication, trimmingText } from '@/shared/lib'
+import { useAppSelector } from '@/shared/lib/hooks'
+import { Loader } from '@/shared/ui'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import classnames from 'classnames'
 import classNames from 'classnames'
 import { useState } from 'react'
 import { IoIosArrowDown, IoMdInformationCircleOutline } from 'react-icons/io'
@@ -12,7 +16,11 @@ import styles from './acrodion.module.sass'
 
 export const ChatInfoAccordion = () => {
 	const [expanded, setExpanded] = useState(true)
+	const chatData = useAppSelector(selectChatData)
 
+	if (!chatData) {
+		return <Loader />
+	}
 	return (
 		<>
 			<Accordion
@@ -58,20 +66,35 @@ export const ChatInfoAccordion = () => {
 								<IoPeopleSharp />
 								Участники:
 							</p>
-							<p className={styles.subtitle}>{trimmingText(['Oxygen32', 'Oxygen123'].join(', '))}</p>
+							<p className={styles.subtitle}>
+								{trimmingText(chatData.users.map((user) => user.user.userLogin).join(', '))}
+							</p>
 						</div>
 
 						<div className={styles.members_right}>
-							<img
-								src='https://i.imgur.com/A5jCy4B.png'
-								alt=''
-								className={styles.members_avatar}
-							/>
-							<img
-								src='https://i.imgur.com/A5jCy4B.png'
-								alt=''
-								className={styles.members_avatar}
-							/>
+							{chatData.users.slice(-3).map((user) => {
+								return (
+									<>
+										{user.user.userImage ? (
+											<img
+												key={user.user.id}
+												src={user.user.userImage}
+												alt=''
+												className={styles.members_avatar}
+											/>
+										) : (
+											<div
+												className={classnames(styles.members_avatar, styles.noImg)}
+												key={user.user.id}
+												style={{ backgroundColor: user.user.avatarColor }}
+											>
+												{user.user.userLogin[0].toUpperCase()}
+											</div>
+										)}
+									</>
+								)
+							})}
+
 							<button
 								type='button'
 								className={styles.add_member}
@@ -88,15 +111,15 @@ export const ChatInfoAccordion = () => {
 						</p>
 						<div className={styles.row}>
 							<p className={styles.subtitle}>Всего отправлено за все время:</p>
-							<p className={styles.count}>300</p>
-						</div>
-						<div className={styles.row}>
-							<p className={styles.subtitle}>Первое сообщение:</p>
-							<p className={styles.count}>12.02.24</p>
+							<p className={styles.count}>{chatData.messagesCount}</p>
 						</div>
 						<div className={styles.row}>
 							<p className={styles.subtitle}>Последние сообщение:</p>
-							<p className={styles.count}>15.02.24</p>
+							<p className={styles.count}>{timeSincePublication(chatData.latestMessageDate)}</p>
+						</div>
+						<div className={styles.row}>
+							<p className={styles.subtitle}>Первое сообщение:</p>
+							<p className={styles.count}>{timeSincePublication(chatData.createdAt)}</p>
 						</div>
 					</div>
 				</AccordionDetails>
