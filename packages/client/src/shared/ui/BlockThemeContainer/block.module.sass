@@ -10,6 +10,8 @@
   display: flex
   justify-content: space-between
   margin-bottom: 10px
+  @media (max-width: 534px)
+    display: block
 
   &.flag
     align-items: center
@@ -25,12 +27,17 @@
 .chat_info
   display: flex
   align-items: center
+  @media (max-width: 420px)
+    display: block
+    padding-bottom: 20px
 
 .exit
   font-size: 14px
   padding: 7px 12px
   border: 1px solid white
   border-radius: 12px
+  @media (max-width: 531px)
+    height: 50%
 
 .plate
   border-radius: 8px

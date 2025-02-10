@@ -1,0 +1,1 @@
+export const selectChange = ({admin}: any) => admin;

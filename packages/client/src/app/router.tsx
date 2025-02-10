@@ -1,4 +1,5 @@
 import { BaseLayout as App } from '@/app/layout'
+import { Admin } from '@/pages/Admin'
 import { AllChatsPages } from '@/pages/AllChats'
 import { ChapterPage } from '@/pages/Chapter'
 import { Chat } from '@/pages/Chat'
@@ -48,6 +49,10 @@ export const router = createBrowserRouter(
 				{
 					path: PATH.CHAT,
 					element: <Chat />,
+				},
+				{
+					path: PATH.ADMIN,
+					element: <Admin />,
 				},
 			],
 		},
