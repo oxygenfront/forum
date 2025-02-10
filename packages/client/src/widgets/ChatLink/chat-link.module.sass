@@ -13,6 +13,9 @@
     align-items: center
     gap: 10px
     width: 250px
+    @media (max-width: 836px)
+      width: 150px
+      font-size: 15px
 
     & svg
       font-size: 30px
@@ -21,11 +24,24 @@
     display: flex
     align-items: center
     gap: 10px
+    @media (max-width: 836px)
+      font-size: 15px
+
+
+  &_right
+    @media (max-width: 836px)
+      font-size: 15px
 
   &_count
     color: #00FFE0
     font-size: 20px
     margin-left: 10px
+    @media (max-width: 515px)
+      font-size: 15px
+      display: flex
+      flex-direction: column
+
+
 
 
 .hr
