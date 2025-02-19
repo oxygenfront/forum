@@ -12,7 +12,7 @@ import { BlockThemeContainer, LoginForAction } from '@/shared/ui'
 import { Loader } from '@/shared/ui/Loader'
 import { selectCurrentPage } from '@/shared/ui/Pagination'
 import { Pagination } from '@/shared/ui/Pagination/pagination'
-import { clearData, selectReply } from '@/shared/ui/ReplyedMessage'
+import { clearReplyData, selectReply } from '@/shared/ui/ReplyedMessage'
 import { Message } from '@/widgets/MessageBlock'
 import classNames from 'classnames'
 import { FC, KeyboardEvent, useEffect, useState } from 'react'
@@ -36,7 +36,7 @@ export const ThemePage: FC = () => {
 
 	useEffect(() => {
 		return () => {
-			dispatch(clearData())
+			dispatch(clearReplyData())
 		}
 	}, [dispatch])
 
@@ -79,7 +79,7 @@ export const ThemePage: FC = () => {
 				})
 			}
 
-			dispatch(clearData())
+			dispatch(clearReplyData())
 		}
 	}
 

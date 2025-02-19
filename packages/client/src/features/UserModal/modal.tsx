@@ -5,11 +5,12 @@ import { clearUserData } from '@/features/Auth/model'
 import { useOutsideClick } from '@/shared/lib'
 import { trimmingText } from '@/shared/lib/'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import classnames from 'classnames'
 import { type FC, useEffect, useRef } from 'react'
 import { PiWechatLogoBold } from 'react-icons/pi'
 import { RiLogoutCircleRLine } from 'react-icons/ri'
 import { VscAccount } from 'react-icons/vsc'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styles from './modal.module.sass'
 
 export const UserModal: FC = () => {
@@ -17,6 +18,8 @@ export const UserModal: FC = () => {
 	const [logout, { isSuccess, isLoading }] = useLogoutMutation()
 	const dispatch = useAppDispatch()
 	const ref = useRef<HTMLDivElement>(null)
+	const { pathname } = useLocation()
+	const isCurrentPage = (arg: string) => (pathname as unknown as string).split('/').includes(arg)
 
 	function handleClose() {
 		dispatch(toggleUserModal())
@@ -56,14 +59,16 @@ export const UserModal: FC = () => {
 			<div className={styles.links}>
 				<Link
 					to={`/profile/${userLogin}`}
-					className={styles.links_item}
+					onClick={() => handleClose()}
+					className={classnames(styles.links_item, { [styles.current]: isCurrentPage('profile') })}
 				>
 					<VscAccount />
 					Мой профиль
 				</Link>
 				<Link
 					to='/chats'
-					className={styles.links_item}
+					onClick={() => handleClose()}
+					className={classnames(styles.links_item, { [styles.current]: isCurrentPage('chats') })}
 				>
 					<PiWechatLogoBold />
 					Мои сообщения

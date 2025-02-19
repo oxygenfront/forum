@@ -4,6 +4,7 @@ import { userSlice } from '@/features/Auth'
 import { breadCrumbsSlice } from '@/features/BreadCrumbs'
 import { messageSlice } from '@/features/CreateMessage'
 import { chatSlice } from '@/pages/Chat'
+import { editProfileSlice } from '@/pages/Profile'
 import { rootApi } from '@/shared/api'
 import { hintSlice } from '@/shared/ui/InputsForm'
 import { paginationSlice } from '@/shared/ui/Pagination'
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
 	[replayedSlice.name]: replayedSlice.reducer,
 	[modalNewChatOrSearchUsersSlice.name]: modalNewChatOrSearchUsersSlice.reducer,
 	[chatSlice.name]: chatSlice.reducer,
+	[editProfileSlice.name]: editProfileSlice.reducer,
 })
 
 export const store = configureStore({

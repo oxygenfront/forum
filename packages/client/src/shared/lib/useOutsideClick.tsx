@@ -1,6 +1,6 @@
 import { type RefObject, useEffect } from 'react'
 
-export function useOutsideClick<T extends HTMLElement>(ref: RefObject<T>, onClose: () => void): void {
+export function useOutsideClick<T extends HTMLElement | null>(ref: RefObject<T>, onClose: () => void): void {
 	useEffect(() => {
 		function handleKeyDown(event: KeyboardEvent) {
 			if (event.key === 'Escape') {

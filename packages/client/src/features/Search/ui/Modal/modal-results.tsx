@@ -13,10 +13,10 @@ interface IModalResultsProps {
 export const ModalResults: FC<IModalResultsProps> = ({ results, loading }) => {
 	return (
 		<div className={styles.wrapper}>
-			{loading || !results ? (
+			{loading ? (
 				<Loader />
-			) : results.length ? (
-				results?.map((result) => {
+			) : results?.length ? (
+				results.map((result) => {
 					return (
 						<ResultElement
 							key={result.chapterId}

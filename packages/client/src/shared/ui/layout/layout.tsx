@@ -1,5 +1,5 @@
 import { selectIsLogin, selectUserData, useGetAuthQuery } from '@/features/Auth'
-import { selectChatData, setChatData } from '@/pages/Chat/model'
+import { selectChatData, setChatData } from '@/pages/Chat'
 import { PATH, initChatData } from '@/shared/constants'
 import { useSocket } from '@/shared/lib/SocketContext'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks.ts'
@@ -25,7 +25,6 @@ export const Layout: FC = () => {
 	const navigate = useNavigate()
 	const { socket } = useSocket()
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-
 	const [error, setError] = useState<IError>()
 
 	useGetAuthQuery(undefined, { skip: isLogin })

@@ -1,13 +1,24 @@
+import { toggleEditProfile } from '@/pages/Profile'
 import { ROLES_UI } from '@/shared/constants'
 import { timeSincePublication } from '@/shared/lib'
+import { useAppDispatch } from '@/shared/lib/hooks'
 import type { IUser } from '@/shared/types'
+import classnames from 'classnames'
 import classNames from 'classnames'
 import type { FC } from 'react'
 import styles from './userblock.module.sass'
 
 export const UserBlock: FC<
-	Pick<IUser, 'userImage' | 'avatarColor' | 'role' | 'userLogin' | 'createdAt' | 'themeMessagesCount'>
-> = ({ userImage, avatarColor, userLogin, role, createdAt, themeMessagesCount }) => {
+	Pick<IUser, 'userImage' | 'avatarColor' | 'role' | 'userLogin' | 'createdAt' | 'themeMessagesCount'> & {
+		isEditProfile: boolean
+	}
+> = (props) => {
+	const { userImage, avatarColor, userLogin, role, createdAt, themeMessagesCount, isEditProfile } = props
+	const dispatch = useAppDispatch()
+	function handleEditProfile() {
+		dispatch(toggleEditProfile())
+	}
+
 	return (
 		<>
 			<div className={styles.wrapper}>
@@ -19,7 +30,12 @@ export const UserBlock: FC<
 							className={styles.user_img}
 						/>
 					) : (
-						<div>{avatarColor}</div>
+						<div
+							className={classnames(styles.user_img, styles.noImg)}
+							style={{ backgroundColor: avatarColor }}
+						>
+							{userLogin.slice(0, 1).toUpperCase()}
+						</div>
 					)}
 					<p className={classNames(styles.status_online, styles.isOnline)}>Онлайн</p>
 				</div>
@@ -30,12 +46,23 @@ export const UserBlock: FC<
 							<div className={styles.status_site}>Не проверен</div>
 						</div>
 						<div className={styles.up_right}>
-							<button
-								type='button'
-								className={styles.button}
-							>
-								Посмотреть профиль
-							</button>
+							{isEditProfile ? (
+								<button
+									type='button'
+									className={styles.button}
+									onClick={() => handleEditProfile()}
+								>
+									Посмотреть профиль
+								</button>
+							) : (
+								<button
+									type='button'
+									className={styles.button}
+									onClick={() => handleEditProfile()}
+								>
+									Редактировать профиль
+								</button>
+							)}
 						</div>
 					</div>
 					<div className={styles.middle}>
@@ -61,20 +88,22 @@ export const UserBlock: FC<
 								<div className={styles.bottom_left_item_content}>210</div>
 							</div>
 						</div>
-						<div className={styles.bottom_right}>
-							<button
-								type='button'
-								className={styles.button}
-							>
-								Отмена
-							</button>
-							<button
-								type='button'
-								className={classNames(styles.button, styles.save)}
-							>
-								Сохранить
-							</button>
-						</div>
+						{isEditProfile && (
+							<div className={styles.bottom_right}>
+								<button
+									type='button'
+									className={styles.button}
+								>
+									Отмена
+								</button>
+								<button
+									type='button'
+									className={classNames(styles.button, styles.save)}
+								>
+									Сохранить
+								</button>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

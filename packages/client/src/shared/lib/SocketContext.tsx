@@ -13,7 +13,6 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined)
 
 export const useSocket = (): SocketContextType => {
 	const context = useContext(SocketContext)
-
 	return context as SocketContextType
 }
 

@@ -7,7 +7,7 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import classnames from 'classnames'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { IoIosArrowDown, IoMdInformationCircleOutline } from 'react-icons/io'
 import { IoPeopleSharp } from 'react-icons/io5'
 import { TbBrandWechat } from 'react-icons/tb'
@@ -74,7 +74,7 @@ export const ChatInfoAccordion = () => {
 						<div className={styles.members_right}>
 							{chatData.users.slice(-3).map((user) => {
 								return (
-									<>
+									<Fragment key={user.userId}>
 										{user.user.userImage ? (
 											<img
 												key={user.user.id}
@@ -91,7 +91,7 @@ export const ChatInfoAccordion = () => {
 												{user.user.userLogin[0].toUpperCase()}
 											</div>
 										)}
-									</>
+									</Fragment>
 								)
 							})}
 

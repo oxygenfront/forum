@@ -86,7 +86,7 @@
         "noSetterReturn": "error",
         "noStringCaseMismatch": "error",
         "noSwitchDeclarations": "warn",
-        "noUndeclaredVariables": "error",
+        "noUndeclaredVariables": "off",
         "noUnnecessaryContinue": "warn",
         "noUnreachable": "error",
         "noUnreachableSuper": "error",

@@ -19,18 +19,25 @@
 .links
   display: flex
   flex-direction: column
-  gap: 15px
+  gap: 10px
   margin-top: 12px
   margin-bottom: 54px
 
   &_item
+    width: 100%
     display: flex
     align-items: center
     gap: 10px
     transition: all .3s linear
+    padding: 5px 15px
+    border-radius: 5px
+    background-color: transparent
 
     &:hover
       color: #00FFE0
+    &.current
+      color: #00FFE0
+      background-color: rgb(66, 81, 98)
 
 .user
   display: flex

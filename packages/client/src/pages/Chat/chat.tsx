@@ -1,4 +1,3 @@
-import { Action } from '@/features/Action'
 import { selectUserData } from '@/features/Auth'
 import { CreateMessage, clearData, selectMessage } from '@/features/CreateMessage'
 import { clearChatData, selectChatData } from '@/pages/Chat/model'
@@ -7,7 +6,8 @@ import { useSocket } from '@/shared/lib/SocketContext'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IChatMessage, IError } from '@/shared/types/chat.types'
 import { BlockThemeContainer, Loader } from '@/shared/ui'
-import { selectReply } from '@/shared/ui/ReplyedMessage'
+import { Action } from '@/shared/ui/Action'
+import { clearReplyData, selectReply } from '@/shared/ui/ReplyedMessage'
 import { ChatMessage } from '@/widgets/ChatMessageBlock'
 import {
 	ModalCreateOrModalSearch,
@@ -111,9 +111,11 @@ export const Chat = () => {
 					content: selectDataMessage.content,
 				})
 				dispatch(clearData())
+				dispatch(clearReplyData())
 			} else {
 				socket.emit('sendMessage', messageData)
 				dispatch(clearData())
+				dispatch(clearReplyData())
 			}
 		}
 	}
@@ -138,33 +140,31 @@ export const Chat = () => {
 	if (error && error.status === 403) {
 		return 'Чат не найден'
 	}
+	if (JSON.stringify(chatData) === JSON.stringify(initChatData) || !(socket && connected)) {
+		return <Loader />
+	}
 
 	return (
 		<>
-			{JSON.stringify(chatData) === JSON.stringify(initChatData) ? (
-				<Loader />
-			) : (
-				<BlockThemeContainer
-					title={chatData.title}
-					user={chatData.users.find((obj) => obj.user.id === chatData.creatorId)?.user}
-					countMessages={messages.length}
-					createdAt={chatData.createdAt}
-					actionMoveFromChat={handleLeaveChat}
-					arrayActions={[
-						<Action
-							nameAction='Обновить пользователей'
-							action={handleAddUser}
-							key='add'
-						/>,
-					]}
-					flag
-					isChat
-				/>
-			)}
+			<BlockThemeContainer
+				title={chatData.title}
+				user={chatData.users.find((obj) => obj.user.id === chatData.creatorId)?.user}
+				countMessages={messages.length}
+				createdAt={chatData.createdAt}
+				actionMoveFromChat={handleLeaveChat}
+				arrayActions={[
+					<Action
+						nameAction='Обновить пользователей'
+						action={handleAddUser}
+						key='add'
+					/>,
+				]}
+				flag
+				isChat
+			/>
 
-			{socket && connected ? (
-				messages.length ? (
-					messages.map((message) => {
+			{messages.length
+				? messages.map((message) => {
 						return (
 							<ChatMessage
 								deleteMessageAction={handleDeleteMessage}
@@ -174,12 +174,7 @@ export const Chat = () => {
 							/>
 						)
 					})
-				) : (
-					'Напишите свое первое сообщение'
-				)
-			) : (
-				<Loader />
-			)}
+				: 'Напишите свое первое сообщение'}
 			{searchUsersModalOpen && (
 				<ModalCreateOrModalSearch
 					isSearchUsers

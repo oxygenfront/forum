@@ -1,1 +1,1 @@
-export { changeData, formsDataSlice, selectForms, clearData } from './model'
+export { changeData, formsDataSlice, selectForms, clearReplyData } from './model'

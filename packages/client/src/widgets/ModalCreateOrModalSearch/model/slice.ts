@@ -47,7 +47,7 @@ export const modalNewChatOrSearchUsersSlice = createSlice({
 			state.message = action.payload
 		},
 
-		clearData: (state) => {
+		clearReplyData: (state) => {
 			state.message = ''
 			state.addedUsers = []
 			state.createModalOpen = false

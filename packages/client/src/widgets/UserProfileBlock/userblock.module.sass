@@ -4,7 +4,6 @@
   display: flex
   gap: 57px
   border-radius: 30px
-  // margin-bottom: 10px
 .user
   display: flex
   flex-direction: column
@@ -15,6 +14,12 @@
     width: 224px
     height: 224px
     object-fit: cover
+    &.noImg
+      display: flex
+      justify-content: center
+      align-items: center
+      font-size: 140px
+      border-radius: 50%
 .status
   &_site
     padding: 6px 13px

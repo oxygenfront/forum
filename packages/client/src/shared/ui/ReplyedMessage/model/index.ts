@@ -1,6 +1,6 @@
 export {
 	addReplyMessage,
-	clearData,
+	clearReplyData,
 	setReplyMessageId,
 	replayedSlice,
 	removeReplyMessage,

@@ -18,6 +18,7 @@ export const AllChatsPages: FC = () => {
 	const dispatch = useAppDispatch()
 	const [chats, setChats] = useState<IChat[]>([])
 	const { socket, connected } = useSocket()
+
 	useEffect(() => {
 		if (!(socket && connected)) {
 			return

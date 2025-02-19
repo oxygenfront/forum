@@ -1,4 +1,4 @@
-import { type TypeForms, clearData, selectForms, setTypeForm } from '@/entities/Forms'
+import { type TypeForms, clearReplyData, selectForms, setTypeForm } from '@/entities/Forms'
 import { toggleAuthModal } from '@/entities/Modal'
 
 import { setUserData, useLoginMutation, useRegisterMutation } from '@/features/Auth'
@@ -63,7 +63,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 
 		if (isSuccessLogin) {
 			handleAuthSuccess(fetchLoginData)
-			dispatch(clearData())
+			dispatch(clearReplyData())
 			dispatch(clearHints('login'))
 			dispatch(toggleAuthModal())
 		} else if (errorLogin) {
@@ -78,7 +78,7 @@ export const useReturnsElements = (styles: CSSModuleClasses) => {
 		}
 		if (isSuccessRegister) {
 			handleAuthSuccess(fetchRegisterData)
-			dispatch(clearData())
+			dispatch(clearReplyData())
 			dispatch(setRememberMe(true))
 			dispatch(clearHints('register'))
 			dispatch(toggleAuthModal())

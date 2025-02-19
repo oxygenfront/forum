@@ -1,14 +1,13 @@
-import { Action } from '@/features/Action'
 import { selectIsLogin, selectUserData } from '@/features/Auth'
 import { setValue, useDeleteMessageMutation } from '@/features/CreateMessage'
 import { ModalOptions } from '@/features/ModalSort'
 import { timeSincePublication } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IMessageRes } from '@/shared/types'
+import { Action } from '@/shared/ui/Action'
 import { RepliedMessage, setReplyMessageId } from '@/shared/ui/ReplyedMessage'
 import classNames from 'classnames'
 import type { FC } from 'react'
-import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai'
 import { FaArrowTurnDown } from 'react-icons/fa6'
 import styles from './message.module.sass'
 
@@ -96,9 +95,10 @@ export const Message: FC<IMessageProps> = (message) => {
 			<hr className={styles.hr} />
 			<div className={styles.down}>
 				<div className={styles.icons}>
-					{isChat ? (
-						<span className={styles.created_at}>{timeSincePublication(new Date(createdAt), { isChat })}</span>
-					) : (
+					{
+						isChat ? (
+							<span className={styles.created_at}>{timeSincePublication(new Date(createdAt), { isChat })}</span>
+						) : null /*(
 						<>
 							<button
 								type='button'
@@ -115,7 +115,8 @@ export const Message: FC<IMessageProps> = (message) => {
 								<span>103</span>
 							</button>
 						</>
-					)}
+					)*/
+					}
 				</div>
 				<button
 					type='button'

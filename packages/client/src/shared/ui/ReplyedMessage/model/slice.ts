@@ -47,7 +47,7 @@ export const replayedSlice = createSlice({
 			state.chatReplyMessages = state.chatReplyMessages.filter((message) => message.id !== payload)
 		},
 
-		clearData: (state) => {
+		clearReplyData: (state) => {
 			state.replyMessageId = ''
 			state.replyMessages = []
 			state.chatReplyMessages = []
@@ -61,5 +61,5 @@ export const {
 	removeReplyMessage,
 	addChatReplyMessage,
 	removeChatReplyMessage,
-	clearData,
+	clearReplyData,
 } = replayedSlice.actions

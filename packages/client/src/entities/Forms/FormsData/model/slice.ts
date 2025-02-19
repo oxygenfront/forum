@@ -40,7 +40,7 @@ export const formsDataSlice = createSlice({
 					break
 			}
 		},
-		clearData: (state) => {
+		clearReplyData: (state) => {
 			state.login = initialState.login
 			state.forgot = initialState.forgot
 			state.register = initialState.register
@@ -48,4 +48,4 @@ export const formsDataSlice = createSlice({
 	},
 })
 
-export const { changeData, clearData } = formsDataSlice.actions
+export const { changeData, clearReplyData } = formsDataSlice.actions
