@@ -46,7 +46,7 @@ export function ChapterLink(props: IChapterLinkProps) {
 			{renderAuthorAvatar(isChapter, props)}
 			<div className={styles.wrapper}>
 				<div className={styles.chapter__left}>
-					<div className={styles.chapter__left_title}>{trimmingText(title, 12)}</div>
+					<div className={styles.chapter__left_title}>{trimmingText(title, 25)}</div>
 					{isChapter ? null : (
 						<div className={styles.chapter__left_theme_info}>
 							<span className={styles.chapter__left_theme_info_item}>{props.user.userLogin}</span>
@@ -97,7 +97,9 @@ export function ChapterLink(props: IChapterLinkProps) {
 								</p>
 								<div className={styles.user__info}>
 									<div className={styles.user__info_name}>
-										{isChapter ? props.latestMessage?.user.userLogin : props.latestThemeMessage?.user.userLogin}
+										{isChapter
+											? trimmingText(props.latestMessage?.user.userLogin, 10)
+											: trimmingText(props.latestThemeMessage?.user.userLogin, 10)}
 									</div>
 									<div className={styles.user__info_time}>
 										{isChapter

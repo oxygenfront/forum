@@ -1,7 +1,8 @@
 import { selectIsLogin, selectUserData } from '@/features/Auth'
 import { setValue } from '@/features/CreateMessage'
 import { ModalOptions } from '@/features/ModalSort'
-import { timeSincePublication } from '@/shared/lib'
+import { useMediaQuery } from '@/pages/Chat/hooks'
+import { timeSincePublication, trimmingText } from '@/shared/lib'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import type { IChatMessage } from '@/shared/types/chat.types'
 import { Action } from '@/shared/ui/Action'
@@ -19,6 +20,11 @@ interface IMessageProps extends IChatMessage {
 }
 
 export const ChatMessage: FC<IMessageProps> = (message) => {
+	const { isMobile } = useMediaQuery({
+		desktopWidth: 1200,
+		mobileWidth: 560,
+		tabletWidth: 0, // Необязательно, но можно передать
+	})
 	const { content, user, id: messageId, respondedTo, isChat, createdAt, deleteMessageAction } = message
 
 	const { id: userId } = useAppSelector(selectUserData)
@@ -83,7 +89,7 @@ export const ChatMessage: FC<IMessageProps> = (message) => {
 						</div>
 					)}
 
-					<div className={styles.user_name}>{user.userLogin}</div>
+					<div className={styles.user_name}>{isMobile ? trimmingText(user.userLogin, 10) : user.userLogin}</div>
 					{/*<div className={styles.user_role}>{message.userThemeId === messageUserId ? 'Продавец' : 'Пользователь'}</div>*/}
 				</div>
 				<div className={styles.content}>{content}</div>

@@ -31,12 +31,18 @@
     height: 124px
     border-radius: 100px
     object-fit: cover
+    @media (max-width: 609px)
+      width: 80px
+      height: 80px
+      border-radius: 100px
 
     &.noImg
       display: flex
       justify-content: center
       align-items: center
       font-size: 80px
+      @media (max-width: 609px)
+        font-size: 40px
 
   &_name
     color: #E3E3E3BF
@@ -57,6 +63,8 @@
   line-height: 26px
   width: 80%
   white-space: wrap
+  word-break: break-word
+
 
 .down
   display: flex

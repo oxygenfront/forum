@@ -3,6 +3,8 @@ import { useGetProfilePageQuery } from '@/pages/Profile/api'
 import { selectEditProfile } from '@/pages/Profile/model'
 import { useAppSelector } from '@/shared/lib/hooks'
 import { Loader } from '@/shared/ui'
+import { ProfileButtons } from '@/shared/ui/ProfileButtons'
+import { ProfileWall } from '@/shared/ui/ProfileWall'
 import { Appearance } from '@/widgets/Appearance'
 import { Confidence } from '@/widgets/Confidence'
 import { UserBlock } from '@/widgets/UserProfileBlock'
@@ -48,6 +50,8 @@ export const Profile = () => {
 					{/*/>*/}
 				</>
 			)}
+			<ProfileButtons />
+			<ProfileWall />
 		</>
 	)
 }
