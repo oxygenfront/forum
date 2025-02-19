@@ -1,0 +1,60 @@
+.post
+  margin-bottom: 32px
+
+  &_wrapper
+    width: 90%
+  &_info
+    display: flex
+    align-items: center
+    gap: 33px
+  &_img
+    width: 73px
+    height: 73px
+    border-radius: 100px
+    background-color: #00FFE0
+  &_main
+    display: flex
+    justify-content: space-between
+    gap: 34px
+    &__content
+      display: flex
+      align-items: center
+      padding-bottom: 24px
+      gap: 34px
+    &__userinfo
+      display: flex
+      align-items: center
+      justify-content: space-between
+      gap: 10px
+      &_username
+        font-size: 20px
+        color: #CACACA
+      &_dot
+        width: 5px
+        height: 5px
+        border-radius: 100px
+        background: #8E8B8B
+      &_date
+        font-size: 16px
+        color: #8E8B8B
+    &__desc
+      display: flex
+      justify-content: space-between
+      align-items: center
+      width: 99.5%
+    &_btn
+      color: #00FFE0
+      &__answer
+        padding-left: 6px
+        color: #00FFE0
+        font-size: 16px
+  &_line
+    display: block
+    content: ""
+    height: 2px
+    width: 100%
+    background-color: rgba(255, 255, 255, 0.12)
+    margin-top: 35px
+.post:last-child .post_line
+  display: none
+

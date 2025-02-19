@@ -4,6 +4,8 @@ import { Accordion } from '@/shared/ui/Accordion'
 import { Appearance } from '@/shared/ui/Appearance'
 import { Confidence } from '@/shared/ui/Confidence'
 import { GeneralSettings } from '@/shared/ui/GeneralSettings'
+import { ProfileButtons } from '@/shared/ui/ProfileButtons'
+import { ProfileWall } from '@/shared/ui/ProfileWall'
 import { UserBlock } from '@/widgets/UserProfileBlock'
 import { useParams } from 'react-router-dom'
 export const Profile = () => {
@@ -32,6 +34,9 @@ export const Profile = () => {
 			<Appearance />
 			<Confidence />
 			<GeneralSettings />
+
+			<ProfileButtons />
+			<ProfileWall />
 		</>
 	)
 }
