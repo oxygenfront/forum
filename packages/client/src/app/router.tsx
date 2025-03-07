@@ -12,54 +12,47 @@ import { SocketProvider } from '@/shared/lib/SocketContext'
 import { ChaptersLinksBlock } from '@/widgets/ChaptersLinks'
 import { createBrowserRouter } from 'react-router-dom'
 
-export const router = createBrowserRouter(
-	[
-		{
-			path: PATH.BASE,
-			element: (
-				<SocketProvider>
-					<App />
-				</SocketProvider>
-			),
-			children: [
-				{
-					path: PATH.BASE,
-					element: <ChaptersLinksBlock />,
-				},
-				{
-					path: PATH.WARRANTOR,
-					element: <WarrantorPage />,
-				},
-				{
-					path: PATH.CHAPTER,
-					element: <ChapterPage />,
-				},
-				{
-					path: PATH.THEME,
-					element: <ThemePage />,
-				},
-				{
-					path: PATH.PROFILE,
-					element: <Profile />,
-				},
-				{
-					path: PATH.ALL_CHATS,
-					element: <AllChatsPages />,
-				},
-				{
-					path: PATH.CHAT,
-					element: <Chat />,
-				},
-				{
-					path: PATH.ADMIN,
-					element: <Admin />,
-				},
-			],
-		},
-	],
+export const router = createBrowserRouter([
 	{
-		future: {
-			v7_startTransition: false,
-		},
+		path: PATH.BASE,
+		element: (
+			<SocketProvider>
+				<App />
+			</SocketProvider>
+		),
+		children: [
+			{
+				path: PATH.BASE,
+				element: <ChaptersLinksBlock />,
+			},
+			{
+				path: PATH.WARRANTOR,
+				element: <WarrantorPage />,
+			},
+			{
+				path: PATH.CHAPTER,
+				element: <ChapterPage />,
+			},
+			{
+				path: PATH.THEME,
+				element: <ThemePage />,
+			},
+			{
+				path: PATH.PROFILE,
+				element: <Profile />,
+			},
+			{
+				path: PATH.ALL_CHATS,
+				element: <AllChatsPages />,
+			},
+			{
+				path: PATH.CHAT,
+				element: <Chat />,
+			},
+			{
+				path: PATH.ADMIN,
+				element: <Admin />,
+			},
+		],
 	},
-)
+])

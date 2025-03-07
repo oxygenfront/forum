@@ -18,7 +18,7 @@ export const ProfileWall = () => {
 						className={styles.wall_midle__input}
 						placeholder={'Обновить свой статус'}
 					/>
-					<span className={styles.wall_midle__line}></span>
+					<span className={styles.wall_midle__line} />
 					<button
 						className={styles.wall_midle__btn}
 						type={'button'}
@@ -27,10 +27,7 @@ export const ProfileWall = () => {
 					</button>
 				</div>
 			</div>
-			<span className={styles.wall_line}></span>
-			<ProfilePost />
-			<ProfilePost />
-			<ProfilePost />
+			<span className={styles.wall_line} />
 			<ProfilePost />
 		</div>
 	)

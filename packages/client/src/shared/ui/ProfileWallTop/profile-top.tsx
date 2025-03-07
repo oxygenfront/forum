@@ -10,7 +10,7 @@ export const ProfileTop = () => {
 				</p>
 				<ModalOptions arrayActions={['Редактировать', 'Удалить']} />
 			</div>
-			<span className={styles.top_line}></span>
+			<span className={styles.top_line} />
 		</>
 	)
 }

@@ -11,9 +11,10 @@ import styles from './userblock.module.sass'
 export const UserBlock: FC<
 	Pick<IUser, 'userImage' | 'avatarColor' | 'role' | 'userLogin' | 'createdAt' | 'themeMessagesCount'> & {
 		isEditProfile: boolean
+		myProfile: boolean
 	}
 > = (props) => {
-	const { userImage, avatarColor, userLogin, role, createdAt, themeMessagesCount, isEditProfile } = props
+	const { userImage, avatarColor, userLogin, role, createdAt, themeMessagesCount, isEditProfile, myProfile } = props
 	const dispatch = useAppDispatch()
 	function handleEditProfile() {
 		dispatch(toggleEditProfile())
@@ -46,23 +47,25 @@ export const UserBlock: FC<
 							<div className={styles.status_site}>Не проверен</div>
 						</div>
 						<div className={styles.up_right}>
-							{isEditProfile ? (
-								<button
-									type='button'
-									className={styles.button}
-									onClick={() => handleEditProfile()}
-								>
-									Посмотреть профиль
-								</button>
-							) : (
-								<button
-									type='button'
-									className={styles.button}
-									onClick={() => handleEditProfile()}
-								>
-									Редактировать профиль
-								</button>
-							)}
+							{myProfile ? (
+								isEditProfile ? (
+									<button
+										type='button'
+										className={styles.button}
+										onClick={() => handleEditProfile()}
+									>
+										Посмотреть профиль
+									</button>
+								) : (
+									<button
+										type='button'
+										className={styles.button}
+										onClick={() => handleEditProfile()}
+									>
+										Редактировать профиль
+									</button>
+								)
+							) : null}
 						</div>
 					</div>
 					<div className={styles.middle}>

@@ -14,12 +14,22 @@
     width: 224px
     height: 224px
     object-fit: cover
+    @media (max-width: 920px)
+      width: 150px
+      height: 150px
+    @media (max-width: 760px)
+      width: 100px
+      height: 100px
     &.noImg
       display: flex
       justify-content: center
       align-items: center
       font-size: 140px
       border-radius: 50%
+      @media (max-width: 850px)
+        font-size: 100px
+      @media (max-width: 760px)
+        font-size: 80px
 .status
   &_site
     padding: 6px 13px
@@ -42,6 +52,8 @@
       border-radius: 50%
 .username
   font-size: 36px
+  @media (max-width: 850px)
+    font-size: 24px
 
 .about
   display: flex
@@ -52,10 +64,15 @@
   display: flex
   justify-content: space-between
   align-items: center
+  //@media (max-width: 912px)
+  //  display: block
   &_left
     display: flex
     align-items: center
     gap: 33px
+    //@media (max-width: 912px)
+    //  padding-bottom: 10px
+
 
 .middle
   display: flex

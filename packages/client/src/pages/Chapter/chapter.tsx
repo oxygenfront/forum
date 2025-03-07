@@ -1,6 +1,7 @@
 import { useGetChapterPageQuery } from '@/pages/Chapter'
-import { BlockThemeContainer, ChapterLink } from '@/shared/ui'
+import { BlockThemeContainer } from '@/shared/ui'
 import { Loader } from '@/shared/ui/Loader'
+import { ThemeLink } from '@/shared/ui/ThemeLink'
 import { FC } from 'react'
 import { useParams } from 'react-router-dom'
 import styles from './chapter.module.sass'
@@ -8,7 +9,6 @@ import styles from './chapter.module.sass'
 export const ChapterPage: FC = () => {
 	const { id } = useParams()
 	const { data, isLoading } = useGetChapterPageQuery(id)
-
 	const conditionalForShow = isLoading || !data
 	return (
 		<>
@@ -27,7 +27,7 @@ export const ChapterPage: FC = () => {
 				) : (
 					data.chapterThemes.map((el) => {
 						return (
-							<ChapterLink
+							<ThemeLink
 								{...el}
 								key={el.id}
 							/>

@@ -3,7 +3,6 @@ import { useGetChaptersQuery } from '@/widgets/ChaptersLinks'
 import type { FC } from 'react'
 export const ChaptersLinksBlock: FC = () => {
 	const { data, isLoading } = useGetChaptersQuery()
-
 	if (isLoading || !data) {
 		return
 	}

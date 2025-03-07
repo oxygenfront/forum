@@ -23,6 +23,7 @@ dayjs.updateLocale('ru', {
 		yy: '%d г.',
 	},
 })
+
 export const timeSincePublication = (date: Date, options?: { isChat?: boolean; isProfile?: boolean }) => {
 	if (!date) {
 		return
@@ -105,7 +106,7 @@ export function trimmingText(str: string, maxLength = 20): string {
 	}
 	return str.substring(0, maxLength).concat('...')
 }
-type IChapterLinkProps = IChapterPageRes | IThemePageRes
+type ILinkProps = IChapterPageRes | IThemePageRes
 
 export function generateThemeUrl({
 	isChapter,
@@ -113,7 +114,7 @@ export function generateThemeUrl({
 	isMessage,
 }: {
 	isChapter: boolean
-	props: IChapterLinkProps
+	props: ILinkProps
 	isMessage?: boolean
 }): string {
 	if (isChapter) {

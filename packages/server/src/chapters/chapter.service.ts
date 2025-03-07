@@ -34,6 +34,7 @@ export class ChapterService {
 										id: true,
 										userLogin: true,
 										userImage: true,
+										avatarColor: true,
 									},
 								},
 								theme: {
@@ -45,6 +46,7 @@ export class ChapterService {
 						},
 					},
 				},
+				createdAt: true,
 			},
 		})
 
@@ -81,6 +83,7 @@ export class ChapterService {
 							id: latestMessage.user.id,
 							userLogin: latestMessage.user.userLogin,
 							userImage: latestMessage.user.userImage,
+							avatarColor: latestMessage.user.avatarColor,
 						},
 						theme: latestMessage.theme,
 					},
@@ -115,12 +118,14 @@ export class ChapterService {
 										id: true,
 										userLogin: true,
 										userImage: true,
+										avatarColor: true,
 									},
 								},
 							},
 							take: 1,
 							orderBy: { createdAt: 'desc' },
 						},
+						createdAt: true,
 						_count: {
 							select: {
 								themeMessages: true,
@@ -149,6 +154,7 @@ export class ChapterService {
 				countThemeMessages: theme._count.themeMessages,
 				latestThemeMessage: theme.themeMessages[0] || null,
 				user: theme.user,
+				createdAt: theme.createdAt,
 			}))
 
 		return {

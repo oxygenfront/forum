@@ -3,6 +3,11 @@
 
   &_wrapper
     width: 90%
+    display: flex
+    flex-direction: column
+    gap: 24px
+    @media (max-width: 675px)
+      margin: 0 auto
   &_info
     display: flex
     align-items: center
@@ -12,14 +17,14 @@
     height: 73px
     border-radius: 100px
     background-color: #00FFE0
+    @media (max-width: 675px)
+      display: none
   &_main
     display: flex
     justify-content: space-between
-    gap: 34px
     &__content
       display: flex
       align-items: center
-      padding-bottom: 24px
       gap: 34px
     &__userinfo
       display: flex

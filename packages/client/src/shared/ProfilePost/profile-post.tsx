@@ -38,7 +38,7 @@ export const ProfilePost = () => {
 					</div>
 				</div>
 			</div>
-			<span className={styles.post_line}></span>
+			<span className={styles.post_line} />
 		</div>
 	)
 }

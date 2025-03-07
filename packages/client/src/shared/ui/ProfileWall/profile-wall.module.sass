@@ -20,6 +20,8 @@
       height: 79px
       border-radius: 50px
       background-color: #00FFE0
+      @media (max-width: 675px)
+        display: none
     &__main
       display: flex
       align-items: center
@@ -30,6 +32,10 @@
       border-radius: 22px
       gap: 30px
       height: 81px
+      @media (max-width: 675px)
+        margin: 0 auto
+        gap: 5px
+
     &__input
       flex-grow: 1
       background: none
@@ -38,7 +44,8 @@
       font-size: 16px
       padding: 17px 0 45px 22px
       outline: none
-
+      @media (max-width: 630px)
+        font-size: 14px
     &__btn
       background-color: transparent
       border: 1px solid
@@ -47,6 +54,9 @@
       border-radius: 12px
       cursor: pointer
       font-size: 16px
+      @media (max-width: 630px)
+        font-size: 14px
+        padding: 5px 10px
     &__line
       display: block
       content: ""

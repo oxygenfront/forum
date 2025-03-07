@@ -33,6 +33,7 @@ export const Profile = () => {
 				createdAt={data.createdAt}
 				themeMessagesCount={data.themeMessagesCount}
 				isEditProfile={isEditProfile}
+				myProfile={myProfile}
 			/>
 			{myProfile && isEditProfile && (
 				<>

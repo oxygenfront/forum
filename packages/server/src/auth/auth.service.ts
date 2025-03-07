@@ -46,6 +46,7 @@ export class AuthService {
 
 			const userEmailExists = await this.usersService.findByEmail(registerUserDto.userEmail)
 			const userLoginExists = await this.usersService.findByLogin(registerUserDto.userLogin)
+
 			if (userEmailExists) {
 				validationErrors.push({
 					inputType: 'userEmail',

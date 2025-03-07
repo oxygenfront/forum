@@ -61,10 +61,12 @@ export class UsersService {
 			},
 		})
 
-		return {
-			...user,
-			themeMessagesCount: count?._count.themeMessages ?? 0,
-		}
+		return user
+			? {
+					...user,
+					themeMessagesCount: count?._count.themeMessages ?? 0,
+				}
+			: null
 	}
 
 	update(id: string, updateUserDto: UpdateUserDto) {
